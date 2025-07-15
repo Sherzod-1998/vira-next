@@ -31,7 +31,7 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	/** APOLLO REQUESTS **/
 	const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
-	const [removePropertyByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
+	const [removeProductByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
 
 	const {
 		loading: getAllBoardArticlesByAdminLoading,
@@ -139,7 +139,7 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	const removeArticleHandler = async (id: string) => {
 		try {
 			if (await sweetConfirmAlert('are you sure to remove?')) {
-				await removePropertyByAdmin({
+				await removeProductByAdmin({
 					variables: {
 						input: id,
 					},

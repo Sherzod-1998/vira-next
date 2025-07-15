@@ -39,7 +39,6 @@ export const GET_SELLERS = gql`
         }
     }
 }
-
 `;
 
 export const GET_MEMBER = gql(`
@@ -86,10 +85,10 @@ query GetMember($memberId: String!) {
 `);
 
 /**************************
- *        PROPERTY        *
+ *        PRODUCT        *
  *************************/
 
-export const GET_PROPERTY = gql`
+export const GET_PRODUCT = gql`
 	query GetProducts($input: ProductsInquiry!) {
     getProducts(input: $input) {
         list {
@@ -119,65 +118,67 @@ export const GET_PROPERTY = gql`
 `;
 
 export const GET_PRODUCTS = gql`
-	query GetProperties($input: PropertiesInquiry!) {
-		getProperties(input: $input) {
-			list {
-				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
-				memberId
-				soldAt
-				deletedAt
-				constructedAt
-				createdAt
-				updatedAt
-				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberWarnings
-					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
-					deletedAt
-					createdAt
-					updatedAt
-				}
-				meLiked {
-					memberId
-					likeRefId
-					myFavorite
-				}
-			}
-			metaCounter {
-				total
-			}
-		}
-	}
+	query GetProducts($input: ProductsInquiry!) {
+    getProducts(input: $input) {
+        list {
+            _id
+            productType
+            productStatus
+            productLocation
+            productAddress
+            productTitle
+            productPrice
+            productMaterial
+            productViews
+            productLikes
+            productComments
+            productRank
+            productImages
+            productDesc
+            memberId
+            soldAt
+            deletedAt
+            createdAt
+            updatedAt
+            memberData {
+                _id
+                memberType
+                memberStatus
+                memberAuthType
+                memberPhone
+                memberNick
+                memberFullName
+                memberImage
+                memberAddress
+                memberDesc
+                memberProducts
+                memberArticles
+                memberFollowers
+                memberFollowings
+                memberPoints
+                memberLikes
+                memberViews
+                memberComments
+                memberRank
+                memberWarnings
+                memberBlocks
+                deletedAt
+                createdAt
+                updatedAt
+                accessToken
+            }
+            meLiked {
+                memberId
+                likeRefId
+                myFavorite
+            }
+        }
+        metaCounter {
+            total
+        }
+    }
+}
+
 `;
 
 export const GET_SELLER_PRODUCTS = gql`

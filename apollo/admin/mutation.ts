@@ -41,61 +41,57 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
  *************************/
 
 export const UPDATE_PRODUCT_BY_ADMIN = gql`
-	mutation UpdatePropertyByAdmin($input: PropertyUpdate!) {
-		updatePropertyByAdmin(input: $input) {
-			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
-			memberId
-			soldAt
-			deletedAt
-			constructedAt
-			createdAt
-			updatedAt
-		}
-	}
+	mutation UpdateProductByAdmin ($input:ProductUpdate!) {
+    updateProductByAdmin(input: $input) {
+        _id
+        productType
+        productStatus
+        productLocation
+        productAddress
+        productTitle
+        productPrice
+        productMaterial
+        productViews
+        productLikes
+        productComments
+        productRank
+        productImages
+        productDesc
+        memberId
+        soldAt
+        deletedAt
+        createdAt
+        updatedAt
+    }
+}
+
 `;
 
 export const REMOVE_PRODUCT_BY_ADMIN = gql`
-	mutation RemovePropertyByAdmin($input: String!) {
-		removePropertyByAdmin(propertyId: $input) {
-			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
-			memberId
-			soldAt
-			deletedAt
-			constructedAt
-			createdAt
-			updatedAt
-		}
-	}
+	mutation RemoveProductByAdmin ($input: String!) {
+    removeProductByAdmin(productId: $input) {
+        _id
+        productType
+        productStatus
+        productLocation
+        productAddress
+        productTitle
+        productPrice
+        productMaterial
+        productViews
+        productLikes
+        productComments
+        productRank
+        productImages
+        productDesc
+        memberId
+        soldAt
+        deletedAt
+        createdAt
+        updatedAt
+    }
+}
+
 `;
 
 /**************************
@@ -104,38 +100,42 @@ export const REMOVE_PRODUCT_BY_ADMIN = gql`
 
 export const UPDATE_BOARD_ARTICLE_BY_ADMIN = gql`
 	mutation UpdateBoardArticleByAdmin($input: BoardArticleUpdate!) {
-		updateBoardArticleByAdmin(input: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
+    updateBoardArticleByAdmin(input: $input) {
+        _id
+        articleCategory
+        articleStatus
+        articleTitle
+        articleContent
+        articleImage
+        articleViews
+        articleLikes
+        articleComments
+        memberId
+        createdAt
+        updatedAt
+    }
+}
+
 `;
 
 export const REMOVE_BOARD_ARTICLE_BY_ADMIN = gql`
 	mutation RemoveBoardArticleByAdmin($input: String!) {
-		removeBoardArticleByAdmin(articleId: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
+    removeBoardArticleByAdmin(articleId: $input) {
+        _id
+        articleCategory
+        articleStatus
+        articleTitle
+        articleContent
+        articleImage
+        articleViews
+        articleLikes
+        articleComments
+        memberId
+        createdAt
+        updatedAt
+    }
+}
+
 `;
 
 /**************************
@@ -143,16 +143,15 @@ export const REMOVE_BOARD_ARTICLE_BY_ADMIN = gql`
  *************************/
 
 export const REMOVE_COMMENT_BY_ADMIN = gql`
-	mutation RemoveCommentByAdmin($input: String!) {
-		removeCommentByAdmin(commentId: $input) {
-			_id
-			commentStatus
-			commentGroup
-			commentContent
-			commentRefId
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
+	removeCommentByAdmin(commentId: $input) {
+        _id
+        commentStatus
+        commentGroup
+        commentContent
+        commentRefId
+        memberId
+        createdAt
+        updatedAt
+    }
+}
 `;
