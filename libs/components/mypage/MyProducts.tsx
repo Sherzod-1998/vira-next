@@ -5,7 +5,7 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { Product } from '../../types/product/product';
-import { AgentProductsInquiry } from '../../types/product/product.input';
+import { sellerProductsInquiry } from '../../types/product/product.input';
 import { T } from '../../types/common';
 import { ProductStatus } from '../../enums/product.enum';
 import { userVar } from '../../../apollo/store';
@@ -17,8 +17,8 @@ import { stat } from 'fs';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
-	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
+	const [searchFilter, setSearchFilter] = useState<sellerProductsInquiry>(initialInput);
+	const [sellerProducts, setsellerProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
@@ -27,17 +27,17 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
 	const {
-		loading: getAgentProductsLoading,
-		data: getAgentProductsData,
-		error: getAgentProductsError,
-		refetch: getAgentProductsRefetch,
+		loading: getsellerProductsLoading,
+		data: getsellerProductsData,
+		error: getsellerProductsError,
+		refetch: getsellerProductsRefetch,
 	} = useQuery(GET_SELLER_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProducts(data?.getAgentProducts?.list);
-			setTotal(data?.getAgentProducts?.metaCounter[0]?.total ?? 0);
+			setsellerProducts(data?.getsellerProducts?.list);
+			setTotal(data?.getsellerProducts?.metaCounter[0]?.total ?? 0);
 		},
 	});
 
@@ -62,7 +62,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					},
 				});
 
-				await getAgentProductsRefetch({ input: searchFilter });
+				await getsellerProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
@@ -80,7 +80,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 						},
 					},
 				});
-				await getAgentProductsRefetch({ input: searchFilter });
+				await getsellerProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
@@ -128,13 +128,13 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							)}
 						</Stack>
 
-						{agentProducts?.length === 0 ? (
+						{sellerProducts?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No Product found!</p>
 							</div>
 						) : (
-							agentProducts.map((product: Product) => {
+							sellerProducts.map((product: Product) => {
 								return (
 									<ProductCard
 										product={product}
@@ -145,7 +145,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							})
 						)}
 
-						{agentProducts.length !== 0 && (
+						{sellerProducts.length !== 0 && (
 							<Stack className="pagination-config">
 								<Stack className="pagination-box">
 									<Pagination

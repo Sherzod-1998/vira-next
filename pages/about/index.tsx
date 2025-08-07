@@ -74,7 +74,7 @@ const About: NextPage = () => {
 						<p className={'desc'}>Aliquam lacinia diam quis lacus euismod</p>
 						<Stack className={'wrap'}>
 							{/*{[1, 2, 3, 4, 5].map(() => {*/}
-							{/*	return <AgentCard />;*/}
+							{/*	return <sellerCard />;*/}
 							{/*})}*/}
 						</Stack>
 					</Stack>

@@ -4,38 +4,38 @@ import { Stack } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Member } from '../../types/member/member';
 
-interface TopAgentProps {
-	agent: Member;
+interface TopsellerProps {
+	seller: Member;
 }
-const TopAgentCard = (props: TopAgentProps) => {
-	const { agent } = props;
+const TopsellerCard = (props: TopsellerProps) => {
+	const { seller } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const agentImage = agent?.memberImage
-		? `${process.env.REACT_APP_API_URL}/${agent?.memberImage}`
+	const sellerImage = seller?.memberImage
+		? `${process.env.REACT_APP_API_URL}/${seller?.memberImage}`
 		: '/img/profile/defaultUser.svg';
 
 	/** HANDLERS **/
 
 	if (device === 'mobile') {
 		return (
-			<Stack className="top-agent-card">
-				<img src={agentImage} alt="" />
+			<Stack className="top-seller-card">
+				<img src={sellerImage} alt="" />
 
-				<strong>{agent?.memberNick}</strong>
-				<span>{agent?.memberType}</span>
+				<strong>{seller?.memberNick}</strong>
+				<span>{seller?.memberType}</span>
 			</Stack>
 		);
 	} else {
 		return (
-			<Stack className="top-agent-card">
-				<img src={agentImage} alt="" />
+			<Stack className="top-seller-card">
+				<img src={sellerImage} alt="" />
 
-				<strong>{agent?.memberNick}</strong>
-				<span>{agent?.memberType}</span>
+				<strong>{seller?.memberNick}</strong>
+				<span>{seller?.memberType}</span>
 			</Stack>
 		);
 	}
 };
 
-export default TopAgentCard;
+export default TopsellerCard;

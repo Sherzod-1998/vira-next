@@ -244,7 +244,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 										User
 									</MenuItem>
 									<MenuItem value={'SELLER'} onClick={() => searchTypeHandler('SELLER')}>
-										Agent
+										seller
 									</MenuItem>
 									<MenuItem value={'ADMIN'} onClick={() => searchTypeHandler('ADMIN')}>
 										Admin

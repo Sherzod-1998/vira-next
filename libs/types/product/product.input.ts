@@ -43,7 +43,7 @@ interface APISearch {
 	productStatus?: ProductStatus;
 }
 
-export interface AgentProductsInquiry {
+export interface sellerProductsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;

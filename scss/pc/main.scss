@@ -7,8 +7,8 @@
 @import '/scss/pc/product/product';
 @import '/scss/pc/product/detail.scss';
 
-@import '/scss/pc/agent/agent';
-@import '/scss/pc/agent/detail.scss';
+@import '/scss/pc/seller/seller';
+@import '/scss/pc/seller/detail.scss';
 @import '/scss/pc/mypage/mypage.scss';
 @import '/scss/pc/mypage/addNewProduct.scss';
 @import '/scss/pc/mypage/myProducts.scss';
@@ -33,6 +33,8 @@
 @import '/scss/pc/member/memberArticles.scss';
 @import '/scss/pc/member/memberProducts.scss';
 
+$hover-bg: rgba(154, 200, 188, 0.1);
+
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */
 	scrollbar-width: none; /* for Firefox */
@@ -47,6 +49,7 @@ body::-webkit-scrollbar {
 	#top {
 		.navbar {
 			.navbar-main {
+
 				position: fixed;
 				padding: 22px 0px;
 				width: 100%;
@@ -58,16 +61,22 @@ body::-webkit-scrollbar {
 				align-items: center;
 				border-top: 1px solid rgba(255, 255, 255, 0.07);
 				&.transparent {
-					background-color: #181a209e;
+					background-color: #0000009e;
 				}
 				.container {
 					flex-direction: row;
 					align-items: center;
 					justify-content: space-between;
 					.logo-box {
-						img {
-							width: 150px;
-							cursor: pointer;
+						.logo-text {
+							color: rgb(255, 255, 255);
+							font-family: Unbounded;
+							font-size: 30px;
+							font-weight: 700;
+							line-height: 35px;
+							letter-spacing: 0%;
+							text-align: left;
+							text-transform: uppercase;
 						}
 					}
 					.router-box {
@@ -80,11 +89,15 @@ body::-webkit-scrollbar {
 							position: relative;
 							color: #eeeeeeed;
 							font-family: $font;
-							font-size: 15px;
+							font-size: 17px;
 							font-style: normal;
 							font-weight: 600;
 							line-height: normal;
 							cursor: pointer;
+							transition: color 0.3s ease;
+							&:hover {
+								background-color: $hover-bg;
+								}
 							.community_menu {
 								position: absolute;
 								left: -177%;
@@ -149,8 +162,13 @@ body::-webkit-scrollbar {
 						display: flex;
 						align-items: center;
 						.notification-icon {
-							color: white;
+							color: rgb(255, 255, 255);
 						}
+						.notification-icon:hover {
+							background-color: $hover-bg;
+						}
+						
+						
 						.btn-lang {
 							border-radius: 4px;
 							img {
@@ -661,7 +679,7 @@ body::-webkit-scrollbar {
 		height: auto;
 		display: flex;
 		flex-direction: row;
-		background: #181a20;
+		background: #212121;
 		.footer-container {
 			width: 1300px;
 			height: auto;
@@ -1055,4 +1073,19 @@ body::-webkit-scrollbar {
 	height: 17px;
 	border-radius: 2px;
 	margin-right: 8px;
+}
+.notification-box {
+	position: relative;
+	width: 350px;
+	height: auto;
+	padding: 20px;
+	background: #ffffff;
+	border-radius: 12px;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+	color: #181a20;
+	font-family: $font;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
 }

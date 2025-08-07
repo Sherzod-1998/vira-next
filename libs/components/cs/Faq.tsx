@@ -105,7 +105,7 @@ const Faq = () => {
 			{
 				id: '00f5a45ed8897f8090116a02',
 				subject: 'How can I make the payment?',
-				content: 'you make the payment through an agent!',
+				content: 'you make the payment through an seller!',
 			},
 			{
 				id: '00f5a45ed8897f8090116a91',
@@ -168,7 +168,7 @@ const Faq = () => {
 				id: '00f5a45ed8897f8090116a85',
 				subject: 'How can I determine if a product is within my budget?',
 				content:
-					'Calculate your budget by considering your income, down payment, and potential mortgage payments. Our agents can assist you within your budget.',
+					'Calculate your budget by considering your income, down payment, and potential mortgage payments. Our sellers can assist you within your budget.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a84',
@@ -186,7 +186,7 @@ const Faq = () => {
 				id: '00f5a45ed8897f8090116a82',
 				subject: 'Can I negotiate the price of a product?',
 				content:
-					'Yes, you can negotiate the price of a product. Our agents will assist you in making competitive offers and negotiating terms with the seller.',
+					'Yes, you can negotiate the price of a product. Our sellers will assist you in making competitive offers and negotiating terms with the seller.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a81',
@@ -204,13 +204,13 @@ const Faq = () => {
 				id: '00f5a45ed8897f8090116a79',
 				subject: 'How long does it typically take to find the right product?',
 				content:
-					'The timeframe varies depending on your preferences and market conditions. Our agents will work diligently to find the right product as quickly as possible.',
+					'The timeframe varies depending on your preferences and market conditions. Our sellers will work diligently to find the right product as quickly as possible.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a78',
-				subject: 'What are the advantages of using a real estate agent when buying a product?',
+				subject: 'What are the advantages of using a real estate seller when buying a product?',
 				content:
-					'Real estate agents provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
+					'Real estate sellers provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a77',
@@ -220,21 +220,21 @@ const Faq = () => {
 			},
 		],
 
-		agents: [
+		sellers: [
 			{
 				id: '00f5a45ed8897f8090116a04',
-				subject: 'What do I need to do if I want to become an agent?',
+				subject: 'What do I need to do if I want to become an seller?',
 				content:
-					'If you really decide to become an agent, you should read our terms and conditions and contact the admin!',
+					'If you really decide to become an seller, you should read our terms and conditions and contact the admin!',
 			},
 			{
 				id: '00f5a45ed8897f8090116a62',
-				subject: 'What qualifications do I need to become a real estate agent?',
+				subject: 'What qualifications do I need to become a real estate seller?',
 				content: 'Complete pre-licensing course, pass licensing exam, meet state requirements.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a63',
-				subject: 'How do I find clients as a new real estate agent?',
+				subject: 'How do I find clients as a new real estate seller?',
 				content: 'Build network, use online/offline marketing, join reputable brokerage.',
 			},
 			{
@@ -260,7 +260,7 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a68',
-				subject: 'What tools and technologies should I utilize as a real estate agent?',
+				subject: 'What tools and technologies should I utilize as a real estate seller?',
 				content: 'Use CRM software, virtual tours, digital marketing tools, and mobile apps.',
 			},
 			{
@@ -464,9 +464,9 @@ const Faq = () => {
 						Foy Buyers
 					</div>
 					<div
-						className={category === 'agents' ? 'active' : ''}
+						className={category === 'sellers' ? 'active' : ''}
 						onClick={() => {
-							changeCategoryHandler('agents');
+							changeCategoryHandler('sellers');
 						}}
 					>
 						For Sellers

@@ -5,7 +5,7 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
-import TopAgentCard from './TopSellerCard';
+import TopsellerCard from './TopSellerCard';
 import { Member } from '../../types/member/member';
 import { SellersInquiry } from '../../types/member/member.input';
 import { GET_SELLERS } from '../../../apollo/user/query';
@@ -41,23 +41,23 @@ const TopSellers = (props: TopSellersProps) => {
 
 	if (device === 'mobile') {
 		return (
-			<Stack className={'top-agents'}>
+			<Stack className={'top-sellers'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<span>Top Sellers</span>
 					</Stack>
 					<Stack className={'wrapper'}>
 						<Swiper
-							className={'top-agents-swiper'}
+							className={'top-sellers-swiper'}
 							slidesPerView={'auto'}
 							centeredSlides={true}
 							spaceBetween={29}
 							modules={[Autoplay]}
 						>
-							{topSellers.map((agent: Member) => {
+							{topSellers.map((seller: Member) => {
 								return (
-									<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-										<TopAgentCard agent={agent} key={agent?.memberNick} />
+									<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
+										<TopsellerCard seller={seller} key={seller?.memberNick} />
 									</SwiperSlide>
 								);
 							})}
@@ -68,7 +68,7 @@ const TopSellers = (props: TopSellersProps) => {
 		);
 	} else {
 		return (
-			<Stack className={'top-agents'}>
+			<Stack className={'top-sellers'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
@@ -83,30 +83,30 @@ const TopSellers = (props: TopSellersProps) => {
 						</Box>
 					</Stack>
 					<Stack className={'wrapper'}>
-						<Box component={'div'} className={'switch-btn swiper-agents-prev'}>
+						<Box component={'div'} className={'switch-btn swiper-sellers-prev'}>
 							<ArrowBackIosNewIcon />
 						</Box>
 						<Box component={'div'} className={'card-wrapper'}>
 							<Swiper
-								className={'top-agents-swiper'}
+								className={'top-sellers-swiper'}
 								slidesPerView={'auto'}
 								spaceBetween={29}
 								modules={[Autoplay, Navigation, Pagination]}
 								navigation={{
-									nextEl: '.swiper-agents-next',
-									prevEl: '.swiper-agents-prev',
+									nextEl: '.swiper-sellers-next',
+									prevEl: '.swiper-sellers-prev',
 								}}
 							>
-								{topSellers.map((agent: Member) => {
+								{topSellers.map((seller: Member) => {
 									return (
-										<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-											<TopAgentCard agent={agent} key={agent?.memberNick} />
+										<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
+											<TopsellerCard seller={seller} key={seller?.memberNick} />
 										</SwiperSlide>
 									);
 								})}
 							</Swiper>
 						</Box>
-						<Box component={'div'} className={'switch-btn swiper-agents-next'}>
+						<Box component={'div'} className={'switch-btn swiper-sellers-next'}>
 							<ArrowBackIosNewIcon />
 						</Box>
 					</Stack>

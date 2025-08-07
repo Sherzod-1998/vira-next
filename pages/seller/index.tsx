@@ -5,7 +5,7 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Box, Button, Pagination } from '@mui/material';
 import { Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import AgentCard from '../../libs/components/common/SellerCard';
+import sellerCard from '../../libs/components/common/SellerCard';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
@@ -22,7 +22,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const AgentList: NextPage = ({ initialInput, ...props }: any) => {
+const sellerList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
@@ -32,7 +32,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 	const [searchFilter, setSearchFilter] = useState<any>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-	const [agents, setSellers] = useState<Member[]>([]);
+	const [sellers, setSellers] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
@@ -61,7 +61,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 			const input_obj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(input_obj);
 		} else
-			router.replace(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`);
+			router.replace(`/seller?input=${JSON.stringify(searchFilter)}`, `/seller?input=${JSON.stringify(searchFilter)}`);
 
 		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
@@ -102,7 +102,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 
 	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
-		await router.push(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`, {
+		await router.push(`/seller?input=${JSON.stringify(searchFilter)}`, `/seller?input=${JSON.stringify(searchFilter)}`, {
 			scroll: false,
 		});
 		setCurrentPage(value);
@@ -130,13 +130,13 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 		return <h1>SELLERS PAGE MOBILE</h1>;
 	} else {
 		return (
-			<Stack className={'agent-list-page'}>
+			<Stack className={'seller-list-page'}>
 				<Stack className={'container'}>
 					<Stack className={'filter'}>
 						<Box component={'div'} className={'left'}>
 							<input
 								type="text"
-								placeholder={'Search for an agent'}
+								placeholder={'Search for an seller'}
 								value={searchText}
 								onChange={(e: any) => setSearchText(e.target.value)}
 								onKeyDown={(event: any) => {
@@ -173,20 +173,20 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 						</Box>
 					</Stack>
 					<Stack className={'card-wrap'}>
-						{agents?.length === 0 ? (
+						{sellers?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No Sellers found!</p>
 							</div>
 						) : (
-							agents.map((agent: Member) => {
-								return <AgentCard agent={agent} key={agent._id} likeMemberHandler={likeMemberHandler} />;
+							sellers.map((seller: Member) => {
+								return <sellerCard seller={seller} key={seller._id} likeMemberHandler={likeMemberHandler} />;
 							})
 						)}
 					</Stack>
 					<Stack className={'pagination'}>
 						<Stack className="pagination-box">
-							{agents.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
+							{sellers.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
 								<Stack className="pagination-box">
 									<Pagination
 										page={currentPage}
@@ -199,9 +199,9 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 							)}
 						</Stack>
 
-						{agents.length !== 0 && (
+						{sellers.length !== 0 && (
 							<span>
-								Total {total} agent{total > 1 ? 's' : ''} available
+								Total {total} seller{total > 1 ? 's' : ''} available
 							</span>
 						)}
 					</Stack>
@@ -211,7 +211,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 	}
 };
 
-AgentList.defaultProps = {
+sellerList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
@@ -221,4 +221,4 @@ AgentList.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(AgentList);
+export default withLayoutBasic(sellerList);
