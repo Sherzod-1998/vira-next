@@ -193,14 +193,66 @@ body::-webkit-scrollbar {
 		position: relative;
 		width: 100%;
 		height: 860px;
-		background-image: url('/img/banner/header1.svg');
-		background-size: cover;
+		background-color: rgb(28, 16, 6);
+		background-image: url('/img/banner/header1.webp');
+		background-repeat: no-repeat;
+		background-position: right center;
+		background-size: auto 100%;
+		.header-content { 
+			margin-top: 110px;
+			margin-left: 90px;
+			width: 80%;
+			height: 600px;
+			.header-content__title { 
+				color: rgba(255, 255, 255, 1);
+				font-family: Unbounded;
+				font-size: 60px;
+				font-weight: 400;
+				line-height: 85px;
+				letter-spacing: 0%;
+				text-align: left;
+				text-transform: capitalize;
+			}
+			.header-content__title-text_2 { 
+				color: rgba(255, 255, 255, 1);
+				font-family: Karla;
+				font-style: italic;
+				font-size: 18px;
+				font-weight: 400;
+				line-height: 30px;
+				letter-spacing: 0%;
+				text-align: left;
+				text-transform: capitalize;
+			}
+			.buttons {
+  margin-top: 30px;
+
+  .more-detail,
+  .shop_now {
+    width: 172px;
+    height: 50px;
+    border-radius: 50px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      background: white;
+      color: black;
+    }
+  }
+}
+
+		}
 		.container {
 			position: relative;
-			margin-top: 20px;
 			flex-direction: column;
 			align-items: center;
 			.search-box {
+				background-color: #000;
 				position: relative;
 				margin-top: 56px;
 				padding: 16px 29px;
