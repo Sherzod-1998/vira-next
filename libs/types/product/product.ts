@@ -19,17 +19,12 @@ export interface Product {
 	productAddress: string;
 	productTitle: string;
 	productPrice: number;
-	productSquare: number;
-	productBeds: number;
-	productRooms: number;
 	productViews: number;
 	productLikes: number;
 	productComments: number;
 	productRank: number;
 	productImages: string[];
 	productDesc?: string;
-	productBarter: boolean;
-	productRent: boolean;
 	memberId: string;
 	soldAt?: Date;
 	deletedAt?: Date;

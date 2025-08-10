@@ -7,27 +7,18 @@ export interface ProductInput {
 	productAddress: string;
 	productTitle: string;
 	productPrice: number;
-	productSquare: number;
-	productBeds: number;
-	productRooms: number;
+	productMaterial: string;
 	productImages: string[];
 	productDesc?: string;
-	productBarter?: boolean;
-	productRent?: boolean;
 	memberId?: string;
-	constructedAt?: Date;
 }
 
 interface PISearch {
 	memberId?: string;
 	locationList?: ProductLocation[];
 	typeList?: ProductType[];
-	roomsList?: Number[];
 	options?: string[];
-	bedsList?: Number[];
 	pricesRange?: Range;
-	periodsRange?: PeriodsRange;
-	squaresRange?: Range;
 	text?: string;
 }
 

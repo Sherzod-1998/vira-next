@@ -10,7 +10,6 @@ for (let i = 1970; i <= thisYear; i++) {
 	productYears.push(String(i));
 }
 
-export const productSquare = [0, 25, 50, 75, 100, 125, 150, 200, 300, 500];
 
 export const Messages = {
 	error1: 'Something went wrong!',

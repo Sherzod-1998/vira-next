@@ -1,13 +1,36 @@
 export enum ProductType {
-	APARTMENT = 'APARTMENT',
-	VILLA = 'VILLA',
-	HOUSE = 'HOUSE',
+	RING = 'RING',
+	NECKLACE = 'NECKLACE',
+	BRACELET = 'BRACELET',
+	EARRING = 'EARRING',
+	SET = 'SET',
+	WATCH = 'WATCH',
+	BROOCH = 'BROOCH',
+	CHAIN = 'CHAIN',
+	GOLD_BAR = 'GOLD_BAR',
+	OTHER = 'OTHER',
 }
 
 export enum ProductStatus {
 	ACTIVE = 'ACTIVE',
 	SOLD = 'SOLD',
 	DELETE = 'DELETE',
+}
+
+export enum ProductMaterial {
+	GOLD = 'GOLD',
+	WHITE_GOLD = 'WHITE_GOLD',
+	ROSE_GOLD = 'ROSE_GOLD',
+	SILVER = 'SILVER',
+	PLATINUM = 'PLATINUM',
+	DIAMOND = 'DIAMOND',
+	PEARL = 'PEARL',
+	TITANIUM = 'TITANIUM',
+	STAINLESS_STEEL = 'STAINLESS_STEEL',
+	BRASS = 'BRASS',
+	COPPER = 'COPPER',
+	LEATHER = 'LEATHER',
+	OTHER = 'OTHER',
 }
 
 export enum ProductLocation {
