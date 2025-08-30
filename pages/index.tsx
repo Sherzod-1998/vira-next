@@ -1,15 +1,15 @@
 import { NextPage } from 'next';
 import useDeviceDetect from '../libs/hooks/useDeviceDetect';
 import withLayoutMain from '../libs/components/layout/LayoutHome';
-import CommunityBoards from '../libs/components/homepage/CommunityBoards';
-import PopularProducts from '../libs/components/homepage/PopularProducts';
-import TopSellers from '../libs/components/homepage/TopSellers';
-import Events from '../libs/components/homepage/Events';
-import TrendProducts from '../libs/components/homepage/TrendProducts';
-import TopProducts from '../libs/components/homepage/TopProducts';
 import { Stack } from '@mui/material';
-import Advertisement from '../libs/components/homepage/Advertisement';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import GorgeousCollection from '../libs/components/homepage/GorgeousCollection';
+import Statistics from '../libs/components/homepage/Statistics';
+import TrendProducts from '../libs/components/homepage/TrendProducts';
+import PopularProducts from '../libs/components/homepage/PopularProducts';
+import TopProducts from '../libs/components/homepage/TopProducts';
+import TopSellers from '../libs/components/homepage/TopSellers';
+import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -23,23 +23,19 @@ const Home: NextPage = () => {
 	if (device === 'mobile') {
 		return (
 			<Stack className={'home-page'}>
-				<TrendProducts />
-				<PopularProducts />
-				<Advertisement />
-				<TopProducts />
-				<TopSellers />
+				<GorgeousCollection />
 			</Stack>
 		);
 	} else {
 		return (
 			<Stack className={'home-page'}>
+				<GorgeousCollection />
 				<TrendProducts />
 				<PopularProducts />
-				<Advertisement />
 				<TopProducts />
 				<TopSellers />
-				<Events />
 				<CommunityBoards />
+				
 			</Stack>
 		);
 	}

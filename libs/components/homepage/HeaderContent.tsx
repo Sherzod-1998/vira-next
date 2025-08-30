@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
+import { useTranslation } from "react-i18next";
 
 
 const HeaderContent = () => {
+    const { t, i18n } = useTranslation('common');
+    const [lang, setLang] = useState<string | null>('en');
 	return (
         <div className="header-content">
             <Stack direction="row" className="header-content__inner">
@@ -79,19 +82,22 @@ const HeaderContent = () => {
             </Stack>
             <Stack className="header-content__title" direction="column" spacing={2}>
                 <h1 className="header-content__title-text">
-                    Where Elegance Finds
-                    <br /> 
-                    Extraordinary Artistry
+                    {t('Where Elegance Finds Extraordinary Artistry')}
                 </h1>
                 <h1 className="header-content__title-text_2">
-                    jewelry has been primarily used as an artistic and fashionable item. 
-                    In almost all the cultures, jewelry is used <br /> as an ornament to enhance 
-                    and exhibit beauty of human body.
+                    {t('jewelry has been primarily used as an artistic and fashionable item. In almost all the cultures, jewelry is used as an ornament to enhance and exhibit beauty of human body.')}
                 </h1>
             </Stack>
             <Stack className='buttons' direction="row" spacing={2}>
-                <button className='more-detail'>MORE DETAILS</button>
-                <button className="shop_now">SHOP NOW</button>
+                <button 
+                    className='more-detail'
+                    onClick={() => window.location.href = "/about-us"}>{t('MORE DETAILS')}</button>
+                <button
+                    className="shop_now"
+                    onClick={() => window.location.href = "/product"}
+                >
+                    {t('SHOP NOW')}
+                </button>
             </Stack>
         </div>
     );
