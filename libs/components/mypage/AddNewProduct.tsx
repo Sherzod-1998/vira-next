@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductType } from '../../enums/product.enum';
-import { REACT_APP_API_URL, productSquare } from '../../config';
+import { REACT_APP_API_URL } from '../../config';
 import { ProductInput } from '../../types/product/product.input';
 import axios from 'axios';
 import { getJwtToken } from '../../auth';
@@ -46,11 +46,6 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			productType: getProductData?.getProduct ? getProductData?.getProduct?.productType : '',
 			productLocation: getProductData?.getProduct ? getProductData?.getProduct?.productLocation : '',
 			productAddress: getProductData?.getProduct ? getProductData?.getProduct?.productAddress : '',
-			productBarter: getProductData?.getProduct ? getProductData?.getProduct?.productBarter : false,
-			productRent: getProductData?.getProduct ? getProductData?.getProduct?.productRent : false,
-			productRooms: getProductData?.getProduct ? getProductData?.getProduct?.productRooms : 0,
-			productBeds: getProductData?.getProduct ? getProductData?.getProduct?.productBeds : 0,
-			productSquare: getProductData?.getProduct ? getProductData?.getProduct?.productSquare : 0,
 			productDesc: getProductData?.getProduct ? getProductData?.getProduct?.productDesc : '',
 			productImages: getProductData?.getProduct ? getProductData?.getProduct?.productImages : [],
 		});
@@ -111,18 +106,15 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 	const doDisabledCheck = () => {
 		if (
-			insertProductData.productTitle === '' ||
+			insertProductData.productTitle === '' || // @ts-ignore
 			insertProductData.productPrice === 0 || // @ts-ignore
 			insertProductData.productType === '' || // @ts-ignore
 			insertProductData.productLocation === '' || // @ts-ignore
 			insertProductData.productAddress === '' || // @ts-ignore
 			insertProductData.productBarter === '' || // @ts-ignore
-			insertProductData.productRent === '' ||
-			insertProductData.productRooms === 0 ||
-			insertProductData.productBeds === 0 ||
-			insertProductData.productSquare === 0 ||
-			insertProductData.productDesc === '' ||
-			insertProductData.productImages.length === 0
+			insertProductData.productRent === '' || // @ts-ignore
+			insertProductData.productDesc === '' || // @ts-ignore
+			insertProductData.productImages.length === 0 // @ts-ignore
 		) {
 			return true;
 		}
@@ -282,109 +274,12 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 							</Stack>
 
 							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Barter</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productBarter ? 'yes' : 'no'}
-										defaultValue={insertProductData.productBarter ? 'yes' : 'no'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productBarter: value === 'yes' })
-										}
-									>
-										<option disabled={true} selected={true}>
-											Select
-										</option>
-										<option value={'yes'}>Yes</option>
-										<option value={'no'}>No</option>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Rent</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productRent ? 'yes' : 'no'}
-										defaultValue={insertProductData.productRent ? 'yes' : 'no'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productRent: value === 'yes' })
-										}
-									>
-										<option disabled={true} selected={true}>
-											Select
-										</option>
-										<option value={'yes'}>Yes</option>
-										<option value={'no'}>No</option>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
+								
 							</Stack>
 
 							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Rooms</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productRooms || 'select'}
-										defaultValue={insertProductData.productRooms || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productRooms: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((room: number) => (
-											<option value={`${room}`}>{room}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Bed</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productBeds || 'select'}
-										defaultValue={insertProductData.productBeds || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productBeds: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((bed: number) => (
-											<option value={`${bed}`}>{bed}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Square</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productSquare || 'select'}
-										defaultValue={insertProductData.productSquare || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productSquare: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{productSquare.map((square: number) => {
-											if (square !== 0) {
-												return <option value={`${square}`}>{square}</option>;
-											}
-										})}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
+	
+								
 							</Stack>
 
 							<Typography className="product-title">Product Description</Typography>
