@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_SELLER_PRODUCTS } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
-import { stat } from 'fs';
+
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
@@ -27,17 +27,17 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
 	const {
-		loading: getsellerProductsLoading,
-		data: getsellerProductsData,
-		error: getsellerProductsError,
-		refetch: getsellerProductsRefetch,
+		loading: getSellerProductsLoading,
+		data: getSellerProductsData,
+		error: getSellerProductsError,
+		refetch: getSellerProductsRefetch,
 	} = useQuery(GET_SELLER_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setsellerProducts(data?.getsellerProducts?.list);
-			setTotal(data?.getsellerProducts?.metaCounter[0]?.total ?? 0);
+			setsellerProducts(data?.getSellerProducts?.list);
+			setTotal(data?.getSellerProducts?.metaCounter[0]?.total ?? 0);
 		},
 	});
 
@@ -62,7 +62,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					},
 				});
 
-				await getsellerProductsRefetch({ input: searchFilter });
+				await getSellerProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
@@ -80,7 +80,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 						},
 					},
 				});
-				await getsellerProductsRefetch({ input: searchFilter });
+				await getSellerProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
