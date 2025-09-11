@@ -143,15 +143,16 @@ export const REMOVE_BOARD_ARTICLE_BY_ADMIN = gql`
  *************************/
 
 export const REMOVE_COMMENT_BY_ADMIN = gql`
-	removeCommentByAdmin(commentId: $input) {
-        _id
-        commentStatus
-        commentGroup
-        commentContent
-        commentRefId
-        memberId
-        createdAt
-        updatedAt
+  mutation RemoveCommentByAdmin($input: String!) {
+    removeCommentByAdmin(commentId: $input) {
+      _id
+      commentStatus
+      commentGroup
+      commentContent
+      commentRefId
+      memberId
+      createdAt
+      updatedAt
     }
-}
+  }
 `;
