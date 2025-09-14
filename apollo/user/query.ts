@@ -439,6 +439,19 @@ export const GET_COMMENTS = gql`
 
 `;
 
+export const GET_COMMENTS_SUMMARY = gql`
+  query CommentsSummary {
+    commentsSummary {
+      total
+      recentCommenters {
+        id
+        avatarUrl
+      }
+    }
+  }
+`;
+
+
 /**************************
  *         FOLLOW        *
  *************************/
