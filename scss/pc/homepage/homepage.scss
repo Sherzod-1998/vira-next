@@ -348,8 +348,8 @@
 					margin-bottom: 16px;
 
 					img {
-						width: 42px;
-						height: 42px;
+						width: 62px;
+						height: 62px;
 						border-radius: 999px;
 						object-fit: cover;
 						border: 3px solid #fff;
@@ -427,6 +427,8 @@
 					inset: 0;
 					background-size: cover;
 					background-position: center;
+					background-repeat: no-repeat; /* qo‘shimcha */
+					pointer-events: none; /* qo‘shimcha */
 					opacity: 0;
 					transition: opacity 0.8s ease;
 					will-change: opacity;
@@ -530,6 +532,7 @@
 				.pale__meta {
 					display: flex;
 					align-items: center;
+					justify-content: space-between;
 
 					margin-top: auto;
 					/* eng pastga tushirish */
@@ -549,8 +552,10 @@
 						display: inline-flex;
 						align-items: center;
 						justify-content: center;
+						border: none;
+						cursor: pointer;
 
-						width: 28px;
+						width: 45px;
 						height: 20px;
 
 						border-radius: 999px;
@@ -558,7 +563,7 @@
 						color: #fff;
 
 						svg {
-							width: 12px;
+							width: 22px;
 							height: 12px;
 						}
 					}

@@ -1,4 +1,4 @@
-'use client';
+import { useRouter } from 'next/router';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -8,45 +8,92 @@ import { useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_COMMENTS_SUMMARY } from '../../../apollo/user/query';
 
-// 1) API bazaviy URL (.env ichidan)
 const apiBase = (process.env.REACT_APP_API_URL || '').replace(/\/+$/, '');
 
-// 2) URL helper – to‘liq yoki nisbiy yo‘lni tekshiradi
 function resolveUrl(path?: string | null) {
   if (!path) return '';
-  if (/^https?:\/\//i.test(path)) return path; // allaqachon to‘liq URL
+  if (/^https?:\/\//i.test(path)) return path;
   const rel = String(path).replace(/^\/+/, '');
   return apiBase ? `${apiBase}/${rel}` : `/${rel}`;
 }
+function encodeQuotesOnly(obj: any) {
+  return JSON.stringify(obj).replace(/"/g, '%22');
+}
 
 const HeroSections = () => {
-  const { data, loading, error } = useQuery(GET_COMMENTS_SUMMARY, {
-    fetchPolicy: 'cache-and-network',
-  });
-
+  const router = useRouter();
   const darkCardRef = useRef<HTMLDivElement | null>(null);
-
+  
+  // Dark card background image rotation
   useEffect(() => {
     const root = darkCardRef.current;
     if (!root) return;
 
     const slides = Array.from(root.querySelectorAll<HTMLDivElement>('.card-bg'));
-    if (slides.length < 2) return;
+    if (slides.length === 0) return;
 
-    let i = 0;
-    const tick = () => {
-      const curr = slides[i];
-      const next = slides[(i + 1) % slides.length];
-      curr.classList.remove('is-visible');
-      next.classList.add('is-visible');
-      i = (i + 1) % slides.length;
-    };
+    // 1) keyingi paintda start holat
+    const raf = requestAnimationFrame(() => {
+      slides.forEach((s, idx) => s.classList.toggle('is-visible', idx === 0));
+    });
 
-    const timer = setInterval(tick, 4000);
-    return () => clearInterval(timer);
+    // 2) 1 tadan ko‘p bo‘lsa aylantiramiz
+    if (slides.length > 1) {
+      let i = 0;
+      const tick = () => {
+        const curr = slides[i];
+        const next = slides[(i + 1) % slides.length];
+         console.log('tick', i, curr, next);
+        curr?.classList.remove('is-visible');
+        next?.classList.add('is-visible');
+        i = (i + 1) % slides.length;
+      };
+      const timer = window.setInterval(tick, 4000);
+      return () => {
+        cancelAnimationFrame(raf);
+        window.clearInterval(timer);
+      };
+    }
+
+    // faqat 1 ta bo'lsa
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Backenddan kelayotgan ma’lumotlar
+  // MORE DETAILS → product sahifasini NECKLACE+RING bilan ochish
+  const handleMoreDetails = () => {
+    const input = {
+      page: 1,
+      limit: 9,
+      sort: 'createdAt',
+      direction: 'DESC',
+      search: {
+        pricesRange: { start: 0, end: 2000000 },
+        typeList: ['RING', 'NECKLACE'],
+      },
+    };
+    router.push(`/product?input=${encodeQuotesOnly(input)}`);
+  };
+
+  // WATCHES belgisi → faqat WATCH filtri bilan ochish
+  const handleSeeWatches = () => {
+    const input = {
+      page: 1,
+      limit: 9,
+      sort: 'createdAt',
+      direction: 'DESC',
+      search: {
+        pricesRange: { start: 0, end: 2000000 },
+        typeList: ['WATCH'],
+      },
+    };
+    router.push(`/product?input=${encodeQuotesOnly(input)}`);
+  };
+
+  // Kommentlar
+  const { data, loading, error } = useQuery(GET_COMMENTS_SUMMARY, {
+    fetchPolicy: 'cache-and-network',
+  });
+
   const summary = data?.commentsSummary;
   const total = summary?.total ?? 0;
   const recentCommenters = summary?.recentCommenters ?? [];
@@ -61,8 +108,8 @@ const HeroSections = () => {
           {/* Title */}
           <Grid item xs={12} md={7}>
             <h1 className="hero__title">
-              VIRA COUPLE <span className="hero__gradA">RINGS</span> &{' '}
-              <span className="hero__gradB">DIAMONDS</span> ARE THE
+              VIRA COUPLE <span className="hero__gradA">RINGS</span> & <span className="hero__gradB">DIAMONDS</span> ARE
+              THE
               <br /> NEW COLLECTIONS
             </h1>
           </Grid>
@@ -93,8 +140,7 @@ const HeroSections = () => {
                       src={src || '/img/profile/defaultUser.svg'}
                       alt="user avatar"
                       onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          '/img/profile/defaultUser.svg';
+                        (e.currentTarget as HTMLImageElement).src = '/img/profile/defaultUser.svg';
                       }}
                     />
                   );
@@ -104,55 +150,53 @@ const HeroSections = () => {
 
               <div className="card__headline">
                 <span className="star">⭐</span>
-                <span className="card__headline-text">
-                  {total.toLocaleString()} COMMENTS
-                </span>
+                <span className="card__headline-text">{total.toLocaleString()} COMMENTS</span>
               </div>
 
               <h3 className="card__title">What People Say About Our Jewelry</h3>
 
               <p className="card__text">
-                Read the voices of our community. Thousands of comments sharing
-                their experience and love for our collections.
+                Read the voices of our community. Thousands of comments sharing their experience and love for our
+                collections.
               </p>
             </div>
           </Grid>
 
           {/* Dark banner (auto-rotate bg) */}
           <Grid item xs={12} md={5}>
-								<Box className="card card--dark" ref={darkCardRef}>
-									{/* background layers */}
-									{['/img/collections/1.jpg', '/img/collections/2.jpg'].map((src, i) => (
-										<div
-											key={src}
-											className={`card-bg ${i === 0 ? 'is-visible' : ''}`}
-											data-index={i}
-											style={{ backgroundImage: `url('${src}')` }}
-											aria-hidden="true"
-										/>
-									))}
-									{/* gradient overlay */}
-									<div className="card-overlay" />
-		  
-									<p className="card__kicker">SPECIAL EDITIONS</p>
-									<h3 className="card__dark-title">
-										NECKLACES &<br /> RINGS
-									</h3>
-									<p className="card__dark-text">
-										Embrace the unseen magic of uniqueness. Where elegance finds extraordinary.
-									</p>
-									<Button variant="contained" className="card__dark-btn">
-										MORE DETAILS
-									</Button>
-								</Box>
-							</Grid>
+            <Box className="card card--dark" ref={darkCardRef}>
+              {/* background layers */}
+              {['/img/collections/1.jpg', '/img/collections/2.jpg'].map((src, i) => (
+                <div
+                  key={src}
+                  className={`card-bg ${i === 0 ? 'is-visible' : ''}`}
+                  data-index={i}
+                  style={{ backgroundImage: `url('${src}')` }}
+                  aria-hidden="true"
+                />
+              ))}
+              {/* gradient overlay */}
+              <div className="card-overlay" />
+
+              <p className="card__kicker">SPECIAL EDITIONS</p>
+              <h3 className="card__dark-title">
+                NECKLACES &<br /> RINGS
+              </h3>
+              <p className="card__dark-text">
+                Embrace the unseen magic of uniqueness. Where elegance finds extraordinary.
+              </p>
+              <Button variant="contained" className="card__dark-btn" onClick={handleMoreDetails}>
+                MORE DETAILS
+              </Button>
+            </Box>
+          </Grid>
 
           {/* Pale product */}
           <Grid item xs={12} md={3}>
             <Box className="card card--pale">
               <div className="pale__meta">
-                <h4>GOLD BANGLES</h4>
-                <button className="tiny-badge" aria-label="See more">
+                <h4>WATCHES</h4>
+                <button type="button" className="tiny-badge" aria-label="See more" onClick={handleSeeWatches}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="12"

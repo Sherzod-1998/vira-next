@@ -226,32 +226,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		[searchFilter],
 	);
 
-	const productSquareHandler = useCallback(
-		async (e: any, type: string) => {
-			const value = e.target.value;
-
-			if (type == 'start') {
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						// @ts-ignore
-						squaresRange: { ...searchFilter.search.squaresRange, start: parseInt(value) },
-					},
-				});
-			} else {
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						// @ts-ignore
-						squaresRange: { ...searchFilter.search.squaresRange, end: parseInt(value) },
-					},
-				});
-			}
-		},
-		[searchFilter],
-	);
 
 	const yearStartChangeHandler = async (event: any) => {
 		setYearCheck({ ...yearCheck, start: Number(event.target.value) });
@@ -329,12 +303,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Product type')} </span>
 							<ExpandMoreIcon />
 						</Box>
-						<Box className={`box ${openRooms ? 'on' : ''}`} onClick={roomStateChangeHandler}>
-							<span>
-								{searchFilter?.search?.roomsList ? `${searchFilter?.search?.roomsList[0]} rooms}` : t('Rooms')}
-							</span>
-							<ExpandMoreIcon />
-						</Box>
+						
 					</Stack>
 					<Stack className={'search-box-other'}>
 						<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
@@ -416,26 +385,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<Divider sx={{ mt: '30px', mb: '35px' }} />
 							<div className={'middle'}>
 								<div className={'row-box'}>
-									<div className={'box'}>
-										<span>bedrooms</span>
-										<div className={'inside'}>
-											<div
-												className={`room ${!searchFilter?.search?.bedsList ? 'active' : ''}`}
-												onClick={() => productBedSelectHandler(0)}
-											>
-												Any
-											</div>
-											{[1, 2, 3, 4, 5].map((bed: number) => (
-												<div
-													className={`room ${searchFilter?.search?.bedsList?.includes(bed) ? 'active' : ''}`}
-													onClick={() => productBedSelectHandler(bed)}
-													key={bed}
-												>
-													{bed == 0 ? 'Any' : bed}
-												</div>
-											))}
-										</div>
-									</div>
 									<div className={'box'}>
 										<span>options</span>
 										<div className={'inside'}>
