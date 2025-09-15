@@ -16,18 +16,14 @@
 				flex-direction: column;
 
 				span {
-					color: #181a20;
-					font-family: $font;
-					font-size: 34px;
-					font-style: normal;
+					color: rgba(39, 39, 39, 1);
+					font-family: Unbounded;
+					font-size: 30px;
 					font-weight: 500;
-					line-height: 150%;
-					letter-spacing: -0.646px;
-					text-transform: capitalize;
-
-					&.white {
-						color: #ffffff;
-					}
+					line-height: 36px;
+					letter-spacing: 0%;
+					text-align: left;
+					text-transform: uppercase;
 				}
 
 				p {
@@ -589,7 +585,7 @@
 		.trend-products {
 			padding: 108px 0px 76px;
 			width: 100%;
-			height: 697px;
+			height: auto;
 			display: flex;
 			flex-direction: row;
 
@@ -612,7 +608,7 @@
 
 					.trend-product-swiper {
 						width: 100%;
-						height: 400px;
+						height: 500px;
 						display: flex;
 						flex-direction: row;
 
@@ -625,146 +621,172 @@
 					}
 
 					.trend-card-box {
+						/* figma o'lchamlari */
+						--card-w: 301.73px;
+						--card-h: 425px;
+						--img-h: 301.15px;
+						--radius: 12px;
+						--border: 1px solid rgba(196, 196, 196, 0.71);
+						--shadow: 0px 1px 4px rgba(24, 26, 32, 0.07);
+						--accent: #8b5e3c; /* jigarrang ikon foni */
+
 						position: relative;
-						width: 300px;
-						height: 375px;
+						width: var(--card-w);
+						height: var(--card-h);
 						display: flex;
 						flex-direction: column;
 						transition: transform 0.3s;
 
 						&:hover {
-							opacity: 1;
 							transform: scale(1.05);
 						}
 
 						.card-img {
 							position: relative;
 							width: 100%;
-							height: 203px;
-							background-size: cover;
-							border-radius: 12px 12px 0px 0px;
+							height: var(--img-h);
+							background-color: #efefef;
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size: cover; /* real rasmlar to'liq tursin */
 							cursor: pointer;
+							border: var(--border);
+							border-bottom: none;
+							border-radius: var(--radius) var(--radius) 0 0;
 
-							div {
+							/* rasm-info orasida 1px chiziq */
+							&::after {
+								content: '';
 								position: absolute;
-								padding: 8px 12px;
+								left: 0;
+								right: 0;
+								bottom: -1px;
+								height: 1px;
+								background: rgba(196, 196, 196, 0.71);
+							}
+
+							.material {
+								position: absolute;
+								top: 12px;
 								left: 12px;
-								bottom: 12px;
+								padding: 6px 10px;
+								font-size: 14px;
+								line-height: 1.25;
+								color: #fff;
+								font-weight: 700;
+								background: rgba(146, 106, 84, 1); /* badge rangi */
 								border-radius: 6px;
-								background: #fff;
+								white-space: pre-line; /* Gold\nDiamond ko'rinishi */
+								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+								user-select: none;
+							}
+
+							.img-actions {
+								position: absolute;
+								top: 14px;
+								right: 12px;
+								display: flex;
+								flex-direction: column;
+								gap: 10px;
+								opacity: 0; /* desktop: hover’da ko‘rinadi */
+								transition: opacity 0.2s;
+							}
+
+							.img-action-row {
+								display: flex;
+								align-items: center;
+								gap: 6px;
+							}
+
+							.img-action {
+								width: 28px;
+								height: 28px;
+								background: var(--accent);
+								color: #fff;
+								border-radius: 50%;
+								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+								padding: 0;
+								svg {
+									font-size: 18px;
+								}
+								&:hover {
+									opacity: 0.9;
+								}
+							}
+
+							.img-count {
+								padding: 2px 6px;
+								border-radius: 10px;
+								background: rgba(255, 255, 255, 0.92);
 								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
+								font-size: 12px;
 								font-weight: 600;
-								line-height: normal;
+								line-height: 1;
+								min-width: 22px;
+								text-align: center;
+								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+								user-select: none;
+							}
+
+							&:hover {
+								.img-actions {
+									opacity: 1;
+								}
+							}
+						}
+
+						/* mobile (hover yo'q) — har doim ko'rinsin */
+						@media (hover: none) and (pointer: coarse) {
+							.card-img .img-actions {
+								opacity: 1;
 							}
 						}
 
 						.info {
+							flex: 1;
 							padding: 20px 22px 17px;
 							display: flex;
 							flex-direction: column;
 							box-sizing: border-box;
-							border-radius: 0px 0px 12px 12px;
-							border: 1px solid rgba(196, 196, 196, 0.71);
+							border-radius: 0 0 var(--radius) var(--radius);
+							border: var(--border);
 							border-top: none;
 							background: #fff;
-							box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+							box-shadow: var(--shadow);
 
 							.title {
-								overflow: hidden;
-								color: #181a20;
-								text-overflow: ellipsis;
-								white-space: nowrap;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-								text-transform: capitalize;
+								color: rgba(0, 0, 0, 1);
+
+								font-family: Unbounded;
+								font-size: 18px;
+								font-weight: 500;
+								line-height: 22px;
+								letter-spacing: 0%;
+								text-align: left;
+								text-transform: uppercase;
 								cursor: pointer;
 							}
 
+							.price {
+								margin-top: 8px;
+								display: inline-block;
+								font-weight: 700;
+								font-size: 14px;
+								color: #ffffff;
+								background: rgba(146, 106, 84, 1);
+								border-radius: 6px;
+								padding: 6px 10px;
+								width: fit-content;
+								user-select: none;
+							}
+
 							.desc {
-								margin-top: 5px;
+								margin-top: 6px;
 								overflow: hidden;
 								color: #717171;
-								font-family: $font;
 								font-size: 13px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: normal;
 								text-overflow: ellipsis;
 								white-space: nowrap;
-							}
-
-							.options {
-								margin-top: 15px;
-								display: flex;
-								flex-direction: row;
-								justify-content: space-between;
-
-								div {
-									display: flex;
-									flex-direction: row;
-
-									img {
-										margin-right: 5px;
-										width: 17px;
-										height: 17px;
-									}
-
-									span {
-										color: #181a20;
-										font-family: $font;
-										font-size: 13px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-									}
-								}
-							}
-
-							.bott {
-								display: flex;
-								flex-direction: row;
-								justify-content: space-between;
-								align-items: center;
-
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: normal;
-									text-transform: capitalize;
-								}
-
-								button {
-									margin-left: 7px;
-									width: 16px;
-									height: 16px;
-									box-sizing: border-box;
-								}
-
-								.view-like-box {
-									display: flex;
-									flex-direction: row;
-									gap: 7px;
-									align-items: center;
-
-									.view-cnt {
-										color: #717171;
-										font-family: $font;
-										font-size: 13px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-										text-overflow: ellipsis;
-									}
-								}
 							}
 						}
 					}
