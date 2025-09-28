@@ -794,6 +794,94 @@
 			}
 		}
 
+		/* ==== EXQUISITE SECTION ==== */
+		.exquisiteivesection {
+			width: 1900px;
+			height: 984.36px;
+			border-radius: 30px;
+			background: rgba(29, 29, 29, 1);
+
+			.top-content {
+				width: 1900px;
+				height: 577px;
+				border: 2px solid #eb6753; // qizil rangda chegara
+			}
+			/* ==== Stats bar (Stack bilan) ==== */
+			.bottom-content {
+				color: #fff;
+				padding: 36px 120px 42px;
+
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 60px;
+
+				.item {
+					position: relative;
+					text-align: center; /* markazlashtirish */
+					flex: 1 1 0;
+					min-width: 0;
+
+					&:not(:last-child)::after {
+						content: '';
+						position: absolute;
+						top: 50%; /* vertikal markaz */
+						transform: translateY(-50%);
+						right: 0; /* o‘ng chetidan chiqsin */
+						width: 2px; /* qalinroq */
+						height: 70%; /* item balandligining 70% ini egallasin */
+						background: #fff; /* oq rang */
+						opacity: 0.6; /* biroz shaffoflik */
+					}
+				}
+
+				.value {
+					font-size: 80px;
+					font-weight: 800;
+					letter-spacing: 1px;
+					line-height: 1;
+				}
+
+				.label {
+					margin-top: 8px;
+					font-size: 16px;
+					color: rgba(255, 255, 255, 0.7);
+					font-style: italic;
+				}
+
+				@media (max-width: 1200px) {
+					padding: 28px 40px;
+					flex-wrap: wrap;
+					gap: 30px;
+
+					.item {
+						flex: 0 0 50%;
+
+						&:not(:last-child)::after {
+							display: none; /* mobil va planshetda divider chiqmasin */
+						}
+					}
+				}
+
+				@media (max-width: 768px) {
+					padding: 24px;
+					gap: 22px;
+
+					.item {
+						flex: 0 0 100%;
+					}
+
+					.value {
+						font-size: 50px;
+					}
+
+					.label {
+						font-size: 14px;
+					}
+				}
+			}
+		}
+
 		.popular-products {
 			padding: 132px 0px 94px;
 			width: 100%;

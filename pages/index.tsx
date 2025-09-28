@@ -11,6 +11,7 @@ import TopProducts from '../libs/components/homepage/TopProducts';
 import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import HeroSections from '../libs/components/homepage/HeroSections';
+import ExquisiteJewelry from '../libs/components/homepage/ExquisitiveJewelry';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -33,8 +34,9 @@ const Home: NextPage = () => {
 				<GorgeousCollection />
 				<HeroSections/>
 				<TrendProducts />
-				<PopularProducts />
-				<TopProducts />
+				<ExquisiteJewelry />
+				{/* <PopularProducts /> */}
+				{/* <TopProducts /> */}
 				<TopSellers />
 				<CommunityBoards />
 				
