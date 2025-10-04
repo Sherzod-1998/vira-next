@@ -138,21 +138,38 @@
 			height: 597px;
 			display: flex;
 			flex-direction: row;
+			padding-top: 40px;
+			padding-bottom: 40px;
 
 			.gorgeous_collections {
 				width: 1300px;
-				height: 444px;
+				min-height: 444px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 100%;
+				padding-top: 30px; /* ⬆️ tepada biroz joy */
+				padding-bottom: 30px; /* ⬇️ pastda biroz joy */
 
 				.gorgeous_collection_inner {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					height: 100%;
+					gap: 0;
+
 					.left {
 						display: flex;
 						flex-direction: column;
+						align-items: flex-start;
+						margin-top: 0;
+						padding-left: 10px; /* ozgina ichkariga */
+						margin-bottom: auto;
 
 						span {
 							color: #181a20;
-							font-family: $font;
+							font-family: Unbounded, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 							font-size: 34px;
-							font-style: normal;
 							font-weight: 500;
 							line-height: 150%;
 							letter-spacing: -0.646px;
@@ -165,32 +182,58 @@
 					}
 				}
 
-				.top-text {
-					font-family: Unbounded;
-					font-size: 30px;
-					font-weight: 500;
-					text-align: left;
-					text-transform: capitalize;
-				}
-
 				.bottom_content {
-					height: 304px;
+					position: relative;
 					width: 100%;
+					margin-top: auto;
+					padding-bottom: 10px; /* ⬇️ biroz joy */
+					padding-top: 10px; /* ⬆️ chiroyli balandlik uchun */
+
+					.nav-btn {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						z-index: 3;
+						width: 44px;
+						height: 44px;
+						border-radius: 50%;
+						border: none;
+						background: #181a20;
+						color: #fff;
+						font-size: 22px;
+						display: grid;
+						place-items: center;
+						cursor: pointer;
+						transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+
+						&.prev {
+							left: -56px;
+						}
+						&.next {
+							right: -56px;
+						}
+
+						&:hover {
+							transform: translateY(-50%) scale(1.05);
+						}
+						&:disabled {
+							opacity: 0.35;
+							cursor: not-allowed;
+						}
+					}
 
 					.bottom_content_stack {
 						.circle-container {
 							position: relative;
-							/* markaziy chiziq uchun */
-							display: flex;
-							gap: 20px;
-							justify-content: space-around;
-							align-items: center;
+							display: grid;
+							grid-template-columns: repeat(5, 1fr);
+							gap: 10px;
+							justify-items: center;
 							width: 100%;
-							flex-wrap: nowrap;
-							/* bitta qatorda tursin */
-							overflow: visible;
+							
+							
+							z-index: 1;
 
-							/* Markaziy chiziq */
 							&::before {
 								content: '';
 								position: absolute;
@@ -199,60 +242,153 @@
 								top: 50%;
 								transform: translateY(-50%);
 								height: 4px;
-								background: hsl(0, 74%, 9%);
+								background: black;
 								border-radius: 9999px;
 								z-index: 0;
 								pointer-events: none;
 							}
 
 							.circle-img-wrapper {
+								/* Wrapper o‘lchami qat’iy — layout siljimaydi */
+								
+								height: 200px;
+								
+								margin: 0 auto; /* 5 ustun ichida markazda tursin */
 								position: relative;
 								display: flex;
 								flex-direction: column;
 								align-items: center;
 								z-index: 1;
-								/* chiziq ustida */
-
-								.circle-img-label {
-									margin-top: 10px;
-									font-weight: bold;
-									text-transform: uppercase;
-									text-align: center;
-									transition: all 0.3s ease;
-									pointer-events: none;
-									isolation: isolate;
-									overflow: visible;
-								}
-
-								&:hover .circle-img-label {
-									position: absolute;
-									top: 50%;
-									left: 50%;
-									transform: translate(-50%, -50%);
-									margin-top: 0;
-									background: rgba(0, 0, 0, 0.5);
-									color: #fff;
-									padding: 5px 10px;
-									border-radius: 8px;
-								}
+								/* rasm katta bo‘lsa ham ko‘rinsin */
+								overflow: visible;
 							}
 
-							.circle-img {
+							.circle-figure {
 								width: 177px;
 								height: 177px;
 								border-radius: 50%;
+								position: relative;
+								overflow: visible; /* zoom chiqsin */
+								isolation: isolate; /* stacking context */
+							}
+
+							.circle-img {
+								position: absolute;
+								inset: 0; /* figure ichida to‘liq joylashadi */
+								width: 100%;
+								height: 100%;
+								border-radius: 50%;
 								object-fit: cover;
 								cursor: pointer;
-								transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+								box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+								transform: scale(1);
+								transform-origin: center center;
+								transition: transform 0.3s ease, box-shadow 0.2s ease;
+								will-change: transform;
 								z-index: 1;
+							}
 
-								&:hover {
-									transform: scale(1.2);
-									width: 304px;
-									height: 304px;
-								}
+							/* Hover’da faqat scale — wrapper o‘lchami o‘zgarmaydi */
+							.circle-figure:hover .circle-img {
+								transform: scale(1.56); /* ~276/177 ≈ 1.56 */
+								box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+							}
+
+							.circle-img-label {
+								margin-top: 10px;
+								font-weight: 700;
+								text-transform: uppercase;
+								text-align: center;
+								font-size: 16px;
+								letter-spacing: 0.06em;
+								color: #181a20;
+								transition: all 0.3s ease;
+								pointer-events: none;
+								position: relative;
+								z-index: 2; /* rasm ustida ko‘rinsin */
+							}
+
+							/* Hover’da labelni markazga olib chiqish (ixtiyoriy) */
+							.circle-figure:hover + .circle-img-label {
+								position: absolute;
+								top: 50%;
+								left: 50%;
+								transform: translate(-50%, -50%);
+								margin-top: 0;
+								background: rgba(0, 0, 0, 0.5);
+								color: #fff;
+								padding: 6px 10px;
+								border-radius: 8px;
+								font-weight: 600;
+								z-index: 3;
+								white-space: nowrap;
 							}
 						}
+					}
+
+					.pager-dots {
+						margin-top: 14px;
+						display: flex;
+						justify-content: center;
+						gap: 10px;
+
+						.dot {
+							width: 8px;
+							height: 8px;
+							border-radius: 50%;
+							border: none;
+							background: #cfcfcf;
+							cursor: pointer;
+							transition: transform 0.2s ease, background 0.2s ease;
+
+							&:hover {
+								transform: scale(1.15);
+							}
+							&.is-active {
+								background: #181a20;
+							}
+						}
+					}
+				}
+			}
+
+			/* Responsiv (ixtiyoriy) */
+			@media (max-width: 1400px) {
+				.gorgeous_collections {
+					width: 100%;
+					padding: 0 32px;
+				}
+				.bottom_content .nav-btn.prev {
+					left: 0;
+				}
+				.bottom_content .nav-btn.next {
+					right: 0;
+				}
+			}
+
+			@media (max-width: 900px) {
+				.bottom_content_stack .circle-container {
+					grid-template-columns: repeat(3, 1fr);
+					gap: 16px;
+
+					.circle-img-wrapper .circle-img {
+						width: 150px;
+						height: 150px;
+					}
+				}
+			}
+
+			@media (max-width: 600px) {
+				height: auto;
+				padding-bottom: 32px;
+
+				.bottom_content_stack .circle-container {
+					grid-template-columns: repeat(2, 1fr);
+					gap: 14px;
+
+					.circle-img-wrapper .circle-img {
+						width: 130px;
+						height: 130px;
 					}
 				}
 			}
@@ -305,17 +441,17 @@
 			.hero__cta {
 				border-radius: 999px !important;
 				padding: 12px 22px !important;
-				border-color: #d2d6dc !important;
-				color: #111 !important;
+				border-color: red !important;
+				color: red !important;
 				text-transform: none !important;
 				font-weight: 700 !important;
 				background: #fff !important;
 				transition: all 0.2s ease !important;
 
 				&:hover {
-					background: #111 !important;
+					background: red !important;
 					color: #fff !important;
-					border-color: #111 !important;
+					border-color: red !important;
 				}
 			}
 
@@ -359,7 +495,7 @@
 
 					.pill {
 						margin-left: -6px;
-						background: #d2a087;
+						background: red;
 						color: #fff;
 						font-weight: 700;
 						font-size: 12px;
@@ -479,8 +615,8 @@
 
 				.card__dark-btn {
 					margin-top: 14px;
-					background: rgba(146, 106, 84, 1) !important;
-					color: #fff !important;
+					background: red;
+					color: white !important;
 					text-transform: none !important;
 					font-weight: 800 !important;
 					border-radius: 999px !important;
@@ -488,7 +624,7 @@
 					width: fit-content !important;
 
 					&:hover {
-						background: #b68466 !important;
+						background: #ff5e57;
 					}
 				}
 
@@ -555,7 +691,7 @@
 						height: 20px;
 
 						border-radius: 999px;
-						background: #a06a4e; /* sizning dizayndagi jigarrang */
+						background: red; /* sizning dizayndagi jigarrang */
 						color: #fff;
 
 						svg {
@@ -668,7 +804,7 @@
 							background: red;
 							color: #ffffff;
 							font-size: 11px;
-							font-weight: 600;
+							font-weight: 700;
 							border-radius: 4px;
 							text-transform: uppercase;
 							z-index: 2;
@@ -681,8 +817,9 @@
 							flex: 1;
 
 							.product-category {
-								font-size: 12px;
-								color: #a0a0a0;
+								font-weight: bold;
+								font-size: 14px;
+								color: rgb(255, 132, 0);
 								text-transform: uppercase;
 								letter-spacing: 0.05em;
 								margin-bottom: 4px;
@@ -707,14 +844,14 @@
 									margin-right: 6px;
 
 									.star {
-										color: red;
+										color: rgb(255, 132, 0);
 										font-size: 17px;
 										line-height: 1;
 									}
 								}
 
 								.review-count {
-									font-size: 12px;
+									font-size: 16px;
 									color: #a0a0a0;
 								}
 							}
@@ -732,86 +869,64 @@
 									color: #31302c;
 									letter-spacing: -0.02em;
 								}
-
-								.add-to-cart {
-									background: #e9e9e9;
-									color: #31302c;
-									border: none;
-									border-radius: 50%;
-									width: 36px;
-									height: 36px;
-									display: flex;
-									align-items: center;
-									justify-content: center;
-									cursor: pointer;
-									transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-									opacity: 0.9;
-
-									&:hover {
-										background: #31302c;
-										color: #ffffff;
-									}
-									&:active {
-										transform: scale(0.95);
-									}
-								}
 							}
 
 							/* ↓ Like & views — eng pastda, price-row’dan keyin */
 							.meta {
-								display: flex;
-								align-items: center;
-								gap: 10px;
-								margin-top: 10px; /* price-row’dan keyin ozgina bo‘shliq */
+								margin-top: 12px;
 
+								/* uzun, yassi, full-width pill */
 								.meta-pill {
+									width: 100%;
+									height: 44px;
+									border-radius: 9999px;
+									background: #f3f3f3;
+									border: 1px solid #e3e3e3;
 									display: inline-flex;
 									align-items: center;
-									gap: 6px;
-									padding: 6px 10px;
-									background: #ffffff;
-									border: 1px solid #eee;
-									border-radius: 999px;
-									box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+									justify-content: center;
+									gap: 10px;
+									cursor: pointer;
 									user-select: none;
-									transition: all 0.2s ease;
+									transition: background 0.25s ease, border-color 0.25s ease, transform 0.08s ease;
 
 									.meta-icon {
-										color: #31302c;
-									} /* default qora */
-									.meta-count {
-										font-size: 12px;
+										color: #31302c; /* qora */
+										transition: color 0.2s ease;
+									}
+									.meta-text {
+										font-size: 13px;
 										font-weight: 600;
 										color: #31302c;
-										line-height: 1;
+										letter-spacing: 0.02em;
+									}
+									.meta-count {
+										font-size: 13px;
+										font-weight: 700;
+										color: #31302c;
 									}
 
-									&.is-like.is-active .meta-icon {
-										color: #e74c3c;
-									} /* liked holatda qizil */
-
 									&:hover {
-										transform: translateY(-1px);
-										box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+										background: #ececec;
+										border-color: #d8d8d8;
+									}
+									&:active {
+										transform: translateY(1px);
+									}
+
+									/* bosilganda qizil bo‘lsin */
+									&.is-active {
+										background: #ffe9e7;
+										border-color: #ffc9c4;
+
+										.meta-icon,
+										.meta-text,
+										.meta-count {
+											color: #e74c3c; /* qizil */
+										}
 									}
 								}
 							}
-						}
-
-						.product-quick-view {
-							position: absolute;
-							bottom: 0;
-							left: 0;
-							right: 0;
-							background: rgba(49, 48, 44, 0.9);
-							color: #ffffff;
-							text-align: center;
-							padding: 10px;
-							font-weight: 500;
-							font-size: 13px;
-							transform: translateY(100%);
-							transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-							cursor: pointer;
 						}
 
 						@media (max-width: 600px) {

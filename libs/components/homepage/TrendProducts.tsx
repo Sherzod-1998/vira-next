@@ -102,7 +102,6 @@ const TrendProducts = (props: TrendProductsProps) => {
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
 							<span>Trend Products</span>
-							<p>Trend is based on likes</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
