@@ -619,174 +619,214 @@
 							margin: 10px 0 0 10px;
 						}
 					}
+					/* styles/components/_product-card.scss */
 
-					.trend-card-box {
-						/* figma o'lchamlari */
-						--card-w: 301.73px;
-						--card-h: 425px;
-						--img-h: 301.15px;
-						--radius: 12px;
-						--border: 1px solid rgba(196, 196, 196, 0.71);
-						--shadow: 0px 1px 4px rgba(24, 26, 32, 0.07);
-						--accent: #8b5e3c; /* jigarrang ikon foni */
-
+					.product-card {
+						background: #ffffff;
+						border: 2px solid #000000;
+						border-radius: 12px;
+						overflow: hidden;
+						box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+						transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 						position: relative;
-						width: var(--card-w);
-						height: var(--card-h);
+						height: 375px;
+						width: 300px;
 						display: flex;
 						flex-direction: column;
-						transition: transform 0.3s;
 
 						&:hover {
-							transform: scale(1.05);
-						}
-
-						.card-img {
-							position: relative;
-							width: 100%;
-							height: var(--img-h);
-							background-color: #efefef;
-							background-repeat: no-repeat;
-							background-position: center;
-							background-size: cover; /* real rasmlar to'liq tursin */
-							cursor: pointer;
-							border: var(--border);
-							border-bottom: none;
-							border-radius: var(--radius) var(--radius) 0 0;
-
-							/* rasm-info orasida 1px chiziq */
-							&::after {
-								content: '';
-								position: absolute;
-								left: 0;
-								right: 0;
-								bottom: -1px;
-								height: 1px;
-								background: rgba(196, 196, 196, 0.71);
-							}
-
-							.material {
-								position: absolute;
-								top: 12px;
-								left: 12px;
-								padding: 6px 10px;
-								font-size: 14px;
-								line-height: 1.25;
-								color: #fff;
-								font-weight: 700;
-								background: rgba(146, 106, 84, 1); /* badge rangi */
-								border-radius: 6px;
-								white-space: pre-line; /* Gold\nDiamond ko'rinishi */
-								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-								user-select: none;
-							}
-
-							.img-actions {
-								position: absolute;
-								top: 14px;
-								right: 12px;
-								display: flex;
-								flex-direction: column;
-								gap: 10px;
-								opacity: 0; /* desktop: hover’da ko‘rinadi */
-								transition: opacity 0.2s;
-							}
-
-							.img-action-row {
-								display: flex;
-								align-items: center;
-								gap: 6px;
-							}
-
-							.img-action {
-								width: 28px;
-								height: 28px;
-								background: var(--accent);
-								color: #fff;
-								border-radius: 50%;
-								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-								padding: 0;
-								svg {
-									font-size: 18px;
-								}
-								&:hover {
-									opacity: 0.9;
-								}
-							}
-
-							.img-count {
-								padding: 2px 6px;
-								border-radius: 10px;
-								background: rgba(255, 255, 255, 0.92);
-								color: #181a20;
-								font-size: 12px;
-								font-weight: 600;
-								line-height: 1;
-								min-width: 22px;
-								text-align: center;
-								box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-								user-select: none;
-							}
-
-							&:hover {
-								.img-actions {
-									opacity: 1;
-								}
-							}
-						}
-
-						/* mobile (hover yo'q) — har doim ko'rinsin */
-						@media (hover: none) and (pointer: coarse) {
-							.card-img .img-actions {
+							transform: translateY(-4px);
+							box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+							.product-image::after {
 								opacity: 1;
 							}
 						}
 
-						.info {
-							flex: 1;
-							padding: 20px 22px 17px;
+						.product-image {
+							height: 200px;
+							width: 100%;
+							background-size: cover;
+							background-position: center;
+							position: relative;
+							overflow: hidden;
+
+							&::after {
+								content: '';
+								position: absolute;
+								inset: 0;
+								background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.1) 100%);
+								opacity: 0;
+								transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+							}
+						}
+
+						.product-label {
+							position: absolute;
+							top: 12px;
+							left: 12px;
+							padding: 4px 10px;
+							background: red;
+							color: #ffffff;
+							font-size: 11px;
+							font-weight: 600;
+							border-radius: 4px;
+							text-transform: uppercase;
+							z-index: 2;
+						}
+
+						.product-info {
+							padding: 16px;
 							display: flex;
 							flex-direction: column;
-							box-sizing: border-box;
-							border-radius: 0 0 var(--radius) var(--radius);
-							border: var(--border);
-							border-top: none;
-							background: #fff;
-							box-shadow: var(--shadow);
+							flex: 1;
 
-							.title {
-								color: rgba(0, 0, 0, 1);
-
-								font-family: Unbounded;
-								font-size: 18px;
-								font-weight: 500;
-								line-height: 22px;
-								letter-spacing: 0%;
-								text-align: left;
+							.product-category {
+								font-size: 12px;
+								color: #a0a0a0;
 								text-transform: uppercase;
-								cursor: pointer;
+								letter-spacing: 0.05em;
+								margin-bottom: 4px;
 							}
 
-							.price {
-								margin-top: 8px;
-								display: inline-block;
-								font-weight: 700;
-								font-size: 14px;
-								color: #ffffff;
-								background: rgba(146, 106, 84, 1);
-								border-radius: 6px;
-								padding: 6px 10px;
-								width: fit-content;
-								user-select: none;
+							.product-name {
+								font-size: 16px;
+								font-weight: 600;
+								color: #31302c;
+								margin-bottom: 6px;
+								line-height: 1.3;
+								letter-spacing: -0.01em;
 							}
 
-							.desc {
-								margin-top: 6px;
-								overflow: hidden;
-								color: #717171;
-								font-size: 13px;
-								text-overflow: ellipsis;
-								white-space: nowrap;
+							.rating {
+								display: flex;
+								align-items: center;
+								margin-bottom: 8px;
+
+								.stars {
+									display: flex;
+									margin-right: 6px;
+
+									.star {
+										color: red;
+										font-size: 17px;
+										line-height: 1;
+									}
+								}
+
+								.review-count {
+									font-size: 12px;
+									color: #a0a0a0;
+								}
+							}
+
+							.price-row {
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								margin-top: auto; /* narx qatori pastga yopishadi */
+								position: relative;
+
+								.price {
+									font-weight: 700;
+									font-size: 18px;
+									color: #31302c;
+									letter-spacing: -0.02em;
+								}
+
+								.add-to-cart {
+									background: #e9e9e9;
+									color: #31302c;
+									border: none;
+									border-radius: 50%;
+									width: 36px;
+									height: 36px;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									cursor: pointer;
+									transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+									opacity: 0.9;
+
+									&:hover {
+										background: #31302c;
+										color: #ffffff;
+									}
+									&:active {
+										transform: scale(0.95);
+									}
+								}
+							}
+
+							/* ↓ Like & views — eng pastda, price-row’dan keyin */
+							.meta {
+								display: flex;
+								align-items: center;
+								gap: 10px;
+								margin-top: 10px; /* price-row’dan keyin ozgina bo‘shliq */
+
+								.meta-pill {
+									display: inline-flex;
+									align-items: center;
+									gap: 6px;
+									padding: 6px 10px;
+									background: #ffffff;
+									border: 1px solid #eee;
+									border-radius: 999px;
+									box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+									user-select: none;
+									transition: all 0.2s ease;
+
+									.meta-icon {
+										color: #31302c;
+									} /* default qora */
+									.meta-count {
+										font-size: 12px;
+										font-weight: 600;
+										color: #31302c;
+										line-height: 1;
+									}
+
+									&.is-like.is-active .meta-icon {
+										color: #e74c3c;
+									} /* liked holatda qizil */
+
+									&:hover {
+										transform: translateY(-1px);
+										box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+									}
+								}
+							}
+						}
+
+						.product-quick-view {
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							right: 0;
+							background: rgba(49, 48, 44, 0.9);
+							color: #ffffff;
+							text-align: center;
+							padding: 10px;
+							font-weight: 500;
+							font-size: 13px;
+							transform: translateY(100%);
+							transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+							cursor: pointer;
+						}
+
+						@media (max-width: 600px) {
+							height: 320px;
+							width: 100%;
+							.product-image {
+								height: 170px;
+							}
+							.product-info {
+								.product-name {
+									font-size: 14px;
+								}
+								.price-row .price {
+									font-size: 16px;
+								}
 							}
 						}
 					}
@@ -804,12 +844,197 @@
 			.top-content {
 				width: 1900px;
 				height: 577px;
-				border: 2px solid #eb6753; // qizil rangda chegara
+
+				.left-card {
+					width: 536px;
+					height: 577px;
+
+					border-radius: 20px;
+					padding: 26px;
+					position: relative;
+					overflow: hidden;
+					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+					.badge {
+						width: 442px;
+						display: inline-block; /* background matn bilan chiqadi */
+						padding: 12px 24px; /* matndan tashqarida joy */
+						transform: rotate(-7.45deg);
+						color: #fff;
+						font-family: 'Unbounded', sans-serif;
+						font-size: 30px;
+						font-weight: 700;
+						text-transform: uppercase;
+						background: rgba(146, 106, 84, 1); /* jigarrang */
+						border-radius: 20px; /* yumaloqlik */
+
+						h1 {
+							color: rgba(255, 255, 255, 1);
+							font-family: Unbounded;
+							font-size: 30px;
+							font-weight: 700;
+							line-height: 25px;
+							letter-spacing: 0%;
+							text-align: center;
+							text-transform: uppercase;
+						}
+					}
+
+					.left {
+						background-image: url('/img/exquisitive-jewelry/uniqueness.png');
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size: cover;
+						width: 100%;
+						height: 100%;
+						border-radius: 14px;
+						overflow: hidden;
+						position: relative;
+
+						.model {
+							position: absolute;
+							bottom: 0; /* pastga yopishtirildi */
+							right: 0; /* o‘ng chetidan boshlaydi */
+							width: 92%; /* kerakli nisbat */
+							max-width: 420px;
+							height: auto;
+							display: block;
+							filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.35));
+						}
+					}
+				}
+				.center {
+					width: 683px;
+					height: 577px;
+					color: #fff;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: flex-start;
+
+					.kicker {
+						font-size: 16px;
+						text-transform: uppercase;
+						color: rgba(255, 255, 255, 0.6);
+						letter-spacing: 4px;
+						margin-bottom: 18px;
+					}
+
+					.title {
+						color: rgba(222, 222, 222, 1);
+						font-size: 32px;
+						font-weight: 800;
+						letter-spacing: 1px;
+						line-height: 1.4;
+						margin-bottom: 22px;
+					}
+
+					.desc {
+						max-width: 620px;
+						font-size: 15px;
+						line-height: 1.8;
+						margin-bottom: 34px;
+						color: rgba(255, 255, 255, 0.7);
+					}
+
+					.cta-row {
+						display: flex;
+						align-items: center;
+						gap: 24px;
+
+						.btn {
+							padding: 14px 26px;
+							border-radius: 999px;
+							border: 2px solid #fff;
+							background: transparent;
+							color: #fff;
+							font-weight: 700;
+							letter-spacing: 0.5px;
+							cursor: pointer;
+							transition: all 0.25s;
+
+							&:hover {
+								background: #fff;
+								color: #1d1d1d;
+							}
+						}
+
+						.phone {
+							display: flex;
+							align-items: center;
+							gap: 14px;
+
+							.phone-icon {
+								width: 44px;
+								height: 44px;
+								border-radius: 50%;
+								background: #f0c3a9;
+								display: grid;
+								place-items: center;
+								overflow: hidden;
+
+								img {
+									width: 20px;
+									height: 20px;
+								}
+							}
+
+							.phone-text {
+								span {
+									display: block;
+									font-size: 12px;
+									color: rgba(255, 255, 255, 0.6);
+								}
+								strong {
+									font-size: 16px;
+								}
+							}
+						}
+					}
+				}
+				.right {
+					position: relative;
+					width: 460px;
+					height: 577px;
+					display: flex;
+					align-items: flex-start;
+					justify-content: center;
+
+					/* ichki arka — rasm konteyneri */
+					.arch {
+						position: absolute;
+
+						width: 320px; /* kerak bo‘lsa 420/440 qilib kengaytiring */
+						height: 100%; /* balandlikni 100% qilib oling */
+						overflow: hidden;
+
+						/* yuqori yarim doira + pastda yumaloq burchaklar */
+						border-radius: 240px 240px 12px 12px / 240px 240px 12px 12px;
+						background: #111; /* rasm yuklanmaganda fallback */
+
+						/* arkaning o‘z atrofi bo‘ylab nozik oltin chiziq, past tomoni yo‘q */
+						&::after {
+							content: '';
+							position: absolute;
+							inset: 0;
+							border-bottom: none;
+							border-radius: inherit;
+							pointer-events: none;
+						}
+
+						.photo {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+							object-position: center;
+							display: block;
+						}
+					}
+				}
 			}
-			/* ==== Stats bar (Stack bilan) ==== */
 			.bottom-content {
 				color: #fff;
-				padding: 36px 120px 42px;
+				padding: 36px 0px 42px;
 
 				display: flex;
 				align-items: center;

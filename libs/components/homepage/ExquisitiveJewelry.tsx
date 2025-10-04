@@ -1,5 +1,7 @@
 import { Stack } from '@mui/material';
 import { Box, Container, Grid, Typography } from '@mui/material';
+import PhoneIcon from '@mui/icons-material/Phone';
+import router from 'next/router';
 
 type Stat = { value: string; label: string };
 
@@ -15,13 +17,78 @@ export default function ExquisiteSection() {
 		<Stack
 			className="exquisiteivesection"
 			direction="column"
-			spacing={2}
-			justifyContent="space-around"
-			alignItems="center"
+			
+			justifyContent="center"
 			sx={{ my: 4 }}
 		>
-			<Stack className="top-content">1</Stack>
-			<Stack className="bottom-content" direction="row" alignItems="space-around" justifyContent="space-around" sx={{ width: '100%' }}>
+			<Stack
+				className="top-content"
+				direction="row"
+				justifyContent="center"
+				alignItems="flex-end"
+				sx={{ position: 'relative', width: '100%' }}
+			>
+				<div className="left-card">
+					<div className="badge">
+						<h1>EXQUISITE JEWELRY</h1>
+					</div>
+
+					<div className="left">
+						<img src="/img/exquisitive-jewelry/girl.png" alt="Uniqueness" className="model" />
+					</div>
+				</div>
+				<div className="center">
+					<p className="kicker">our recent products</p>
+
+					<h2 className="title" style={{ textTransform: 'uppercase' }}>
+						jewels enhanced with rings, <br />
+						necklaces, earrings, bracelets, <br />
+						and more.
+					</h2>
+
+					<p className="desc">
+						Praesent maximus est a ligula ultricies, sit amet ornare dui mattis. Donec ac mi dui. Donec commodo ultrices
+						elit eu sodales. Maecenas ut orci hendrerit. Nunc in arcu et nunc scelerisque dignissim. Aliquam enim nunc,
+						volutpat eget.
+					</p>
+
+					<div className="cta-row">
+						<button
+      className="btn"
+      onClick={() => router.push('/product')}
+    >
+      MORE DETAILS
+    </button>
+						<div className="phone">
+							<div className="phone-icon">
+								<PhoneIcon sx={{ color: 'black', fontSize: 32 }} />
+							</div>
+							<div className="phone-text">
+								<span>Get In Touch</span>
+								<strong>+82 10 9910 5777</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="right">
+					<div className="arch">
+						<img
+							src="/img/collections/ear-hooks.jpg" // <-- public/ ichida
+							alt="Earring close-up"
+							className="photo"
+						/>
+					</div>
+
+				
+				</div>
+			</Stack>
+			<Stack
+				className="bottom-content"
+				direction="row"
+				alignItems="space-between"
+				justifyContent="space-between"
+				sx={{ width: '100%' }}
+			>
 				<Stack className="item" spacing={1}>
 					<Typography component="h3" className="value">
 						650+

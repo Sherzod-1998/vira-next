@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 const images = [
     "/img/collections/chains.jpg",
     "/img/collections/rings.jpg",
-    "/img/collections/ear hooks.jpg",
+    "/img/collections/ear-hooks.jpg",
     "/img/collections/bracelets.jpg",
     "/img/collections/bangles.jpg",
 ]
