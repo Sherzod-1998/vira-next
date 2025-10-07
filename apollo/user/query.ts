@@ -274,6 +274,15 @@ export const GET_VISITED = gql`
 
 `;
 
+export const GET_CATEGORY_COUNTS = gql`
+  query GetCategoryCounts($input: ProductCategoryCountInput) {
+    categoryCounts(input: $input) {
+      type
+      count
+    }
+  }
+`;
+
 /**************************
  *      BOARD-ARTICLE     *
  *************************/

@@ -148,8 +148,8 @@
 				flex-direction: column;
 				justify-content: space-between;
 				height: 100%;
-				padding-top: 30px; /* ⬆️ tepada biroz joy */
-				padding-bottom: 30px; /* ⬇️ pastda biroz joy */
+				padding-top: 30px; /* tepada sal joy */
+				padding-bottom: 30px; /* pastda sal joy */
 
 				.gorgeous_collection_inner {
 					display: flex;
@@ -163,7 +163,7 @@
 						flex-direction: column;
 						align-items: flex-start;
 						margin-top: 0;
-						padding-left: 10px; /* ozgina ichkariga */
+						padding-left: 10px;
 						margin-bottom: auto;
 
 						span {
@@ -186,12 +186,12 @@
 					position: relative;
 					width: 100%;
 					margin-top: auto;
-					padding-bottom: 10px; /* ⬇️ biroz joy */
-					padding-top: 10px; /* ⬆️ chiroyli balandlik uchun */
+					padding-top: 10px;
+					padding-bottom: 10px;
 
 					.nav-btn {
 						position: absolute;
-						top: 50%;
+						top: 40%;
 						transform: translateY(-50%);
 						z-index: 3;
 						width: 44px;
@@ -226,102 +226,130 @@
 						.circle-container {
 							position: relative;
 							display: grid;
-							grid-template-columns: repeat(5, 1fr);
+							grid-template-columns: repeat(5, 1fr); /* doim 5 ta */
 							gap: 10px;
 							justify-items: center;
 							width: 100%;
-							
-							
 							z-index: 1;
 
+							/* markaziy chiziq */
 							&::before {
 								content: '';
 								position: absolute;
 								left: 16px;
 								right: 16px;
-								top: 50%;
+								top: 40%;
 								transform: translateY(-50%);
 								height: 4px;
-								background: black;
+								background: #000;
 								border-radius: 9999px;
 								z-index: 0;
 								pointer-events: none;
 							}
 
+							/* pagination anim holatlari */
+							&.is-animating {
+								.circle-img-wrapper {
+									animation-duration: 400ms;
+									animation-fill-mode: both;
+									animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+									animation-delay: calc(var(--i) * 50ms);
+								}
+							}
+							&.is-animating.dir-next .circle-img-wrapper {
+								animation-name: slideInNext;
+							}
+							&.is-animating.dir-prev .circle-img-wrapper {
+								animation-name: slideInPrev;
+							}
+
+							/* har bir doira */
 							.circle-img-wrapper {
-								/* Wrapper o‘lchami qat’iy — layout siljimaydi */
-								
-								height: 200px;
-								
-								margin: 0 auto; /* 5 ustun ichida markazda tursin */
 								position: relative;
 								display: flex;
 								flex-direction: column;
 								align-items: center;
-								z-index: 1;
-								/* rasm katta bo‘lsa ham ko‘rinsin */
-								overflow: visible;
-							}
+								overflow: visible; /* hoverda tashqariga chiqsin */
 
-							.circle-figure {
-								width: 177px;
-								height: 177px;
-								border-radius: 50%;
-								position: relative;
-								overflow: visible; /* zoom chiqsin */
-								isolation: isolate; /* stacking context */
-							}
+								/* hozirchi o‘lcham – doira aniq bo‘lishi uchun kvadrat + 50% radius */
+								.circle-figure {
+									width: 177px;
+									height: 177px;
+									aspect-ratio: 1 / 1; /* har ehtimolga qarshi */
+									border-radius: 50%;
+									position: relative;
+									overflow: hidden; /* rasm chetidan chiqmasin */
+									cursor: pointer;
+									transition: transform 0.3s ease, box-shadow 0.3s ease;
+									transform-origin: center center;
+									will-change: transform;
+									z-index: 1;
+								}
 
-							.circle-img {
-								position: absolute;
-								inset: 0; /* figure ichida to‘liq joylashadi */
-								width: 100%;
-								height: 100%;
-								border-radius: 50%;
-								object-fit: cover;
-								cursor: pointer;
-								box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-								transform: scale(1);
-								transform-origin: center center;
-								transition: transform 0.3s ease, box-shadow 0.2s ease;
-								will-change: transform;
-								z-index: 1;
-							}
+								.circle-img {
+									position: absolute;
+									inset: 0;
+									width: 100%;
+									height: 100%;
+									border-radius: 50%;
+									object-fit: cover;
+									transform: scale(1);
+									transform-origin: center center;
+									transition: transform 0.3s ease, box-shadow 0.2s ease;
+									will-change: transform;
+								}
 
-							/* Hover’da faqat scale — wrapper o‘lchami o‘zgarmaydi */
-							.circle-figure:hover .circle-img {
-								transform: scale(1.56); /* ~276/177 ≈ 1.56 */
-								box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
-							}
+								/* Hover: BUTUN DOIRA kattaradi (frame), rasm ozgina zoom */
+								&:hover {
+									.circle-figure {
+										transform: scale(1.55); /* ~276 / 177 */
+										box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+									}
+									.circle-img {
+										transform: scale(1.05);
+									}
+								}
 
-							.circle-img-label {
-								margin-top: 10px;
-								font-weight: 700;
-								text-transform: uppercase;
-								text-align: center;
-								font-size: 16px;
-								letter-spacing: 0.06em;
-								color: #181a20;
-								transition: all 0.3s ease;
-								pointer-events: none;
-								position: relative;
-								z-index: 2; /* rasm ustida ko‘rinsin */
-							}
+								.circle-img-label {
+									margin-top: 10px;
+									font-weight: 700;
+									text-transform: uppercase;
+									text-align: center;
+									font-size: 16px;
+									letter-spacing: 0.06em;
+									color: #181a20;
+									transition: color 0.3s ease;
+									position: relative;
+									z-index: 2;
+									pointer-events: none; /* label ustida kursor bo‘lsa ham holat o‘zgarmasin */
 
-							/* Hover’da labelni markazga olib chiqish (ixtiyoriy) */
-							.circle-figure:hover + .circle-img-label {
-								position: absolute;
-								top: 50%;
-								left: 50%;
-								transform: translate(-50%, -50%);
-								margin-top: 0;
-								background: rgba(0, 0, 0, 0.5);
-								color: #fff;
-								padding: 6px 10px;
-								border-radius: 8px;
-								font-weight: 600;
-								z-index: 3;
-								white-space: nowrap;
+									.label-count {
+										font-size: 14px;
+										color: #a0a0a0;
+										text-transform: lowercase;
+										transition: color 0.3s ease;
+									}
+								}
+
+								/* Hover bo‘lganda label markazga chiqishi (pointer events yo‘q) */
+								.circle-figure:hover + .circle-img-label {
+									position: absolute;
+									top: 50%;
+									left: 50%;
+									transform: translate(-50%, -50%);
+									margin-top: 0;
+									background: rgba(0, 0, 0, 0.5);
+									color: #fff;
+									padding: 6px 10px;
+									border-radius: 8px;
+									font-weight: 600;
+									z-index: 3;
+									white-space: nowrap;
+
+									.label-count {
+										color: #fff;
+									}
+								}
 							}
 						}
 					}
@@ -352,28 +380,33 @@
 				}
 			}
 
-			/* Responsiv (ixtiyoriy) */
+			/* Responsiv */
 			@media (max-width: 1400px) {
 				.gorgeous_collections {
 					width: 100%;
 					padding: 0 32px;
 				}
-				.bottom_content .nav-btn.prev {
-					left: 0;
-				}
-				.bottom_content .nav-btn.next {
-					right: 0;
+				.bottom_content {
+					.nav-btn.prev {
+						left: 0;
+					}
+					.nav-btn.next {
+						right: 0;
+					}
 				}
 			}
 
 			@media (max-width: 900px) {
-				.bottom_content_stack .circle-container {
-					grid-template-columns: repeat(3, 1fr);
-					gap: 16px;
-
-					.circle-img-wrapper .circle-img {
-						width: 150px;
-						height: 150px;
+				.bottom_content_stack {
+					.circle-container {
+						grid-template-columns: repeat(3, 1fr);
+						gap: 16px;
+						.circle-img-wrapper {
+							.circle-figure {
+								width: 150px;
+								height: 150px;
+							}
+						}
 					}
 				}
 			}
@@ -382,17 +415,22 @@
 				height: auto;
 				padding-bottom: 32px;
 
-				.bottom_content_stack .circle-container {
-					grid-template-columns: repeat(2, 1fr);
-					gap: 14px;
-
-					.circle-img-wrapper .circle-img {
-						width: 130px;
-						height: 130px;
+				.bottom_content_stack {
+					.circle-container {
+						grid-template-columns: repeat(2, 1fr);
+						gap: 14px;
+						.circle-img-wrapper {
+							.circle-figure {
+								width: 130px;
+								height: 130px;
+							}
+						}
 					}
 				}
 			}
 		}
+
+	
 
 		.hero {
 			padding: 44px 0 26px;
