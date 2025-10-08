@@ -59,7 +59,12 @@ const PopularProducts = (props: PopularProductsProps) => {
 							{popularProducts.map((product: Product) => {
 								return (
 									<SwiperSlide key={product._id} className={'popular-product-slide'}>
-										<PopularProductCard product={product} />
+										<PopularProductCard
+											product={product}
+											likeProductHandler={function (user: any, id: string): Promise<void> | void {
+												throw new Error('Function not implemented.');
+											}}
+										/>
 									</SwiperSlide>
 								);
 							})}
@@ -75,7 +80,7 @@ const PopularProducts = (props: PopularProductsProps) => {
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
 							<span>Popular products</span>
-							<p>Popularity is based on views</p>
+							
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'more-box'}>
@@ -89,24 +94,30 @@ const PopularProducts = (props: PopularProductsProps) => {
 					<Stack className={'card-box'}>
 						<Swiper
 							className={'popular-product-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={25}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-popular-next',
-								prevEl: '.swiper-popular-prev',
-							}}
-							pagination={{
-								el: '.swiper-popular-pagination',
+							// desktopda 4 ta ko‘rsatamiz
+							slidesPerView={3}
+							
+							centeredSlides={false}
+							
+							
+							
+							breakpoints={{
+								0: { slidesPerView: 1, spaceBetween: 16 },
+								600: { slidesPerView: 2, spaceBetween: 18 },
+								900: { slidesPerView: 3, spaceBetween: 22 },
+								1200: { slidesPerView: 4, spaceBetween: 25 },
 							}}
 						>
-							{popularProducts.map((product: Product) => {
-								return (
-									<SwiperSlide key={product._id} className={'popular-product-slide'}>
-										<PopularProductCard product={product} />
-									</SwiperSlide>
-								);
-							})}
+							{popularProducts.map((product: Product) => (
+								<SwiperSlide key={product._id} className={'popular-product-slide'}>
+									<PopularProductCard
+										product={product}
+										likeProductHandler={() => {
+											/* popular’da ishlatmaymiz */
+										}}
+									/>
+								</SwiperSlide>
+							))}
 						</Swiper>
 					</Stack>
 					<Stack className={'pagination-box'}>

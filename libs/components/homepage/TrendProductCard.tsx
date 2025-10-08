@@ -32,17 +32,16 @@ const TrendProductCard = ({ product, likeProductHandler }: TrendProductCardProps
 		: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=800&q=80';
 
 	const onLikeClick = async (e?: React.SyntheticEvent) => {
-  e?.stopPropagation();
-  // ixtiyoriy: form/button ichida bo‘lsa
-  // (e as any)?.preventDefault?.();
+		e?.stopPropagation();
+		// ixtiyoriy: form/button ichida bo‘lsa
+		// (e as any)?.preventDefault?.();
 
-  // optimistic toggle
-  setLiked(prev => !prev);
-  setLikeCount(c => (liked ? Math.max(0, c - 1) : c + 1));
+		// optimistic toggle
+		setLiked((prev) => !prev);
+		setLikeCount((c) => (liked ? Math.max(0, c - 1) : c + 1));
 
-  await likeProductHandler(user, data?._id);
-};
-
+		await likeProductHandler(user, data?._id);
+	};
 
 	return (
 		<Stack
@@ -84,24 +83,23 @@ const TrendProductCard = ({ product, likeProductHandler }: TrendProductCardProps
 				</Stack>
 
 				<Stack className="meta" direction="row">
-  <Stack
-    className={`meta-pill is-like ${liked ? 'is-active' : ''}`}
-    direction="row"
-    alignItems="center"
-    justifyContent="center"
-    spacing={1}
-    role="button"
-    onClick={(e) => {
-      e.stopPropagation(); // card detailga o‘tib ketmasin
-      onLikeClick();
-    }}
-  >
-    <FavoriteTwoToneIcon className="meta-icon" fontSize="small" />
-    <span className="meta-text">Like</span>
-    <span className="meta-count">{likeCount}</span>
-  </Stack>
-</Stack>
-
+					<Stack
+						className={`meta-pill is-like ${liked ? 'is-active' : ''}`}
+						direction="row"
+						alignItems="center"
+						justifyContent="center"
+						spacing={1}
+						role="button"
+						onClick={(e) => {
+							e.stopPropagation(); // card detailga o‘tib ketmasin
+							onLikeClick();
+						}}
+					>
+						<FavoriteTwoToneIcon className="meta-icon" fontSize="small" />
+						<span className="meta-text">Like</span>
+						<span className="meta-count">{likeCount}</span>
+					</Stack>
+				</Stack>
 			</Stack>
 		</Stack>
 	);

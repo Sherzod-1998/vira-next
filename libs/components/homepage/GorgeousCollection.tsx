@@ -62,7 +62,6 @@ const GorgeousCollection = () => {
   const prev = () => setPage((p) => Math.max(0, p - 1));
   const next = () => setPage((p) => Math.min(totalPages - 1, p + 1));
 
-  // ——— Navigatsiya (enum bilan)
   const navigateToCategory = (type: ProductType) => {
     const input = {
       page: 1,
@@ -72,7 +71,6 @@ const GorgeousCollection = () => {
       search: { typeList: [type] },
     };
 
-    // siz xohlagan URL ko‘rinishi uchun (faqat qo‘shtirnoqlar kodlanadi):
     const encodeQuotesOnly = (obj: unknown) => JSON.stringify(obj).replace(/"/g, '%22');
     router.push(`/product?input=${encodeQuotesOnly(input)}`);
   };

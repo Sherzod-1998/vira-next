@@ -1,150 +1,85 @@
 import React from 'react';
-import { Stack, Box, Divider, Typography } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { Stack, Box, Typography } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
 import { Product } from '../../types/product/product';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { REACT_APP_API_URL, topProductRank } from '../../config';
+import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../../apollo/store';
 
 interface PopularProductCardProps {
 	product: Product;
+	// prop qolaversin, lekin bu cardda ishlatmaymiz
+	likeProductHandler: (user: any, id: string) => Promise<void> | void;
 }
 
-const PopularProductCard = (props: PopularProductCardProps) => {
-	const { product } = props;
-	const device = useDeviceDetect();
+const PopularProductCard = ({ product }: PopularProductCardProps) => {
 	const router = useRouter();
-	const user = useReactiveVar(userVar);
-
-	/** HANDLERS **/
+	const data = product;
 
 	const pushDetailHandler = async (productId: string) => {
-		console.log('productId:', productId);
-		await router.push({ pathname: './product/detail', query: { id: productId } });
+		if (!productId) return;
+		await router.push({ pathname: '/product/detail', query: { id: productId } });
 	};
 
-	if (device === 'mobile') {
-		return (
-			<Stack className="popular-card-box">
-				<Box
-					component={'div'}
-					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages[0]})` }}
-					onClick={() => {
-						pushDetailHandler(product._id);
-					}}
-				>
-					{product && product?.productRank >= topProductRank ? (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					) : (
-						''
-					)}
+	const imageUrl = data?.productImages?.[0]
+		? `${REACT_APP_API_URL}/${data.productImages[0]}`
+		: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=800&q=80';
 
-					<div className={'price'}>${product.productPrice}</div>
-				</Box>
-				<Box component={'div'} className={'info'}>
-					<strong
-						className={'title'}
-						onClick={() => {
-							pushDetailHandler(product._id);
-						}}
-					>
-						{product.productTitle}
-					</strong>
-					<p className={'desc'}>{product.productAddress}</p>
-					<div className={'options'}>
-						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{product?.productBeds} bed</span>
-						</div>
-						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{product?.productRooms} rooms</span>
-						</div>
-						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{product?.productSquare} m2</span>
-						</div>
-					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
-					<div className={'bott'}>
-						<p>{product?.productRent ? 'rent' : 'sale'}</p>
-						<div className="view-like-box">
-							<IconButton color={'default'}>
-								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{product?.productViews}</Typography>
-						</div>
-					</div>
-				</Box>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className="popular-card-box">
-				<Box
-					component={'div'}
-					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages[0]})` }}
-					onClick={() => {
-						pushDetailHandler(product._id);
-					}}
-				>
-					{product && product?.productRank >= topProductRank ? (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					) : (
-						''
-					)}
+	// reviews soni sifatida hozircha views’dan foydalanamiz (agar alohida field bo‘lsa shuni qo‘ying)
+	const reviews = data?.productViews ?? 0;
 
-					<div className={'price'}>${product.productPrice}</div>
-				</Box>
-				<Box component={'div'} className={'info'}>
-					<strong
-						className={'title'}
-						onClick={() => {
-							pushDetailHandler(product._id);
-						}}
+	return (
+		<Stack
+			className="product-card"
+			direction="column"
+			onClick={() => pushDetailHandler(data._id)}
+			sx={{ position: 'relative' }}
+		>
+			{/* Rasm */}
+			<Box className="product-image" sx={{ backgroundImage: `url('${imageUrl}')` }}>
+				{data.productMaterial && <Box className="product-label">{data.productMaterial}</Box>}
+			</Box>
+
+			{/* Info */}
+			<Stack
+				className="product-info"
+				direction="column"
+				onClick={(e: { stopPropagation: () => any }) => e.stopPropagation()}
+			>
+				<Typography className="product-category">{data.productType}</Typography>
+				<Typography className="product-name">{data.productTitle}</Typography>
+
+				{/* O‘rtadagi “stars + reviews” BLOKNI OLIB TASHLADIK */}
+
+				{/* Narx qatori */}
+				<Stack className="price-row" direction="row" alignItems="center" justifyContent="space-between">
+					<Box>
+						<span className="price">${data.productPrice}</span>
+					</Box>
+				</Stack>
+
+				{/* Pastdagi pill: endi bu yerda yulduz + reviews (NO-CLICK) */}
+				<Stack className="meta" direction="row">
+					<Stack
+						className="meta-pill is-static"
+						direction="row"
+						alignItems="center"
+						justifyContent="center"
+						spacing={1}
 					>
-						{product.productTitle}
-					</strong>
-					<p className={'desc'}>{product.productAddress}</p>
-					<div className={'options'}>
-						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{product?.productBeds} bed</span>
-						</div>
-						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{product?.productRooms} rooms</span>
-						</div>
-						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{product?.productSquare} m2</span>
-						</div>
-					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
-					<div className={'bott'}>
-						<p>{product?.productRent ? 'rent' : 'sale'}</p>
-						<div className="view-like-box">
-							<IconButton color={'default'}>
-								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{product?.productViews}</Typography>
-						</div>
-					</div>
-				</Box>
+						{/* 5 ta yulduz (static) */}
+						<span className="stars-inline" aria-hidden>
+							<StarIcon fontSize="small" />
+							<StarIcon fontSize="small" />
+							<StarIcon fontSize="small" />
+							<StarIcon fontSize="small" />
+							<StarIcon fontSize="small" />
+						</span>
+						<span className="meta-text">{reviews} reviews</span>
+					</Stack>
+				</Stack>
 			</Stack>
-		);
-	}
+		</Stack>
+	);
 };
 
 export default PopularProductCard;

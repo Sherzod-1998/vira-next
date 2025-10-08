@@ -4,7 +4,6 @@ import withLayoutMain from '../libs/components/layout/LayoutHome';
 import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import GorgeousCollection from '../libs/components/homepage/GorgeousCollection';
-import Statistics from '../libs/components/homepage/Statistics';
 import TrendProducts from '../libs/components/homepage/TrendProducts';
 import PopularProducts from '../libs/components/homepage/PopularProducts';
 import TopProducts from '../libs/components/homepage/TopProducts';
@@ -34,9 +33,9 @@ const Home: NextPage = () => {
 				<GorgeousCollection />
 				<HeroSections/>
 				<TrendProducts />
+				<PopularProducts />
+				<TopProducts />
 				<ExquisiteJewelry />
-				{/* <PopularProducts /> */}
-				{/* <TopProducts /> */}
 				<TopSellers />
 				<CommunityBoards />
 				
