@@ -12,6 +12,7 @@ import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import HeroSections from '../libs/components/homepage/HeroSections';
 import ExquisiteJewelry from '../libs/components/homepage/ExquisitiveJewelry';
 import ProductsTabsSection from '../libs/components/homepage/ProductsTabsSection';
+import BenefitsRow from '../libs/components/homepage/BenefitsRow';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -37,6 +38,7 @@ const Home: NextPage = () => {
 				<ExquisiteJewelry />
 				<TopSellers />
 				<CommunityBoards />
+				<BenefitsRow/>
 				
 			</Stack>
 		);
