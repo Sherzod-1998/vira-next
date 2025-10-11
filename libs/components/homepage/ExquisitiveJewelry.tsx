@@ -17,9 +17,7 @@ export default function ExquisiteSection() {
 		<Stack
 			className="exquisiteivesection"
 			direction="column"
-			
 			justifyContent="center"
-			sx={{ my: 4 }}
 		>
 			<Stack
 				className="top-content"

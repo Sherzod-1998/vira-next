@@ -11,6 +11,7 @@ import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import HeroSections from '../libs/components/homepage/HeroSections';
 import ExquisiteJewelry from '../libs/components/homepage/ExquisitiveJewelry';
+import ProductsTabsSection from '../libs/components/homepage/ProductsTabsSection';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -31,10 +32,8 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<GorgeousCollection />
+				<ProductsTabsSection />
 				<HeroSections/>
-				<TrendProducts />
-				<PopularProducts />
-				<TopProducts />
 				<ExquisiteJewelry />
 				<TopSellers />
 				<CommunityBoards />

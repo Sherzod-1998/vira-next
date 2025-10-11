@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
-import ProductCard from '../product/ProductCard';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
 import { useMutation, useQuery } from '@apollo/client';
@@ -10,6 +9,7 @@ import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_FAVORITES } from '../../../apollo/user/query';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import ProductCard from '../product/ProductCard';
 
 const MyFavorites: NextPage = () => {
 	const device = useDeviceDetect();

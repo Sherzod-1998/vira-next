@@ -1,0 +1,167 @@
+'use client';
+import React from 'react';
+import { Box, Tabs, Tab, Stack } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useQuery, useMutation } from '@apollo/client';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper';
+import { GET_PRODUCTS } from '../../../apollo/user/query';
+import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
+import { Direction } from '../../enums/common.enum'; // yo'lni loyihangizga moslang
+import { ProductsInquiry } from '../../types/product/product.input';
+import { Product } from '../../types/product/product';
+import MainProductCard from './MainProductCard';
+
+type TabKey = 'popular' | 'trending' | 'top';
+const TAB_INDEX: Record<TabKey, number> = { popular: 0, trending: 1, top: 2 };
+const INDEX_TAB: Record<number, TabKey> = { 0: 'popular', 1: 'trending', 2: 'top' };
+
+function TabPanel(props: { children?: React.ReactNode; value: number; index: number }) {
+	const { children, value, index, ...other } = props;
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`products-tabpanel-${index}`}
+			aria-labelledby={`products-tab-${index}`}
+			{...other}
+		>
+			{value === index && <Box sx={{ pt: 3, minHeight: 560 }}>{children}</Box>}
+		</div>
+	);
+}
+const a11y = (i: number) => ({ id: `products-tab-${i}`, 'aria-controls': `products-tabpanel-${i}` });
+
+const inputs: Record<TabKey, ProductsInquiry> = {
+	popular: { page: 1, limit: 12, sort: 'productViews', direction: Direction.DESC, search: {} },
+	trending: { page: 1, limit: 12, sort: 'productLikes', direction: Direction.DESC, search: {} },
+	top: { page: 1, limit: 12, sort: 'createdAt', direction: Direction.DESC, search: {} },
+};
+
+const ProductsTabsSection: React.FC = () => {
+	const router = useRouter();
+	const initialKey = (router.query.tab as TabKey) || 'popular';
+	const [value, setValue] = React.useState<number>(TAB_INDEX[initialKey] ?? 0);
+
+	const key = INDEX_TAB[value];
+	const variables = React.useMemo(() => ({ input: inputs[key] }), [key]);
+
+	const { data, refetch } = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables,
+		notifyOnNetworkStatusChange: true,
+	});
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+
+	const onLike = async (id: string) => {
+		try {
+			await likeTargetProduct({ variables: { input: id } });
+			await refetch(variables);
+		} catch (e) {
+			console.log('like error:', (e as any)?.message);
+		}
+	};
+
+	const items: Product[] = data?.getProducts?.list ?? [];
+
+	const handleChange = (_e: React.SyntheticEvent, newValue: number) => {
+		setValue(newValue);
+		router.replace({ pathname: router.pathname, query: { ...router.query, tab: INDEX_TAB[newValue] } }, undefined, {
+			shallow: true,
+		});
+	};
+
+	// Shared selectors (faqat aktiv TabPanel mount bo‘ladi, shuning uchun collision bo‘lmaydi)
+	const navPrev = `.swiper-tabs-prev`;
+	const navNext = `.swiper-tabs-next`;
+	const pagEl = `.swiper-tabs-pagination`;
+
+	// Swiper config
+	const swiperProps = {
+		modules: [Autoplay, Navigation, Pagination],
+		navigation: { prevEl: navPrev, nextEl: navNext },
+		pagination: { el: pagEl, clickable: true },
+		spaceBetween: 20,
+		slidesPerView: 4 as const,
+		breakpoints: {
+			0: { slidesPerView: 1, spaceBetween: 12 },
+			600: { slidesPerView: 2, spaceBetween: 14 },
+			900: { slidesPerView: 3, spaceBetween: 18 },
+			1200: { slidesPerView: 4, spaceBetween: 20 },
+		},
+	};
+
+	return (
+		<Stack className="products-tabs-section"
+            direction="column"
+            justifyContent="center"
+            
+        >
+			<Box className="products-tabs car-like">
+				<Box className="products-tabs__header">
+					<h2 className="products-tabs__title">Featured Product Listings</h2>
+					<div className="products-tabs__nav">
+						<button className="nav-icon swiper-tabs-prev" aria-label="Prev">
+							{'←'}
+						</button>
+						<div className="dots">
+							<span className="dot" />
+							<span className="dot" />
+							<span className="dot" />
+						</div>
+						<button className="nav-icon swiper-tabs-next" aria-label="Next">
+							{'→'}
+						</button>
+					</div>
+				</Box>
+
+				<Tabs value={value} onChange={handleChange} aria-label="Product tabs" className="products-tabs__tabs">
+					<Tab label="Popular Products" {...a11y(0)} />
+					<Tab label="Trending Products" {...a11y(1)} />
+					<Tab label="Top Products" {...a11y(2)} />
+				</Tabs>
+
+				<TabPanel value={value} index={TAB_INDEX['popular']}>
+					<Stack className="products-tabs__panel">
+						<Swiper key="popular" {...swiperProps}>
+							{items.map((p) => (
+								<SwiperSlide key={p._id}>
+									<MainProductCard product={p} onLike={onLike} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+						<div className="swiper-tabs-pagination" />
+					</Stack>
+				</TabPanel>
+
+				<TabPanel value={value} index={TAB_INDEX['trending']}>
+					<Stack className="products-tabs__panel">
+						<Swiper key="trending" {...swiperProps}>
+							{items.map((p) => (
+								<SwiperSlide key={p._id}>
+									<MainProductCard product={p} onLike={onLike} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+						<div className="swiper-tabs-pagination" />
+					</Stack>
+				</TabPanel>
+
+				<TabPanel value={value} index={TAB_INDEX['top']}>
+					<Stack className="products-tabs__panel">
+						<Swiper key="top" {...swiperProps}>
+							{items.map((p) => (
+								<SwiperSlide key={p._id}>
+									<MainProductCard product={p} onLike={onLike} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+						<div className="swiper-tabs-pagination" />
+					</Stack>
+				</TabPanel>
+			</Box>
+		</Stack>
+	);
+};
+
+export default ProductsTabsSection;

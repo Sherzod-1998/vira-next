@@ -70,31 +70,12 @@ const ProductCard = (props: ProductCardType) => {
 						</Stack>
 					</Stack>
 					<Stack className="options">
-						<Stack className="option">
-							<img src="/img/icons/bed.svg" alt="" /> <Typography>{product.productBeds} bed</Typography>
-						</Stack>
-						<Stack className="option">
-							<img src="/img/icons/room.svg" alt="" /> <Typography>{product.productRooms} room</Typography>
-						</Stack>
-						<Stack className="option">
-							<img src="/img/icons/expand.svg" alt="" /> <Typography>{product.productSquare} m2</Typography>
-						</Stack>
+			
 					</Stack>
 					<Stack className="divider"></Stack>
 					<Stack className="type-buttons">
 						<Stack className="type">
-							<Typography
-								sx={{ fontWeight: 500, fontSize: '13px' }}
-								className={product.productRent ? '' : 'disabled-type'}
-							>
-								Rent
-							</Typography>
-							<Typography
-								sx={{ fontWeight: 500, fontSize: '13px' }}
-								className={product.productBarter ? '' : 'disabled-type'}
-							>
-								Barter
-							</Typography>
+							
 						</Stack>
 						{!recentlyVisited && (
 							<Stack className="buttons">
