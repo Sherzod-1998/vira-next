@@ -150,7 +150,7 @@ const HeroSections = () => {
 
               <div className="card__headline">
                 <span className="star">⭐</span>
-                <span className="card__headline-text">{total.toLocaleString()} COMMENTS</span>
+                <span className="card__headline-text">{total.toLocaleString()} Reviews</span>
               </div>
 
               <h3 className="card__title">What People Say About Our Jewelry</h3>
