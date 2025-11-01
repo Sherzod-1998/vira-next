@@ -12,9 +12,8 @@ export interface TotalCounter {
 }
 
 export type ProductMaterial =
-  | 'GOLD' | 'WHITE_GOLD' | 'ROSE_GOLD' | 'SILVER' | 'PLATINUM'
-  | 'DIAMOND' | 'PEARL' | 'TITANIUM' | 'STAINLESS_STEEL'
-  | 'BRASS' | 'COPPER' | 'LEATHER' | 'OTHER';
+  | 'GOLD' | 'SILVER' | 'PLATINUM'
+  | 'DIAMOND' | 'PEARL' | 'TITANIUM' | 'BRASS' | 'COPPER' | 'LEATHER' | 'OTHER';
 
 export interface Product {
 	productCategory: any;

@@ -16,6 +16,7 @@ import { GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import MainProductCard from '../../libs/components/homepage/MainProductCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -80,6 +81,21 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			},
 		);
 		setCurrentPage(value);
+	};
+
+	const onLike = async (id: string) => {
+		try {
+			if (!id) return;
+			await likeTargetProduct({
+				variables: { input: id },
+			});
+
+			await getProductsRefetch({ input: searchFilter });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, onLike:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		}
 	};
 
 	const likeProductHandler = async (user: T, id: string) => {
@@ -180,9 +196,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 									</div>
 								) : (
 									products.map((product: Product) => {
-										return (
-											<ProductCard product={product} likeProductHandler={likeProductHandler} key={product?._id} />
-										);
+										return <MainProductCard product={product} onLike={onLike} key={product?._id} />;
 									})
 								)}
 							</Stack>

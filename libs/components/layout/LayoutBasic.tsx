@@ -31,7 +31,7 @@ const withLayoutBasic = (Component: any) => {
 				case '/product':
 					title = 'Product Search';
 					desc = 'We are glad to see you again!';
-					bgImage = '/img/banner/products.png';
+					bgImage = '/img/banner/products.jpg';
 					break;
 				case '/seller':
 					title = 'Sellers';
@@ -126,12 +126,22 @@ const withLayoutBasic = (Component: any) => {
 						<Stack
 							className={`header-basic ${authHeader && 'auth'}`}
 							style={{
-								backgroundImage: `url(${memoizedValues.bgImage})`,
-								backgroundSize: 'cover',
+								position: 'relative',
+								overflow: 'hidden',
 								boxShadow: 'inset 10px 40px 150px 40px rgb(24 22 36)',
+								background: 'transparent',
 							}}
 						>
-							<Stack className={'container'}>
+							<Stack
+								style={{
+									position: 'absolute',
+									inset: 0,
+									backgroundColor: '#212121',
+									backgroundRepeat: 'no-repeat',
+									zIndex: 0,
+								}}
+							/>
+							<Stack className={'container'} style={{ position: 'relative', zIndex: 1 }}>
 								<strong>{t(memoizedValues.title)}</strong>
 								<span>{t(memoizedValues.desc)}</span>
 							</Stack>

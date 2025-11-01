@@ -14,6 +14,7 @@ export interface ProductInput {
 }
 
 interface PISearch {
+	materialList: any;
 	memberId?: string;
 	locationList?: ProductLocation[];
 	typeList?: ProductType[];
