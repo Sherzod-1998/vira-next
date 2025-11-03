@@ -208,7 +208,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 											count={Math.ceil(total / searchFilter.limit)}
 											onChange={handlePaginationChange}
 											shape="circular"
-											color="primary"
+											color="secondary"
 										/>
 									</Stack>
 								)}
@@ -216,7 +216,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								{products.length !== 0 && (
 									<Stack className="total-result">
 										<Typography>
-											Total {total} propert{total > 1 ? 'ies' : 'y'} available
+											Total {total} product{total > 1 ? 's' : ''} available
 										</Typography>
 									</Stack>
 								)}

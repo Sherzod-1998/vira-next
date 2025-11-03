@@ -47,15 +47,14 @@
 						background: #fff;
 						box-shadow: 0 1px 4px 0 rgba(24, 26, 32, 0.07);
 
-						.find-your-home {
+						.find-your-jewelry {
 							position: relative;
 							width: 100%;
 							gap: 10px;
 							display: flex;
 							flex-direction: column;
 
-							/* Kategoriyalar (Location listdagi hover ochilishi uchun) */
-							.product-location {
+							.collapsible-list {
 								display: flex;
 								flex-direction: column;
 								gap: 10px;
@@ -78,6 +77,7 @@
 								font-style: normal;
 								font-weight: 600;
 								line-height: normal;
+								text-transform: uppercase;
 							}
 
 							/* Bo'lim nomlari: Location, Product Type, Material, Price Range ... */
@@ -111,12 +111,12 @@
 									width: 100%;
 									height: 53px;
 									border-radius: 8px;
-									border: 1px solid #ddd;
-									background: #fff;
+									border: 1px solid #000000;
+									background: #ffffff;
 									outline: none;
 									padding-left: 43px;
 									padding-right: 40px; // refresh icon joyi
-									color: #717171;
+									color: #000000;
 									font-family: $font;
 									font-size: 14px;
 									font-style: normal;
@@ -145,7 +145,7 @@
 								}
 							}
 
-							/* (Agar sizda select bo'lsa) */
+							/* Agar select bo'lsa */
 							.city-select {
 								width: 100%;
 								height: 49px;
@@ -167,7 +167,6 @@
 								line-height: 26px;
 							}
 
-							/* Divider va pastga ikonka agar select bo'lsa */
 							.divider {
 								position: absolute;
 								height: 48px;
@@ -185,7 +184,6 @@
 								top: 52px;
 							}
 
-							/* label matnlari */
 							.product-type,
 							.product_type {
 								color: #181a20;
@@ -197,7 +195,6 @@
 								white-space: nowrap;
 							}
 
-							/* button-group (agar 2ta yonma-yon buttonlar bo'lsa) */
 							.button-group {
 								width: 100%;
 								height: 44px;
@@ -255,25 +252,6 @@
 									}
 								}
 							}
-						}
-					}
-
-					/* RWD tweaks kerak bo'lsa */
-					@media (max-width: 768px) {
-						.filter-main {
-							padding: 20px 16px;
-							border-radius: 10px;
-						}
-
-						.filter-main .find-your-home .input-box .search-input {
-							height: 48px;
-							font-size: 13px;
-						}
-
-						.filter-main .find-your-home .product-location {
-							height: auto !important;
-							max-height: 200px;
-							overflow-y: auto;
 						}
 					}
 
@@ -502,11 +480,28 @@
 						.pagination-box {
 							width: 100%;
 							align-items: center;
+
+							.MuiPagination-root {
+								.MuiPaginationItem-root {
+									color: #000;
+									border: 1px solid #ddd;
+
+									&.Mui-selected {
+										background-color: rgba(146, 106, 84, 1);
+										color: #fff;
+									}
+
+									&:hover {
+										background-color: #f5f5f5;
+									}
+								}
+							}
+
 						}
 
 						.total-result {
 							p {
-								color: #181a20;
+								color: #000000;
 								text-align: center;
 								font-family: $font;
 								font-size: 24px;
