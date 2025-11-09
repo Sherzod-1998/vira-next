@@ -5,7 +5,6 @@ import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import GorgeousCollection from '../libs/components/homepage/GorgeousCollection';
 import TrendProducts from '../libs/components/homepage/TrendProducts';
-import PopularProducts from '../libs/components/homepage/PopularProducts';
 import TopProducts from '../libs/components/homepage/TopProducts';
 import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';

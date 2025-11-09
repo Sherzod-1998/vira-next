@@ -33,9 +33,15 @@ function TabPanel(props: { children?: React.ReactNode; value: number; index: num
 const a11y = (i: number) => ({ id: `products-tab-${i}`, 'aria-controls': `products-tabpanel-${i}` });
 
 const inputs: Record<TabKey, ProductsInquiry> = {
-	popular: { page: 1, limit: 12, sort: 'productViews', direction: Direction.DESC, search: {} },
-	trending: { page: 1, limit: 12, sort: 'productLikes', direction: Direction.DESC, search: {} },
-	top: { page: 1, limit: 12, sort: 'createdAt', direction: Direction.DESC, search: {} },
+	popular: { page: 1, limit: 12, sort: 'productViews', direction: Direction.DESC, search: {
+		materialList: undefined
+	} },
+	trending: { page: 1, limit: 12, sort: 'productLikes', direction: Direction.DESC, search: {
+		materialList: undefined
+	} },
+	top: { page: 1, limit: 12, sort: 'createdAt', direction: Direction.DESC, search: {
+		materialList: undefined
+	} },
 };
 
 const ProductsTabsSection: React.FC = () => {

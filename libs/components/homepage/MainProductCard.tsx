@@ -14,8 +14,11 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 	const router = useRouter();
 	const data = product;
 
+	// backenddan kelgan "men like qilganmanmi?"
+	const initialLiked = Array.isArray(data?.meLiked) && data.meLiked.length > 0;
+
 	// Local UI state (optimistic)
-	const [liked, setLiked] = useState<boolean>(Boolean((data as any)?.isLiked));
+	const [liked, setLiked] = useState<boolean>(initialLiked);
 	const [likeCount, setLikeCount] = useState<number>(data?.productLikes ?? 0);
 
 	const pushDetailHandler = async (productId: string) => {
@@ -29,9 +32,15 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 
 	const onLikeClick = async (e?: React.SyntheticEvent) => {
 		e?.stopPropagation();
-		// optimistic toggle
-		setLiked((prev) => !prev);
-		setLikeCount((c) => (liked ? Math.max(0, c - 1) : c + 1));
+
+		// optimistic update: like/unlike + counter sync
+		setLiked((prevLiked) => {
+			setLikeCount((prevCount) => {
+				return prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1;
+			});
+			return !prevLiked;
+		});
+
 		await onLike(data?._id);
 	};
 
@@ -56,7 +65,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 				<Typography className="product-category">{data.productType}</Typography>
 				<Typography className="product-name">{data.productTitle}</Typography>
 
-				{/* xuddi sizdagi rating bloki */}
+				{/* rating bloki */}
 				<Stack className="rating" direction="row" alignItems="center" spacing={1}>
 					<Stack className="stars" direction="row" spacing={0.5}>
 						<span className="star">★</span>
@@ -75,7 +84,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 					</Box>
 				</Stack>
 
-				{/* Like pill — xuddi o‘sha classlar bilan */}
+				{/* Like pill */}
 				<Stack className="meta" direction="row">
 					<Stack
 						className={`meta-pill is-like ${liked ? 'is-active' : ''}`}
@@ -84,10 +93,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 						justifyContent="center"
 						spacing={1}
 						role="button"
-						onClick={(e: { stopPropagation: () => void }) => {
-							e.stopPropagation();
-							onLikeClick();
-						}}
+						onClick={onLikeClick}
 					>
 						<FavoriteTwoToneIcon className="meta-icon" fontSize="small" />
 						<span className="meta-text">Like</span>
