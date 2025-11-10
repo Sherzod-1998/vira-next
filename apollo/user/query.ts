@@ -33,6 +33,11 @@ export const GET_SELLERS = gql`
 				createdAt
 				updatedAt
 				accessToken
+
+				# 🔴 MUHIM: shu qatorni qo‘shing
+				meLiked {
+					myFavorite
+				}
 			}
 			metaCounter {
 				total
@@ -40,6 +45,7 @@ export const GET_SELLERS = gql`
 		}
 	}
 `;
+
 
 export const GET_MEMBER = gql(`
 query GetMember($memberId: String!) {
