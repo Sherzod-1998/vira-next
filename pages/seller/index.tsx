@@ -15,6 +15,7 @@ import { GET_SELLERS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Messages } from '../../libs/config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import SellerCard from '../../libs/components/common/SellerCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -180,7 +181,7 @@ const sellerList: NextPage = ({ initialInput, ...props }: any) => {
 							</div>
 						) : (
 							sellers.map((seller: Member) => {
-								return <sellerCard seller={seller} key={seller._id} likeMemberHandler={likeMemberHandler} />;
+								return <SellerCard seller={seller} key={seller._id} likeMemberHandler={likeMemberHandler} />;
 							})
 						)}
 					</Stack>

@@ -7,6 +7,7 @@
 	height: 455px;
 	display: flex;
 	flex-direction: column;
+
 	.card-img {
 		position: relative;
 		width: 100%;
@@ -14,6 +15,7 @@
 		background-size: cover;
 		border-radius: 12px 12px 0px 0px;
 		cursor: pointer;
+
 		div.status {
 			position: absolute;
 			padding: 6px 34px;
@@ -23,10 +25,12 @@
 			align-items: center;
 			border-radius: 6px;
 			background: #eb6753;
+
 			img {
 				width: 14px;
 				height: 14px;
 			}
+
 			span {
 				margin-left: 5px;
 				color: #fff;
@@ -38,6 +42,7 @@
 				text-transform: uppercase;
 			}
 		}
+
 		div.price {
 			position: absolute;
 			padding: 8px 12px;
@@ -53,6 +58,7 @@
 			line-height: normal;
 		}
 	}
+
 	.info {
 		padding: 20px 22px 17px;
 		display: flex;
@@ -62,6 +68,7 @@
 		border: 1px solid #ddd;
 		border-top: none;
 		background: #fff;
+
 		.title {
 			overflow: hidden;
 			color: #181a20;
@@ -75,6 +82,7 @@
 			text-transform: capitalize;
 			cursor: pointer;
 		}
+
 		.desc {
 			margin-top: 5px;
 			overflow: hidden;
@@ -87,19 +95,23 @@
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
+
 		.options {
 			margin-top: 15px;
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
+
 			div {
 				display: flex;
 				flex-direction: row;
+
 				img {
 					margin-right: 5px;
 					width: 17px;
 					height: 17px;
 				}
+
 				span {
 					color: #181a20;
 					font-family: $font;
@@ -110,11 +122,13 @@
 				}
 			}
 		}
+
 		.bott {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
+
 			div {
 				width: 65px;
 				display: flex;
@@ -122,6 +136,7 @@
 				align-items: center;
 				justify-content: space-between;
 			}
+
 			p {
 				color: #181a20;
 				font-family: $font;
@@ -131,6 +146,7 @@
 				line-height: normal;
 				text-transform: capitalize;
 			}
+
 			span {
 				margin-left: 6px;
 				color: rgba(143, 143, 143, 0.54);
@@ -141,12 +157,14 @@
 				line-height: normal;
 				text-transform: capitalize;
 			}
+
 			button {
 				margin-left: 15px;
 				width: 16px;
 				height: 16px;
 				box-sizing: border-box;
 			}
+
 			.buttons-box {
 				width: auto;
 				height: auto;
@@ -157,12 +175,14 @@
 		}
 	}
 }
+
 .seller-general-card {
 	position: relative;
 	margin-right: 27px;
 	margin-bottom: 34px;
 	display: flex;
 	flex-direction: column;
+
 	.seller-img {
 		border-radius: 12px;
 		width: 233px;
@@ -170,13 +190,14 @@
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		cursor: pointer;
+
 		div {
 			position: absolute;
 			padding: 12px;
 			top: 12px;
 			left: 12px;
 			border-radius: 6px;
-			background: #eb6753;
+			background: rgba(146, 106, 84, 1);
 			color: #fff;
 			font-family: $font;
 			font-size: 12px;
@@ -185,15 +206,18 @@
 			line-height: normal;
 		}
 	}
+
 	.seller-desc {
 		margin-top: 23px;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
+
 		.seller-info {
 			display: flex;
 			flex-direction: column;
+
 			strong {
 				color: #181a20;
 				font-family: $font;
@@ -203,6 +227,7 @@
 				line-height: normal;
 				cursor: pointer;
 			}
+
 			span {
 				color: #181a20;
 				font-family: $font;
@@ -212,38 +237,45 @@
 				line-height: 28px;
 			}
 		}
+
 		.buttons {
 			width: auto;
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
+
 			svg {
 				width: 24px;
 				height: 24px;
 				cursor: pointer;
 			}
+
 			.view-cnt {
 				font-size: 13px;
 			}
 		}
 	}
 }
+
 .community-general-card-config {
 	position: relative;
 	height: auto;
 	gap: 20px;
 	border-radius: 12px;
 	cursor: pointer;
+
 	.image-box {
 		width: 100%;
 		height: 283px;
+
 		.card-img {
 			width: 100%;
 			height: 100%;
 			border-radius: 12px;
 		}
 	}
+
 	.desc-box {
 		display: flex;
 		flex-direction: row;
@@ -251,6 +283,7 @@
 		align-items: center;
 		width: 100%;
 		height: 80px;
+
 		.title {
 			color: #717171;
 			font-family: $font;
@@ -259,6 +292,7 @@
 			font-weight: 400;
 			line-height: normal;
 		}
+
 		.desc {
 			color: #181a20;
 			font-family: $font;
@@ -268,22 +302,26 @@
 			line-height: 26px;
 			text-transform: capitalize;
 		}
+
 		.buttons {
 			width: auto;
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
+
 			svg {
 				width: 24px;
 				height: 24px;
 				cursor: pointer;
 			}
+
 			.view-cnt {
 				font-size: 13px;
 			}
 		}
 	}
+
 	.date-box {
 		position: absolute;
 		width: 70px;
@@ -295,6 +333,7 @@
 		border-radius: 12px;
 		background: #fff;
 		box-shadow: 0px 6px 15px 0px rgba(64, 79, 104, 0.05);
+
 		.month {
 			color: #181a20;
 			text-align: center;
@@ -304,6 +343,7 @@
 			font-weight: 400;
 			line-height: normal;
 		}
+
 		.day {
 			color: #181a20;
 			font-family: $font;
