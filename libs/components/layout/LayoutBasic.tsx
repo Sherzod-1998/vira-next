@@ -27,57 +27,6 @@ const withLayoutBasic = (Component: any) => {
 				desc = '',
 				bgImage = '';
 
-			switch (router.pathname) {
-				case '/product':
-					title = 'Product Search';
-					desc = 'We are glad to see you again!';
-					bgImage = '/img/banner/products.jpg';
-					break;
-				case '/seller':
-					title = 'Sellers';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/sellers.webp';
-					break;
-				case '/seller/detail':
-					title = 'seller Page';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/mypage':
-					title = 'my page';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header1.svg';
-					break;
-				case '/community':
-					title = 'Community';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/community/detail':
-					title = 'Community Detail';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/cs':
-					title = 'CS';
-					desc = 'We are glad to see you again!';
-					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/account/join':
-					title = 'Login/Signup';
-					desc = 'Authentication Process';
-					bgImage = '/img/banner/header2.svg';
-					setAuthHeader(true);
-					break;
-				case '/member':
-					title = 'Member Page';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header1.svg';
-					break;
-				default:
-					break;
-			}
-
 			return { title, desc, bgImage };
 		}, [router.pathname]);
 

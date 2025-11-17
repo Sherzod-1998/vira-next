@@ -108,7 +108,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
 
           <IconButton onClick={handleLikeClick}>
             {isLiked ? (
-              <FavoriteIcon style={{ color: '#ff4d67' }} />
+              <FavoriteIcon style={{ color: 'rgba(146, 106, 84, 1)' }} />
             ) : (
               <FavoriteBorderIcon style={{ color: '#9a9fa5' }} />
             )}
