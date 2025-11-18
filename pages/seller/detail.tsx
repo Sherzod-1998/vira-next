@@ -18,7 +18,7 @@ import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { CREATE_COMMENT, LIKE_TARGET_PRODUCTS } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 
@@ -48,7 +48,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 
 	/** APOLLO REQUESTS **/
 	const [createComment] = useMutation(CREATE_COMMENT);
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCTS);
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
 	const {
 		loading: getMemberLoading,
@@ -57,7 +57,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 		refetch: getMemberRefetch,
 	} = useQuery(GET_MEMBER, {
 		fetchPolicy: 'network-only',
-		variables: { input: sellerId },
+		variables: { memberId: sellerId }, // ✅ nomini query’ga mos qildik
 		skip: !sellerId,
 		onCompleted: (data: T) => {
 			setseller(data?.getMember);
@@ -65,6 +65,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 				...searchFilter,
 				search: {
 					memberId: data?.getMember?._id,
+					materialList: undefined,
 				},
 			});
 			setCommentInquiry({
@@ -188,7 +189,11 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							src={seller?.memberImage ? `${REACT_APP_API_URL}/${seller?.memberImage}` : '/img/profile/defaultUser.svg'}
 							alt=""
 						/>
-						<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
+						<Box
+							component={'div'}
+							className={'info'}
+							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
+						>
 							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
 							<div>
 								<img src="/img/icons/call.svg" alt="" />
@@ -201,11 +206,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							{sellerProducts.map((product: Product) => {
 								return (
 									<div className={'wrap-main'} key={product?._id}>
-										<ProductBigCard
-											product={product}
-											likeProductHandler={likeProductHandler}
-											key={product?._id}
-										/>
+										<ProductBigCard product={product} likeProductHandler={likeProductHandler} key={product?._id} />
 									</div>
 								);
 							})}
