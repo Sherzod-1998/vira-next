@@ -114,8 +114,8 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						<Stack className="main-box">
 							<Stack className="left-config">
 								<Stack className={'image-info'}>
-									<img src={'/img/logo/logoText.svg'} />
-									<Stack className={'community-name'}>
+									
+									<Stack className={'community-name'} justifyContent={'center'} alignItems={'center'}>
 										<Typography className={'name'}>Vira Community</Typography>
 									</Stack>
 								</Stack>
