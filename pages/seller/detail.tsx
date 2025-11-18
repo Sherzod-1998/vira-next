@@ -21,6 +21,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
+import MainProductCard from '../../libs/components/homepage/MainProductCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -123,6 +124,17 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	useEffect(() => {}, [commentInquiry]);
 
 	/** HANDLERS **/
+
+	const onLike = async (id: string) => {
+		try {
+			await likeTargetProduct({ variables: { input: id } });
+			await getProductsRefetch({ input: searchFilter });
+		} catch (e) {
+			console.log('like error:', (e as any)?.message);
+		}
+	};
+
+
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
 			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
@@ -206,7 +218,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							{sellerProducts.map((product: Product) => {
 								return (
 									<div className={'wrap-main'} key={product?._id}>
-										<ProductBigCard product={product} likeProductHandler={likeProductHandler} key={product?._id} />
+										<MainProductCard product={product} onLike={onLike} />
 									</div>
 								);
 							})}
@@ -221,10 +233,20 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 											onChange={productPaginationChangeHandler}
 											shape="circular"
 											color="primary"
+											sx={{
+												'& .MuiPaginationItem-root': {
+													color: 'rgba(0, 0, 0, 1)', // normal color
+													borderColor: 'rgba(0, 0, 0, 1)',
+												},
+												'& .Mui-selected': {
+													backgroundColor: 'rgba(146, 106, 84, 1) !important',
+													color: '#000000ff !important',
+												},
+											}}
 										/>
 									</Stack>
 									<span>
-										Total {productTotal} propert{productTotal > 1 ? 'ies' : 'y'} available
+										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
 									</span>
 								</>
 							) : (
@@ -258,6 +280,16 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 										onChange={commentPaginationChangeHandler}
 										shape="circular"
 										color="primary"
+										sx={{
+												'& .MuiPaginationItem-root': {
+													color: 'rgba(0, 0, 0, 1)', // normal color
+													borderColor: 'rgba(0, 0, 0, 1)',
+												},
+												'& .Mui-selected': {
+													backgroundColor: 'rgba(146, 106, 84, 1) !important',
+													color: '#000000ff !important',
+												},
+											}}
 									/>
 								</Box>
 							</Stack>
