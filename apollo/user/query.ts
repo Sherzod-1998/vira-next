@@ -210,9 +210,13 @@ export const GET_SELLER_PRODUCTS = gql`
 				createdAt
 				updatedAt
 			}
+			metaCounter {
+				total
+			}
 		}
 	}
 `;
+
 
 export const GET_FAVORITES = gql`
 	query GetFavorites($input: OrdinaryInquiry!) {

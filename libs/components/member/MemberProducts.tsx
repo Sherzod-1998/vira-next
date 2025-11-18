@@ -91,7 +91,17 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 										page={searchFilter.page}
 										shape="circular"
 										color="primary"
-										onChange={paginationHandler}
+										sx={{
+												'& .MuiPaginationItem-root': {
+													color: 'rgba(0, 0, 0, 1)', // normal color
+													borderColor: 'rgba(0, 0, 0, 1)',
+												},
+												'& .Mui-selected': {
+													backgroundColor: 'rgba(146, 106, 84, 1) !important',
+													color: '#000000ff !important',
+												},
+											}}
+										
 									/>
 								</Stack>
 								<Stack className="total-result">

@@ -21,6 +21,7 @@ const MemberMenu = (props: MemberMenuProps) => {
 	const category: any = router.query?.category;
 	const [member, setMember] = useState<Member | null>(null);
 	const { memberId } = router.query;
+	const effectiveMemberId = memberId as string; // kerak bo‘lsa cast
 
 	/** APOLLO REQUESTS **/
 	const {
@@ -30,9 +31,9 @@ const MemberMenu = (props: MemberMenuProps) => {
 		refetch: getMemberRefetch,
 	} = useQuery(GET_MEMBER, {
 		fetchPolicy: 'network-only',
-		variables: { input: memberId },
+		variables: { memberId: effectiveMemberId }, // ✅ to‘g‘ri
 		notifyOnNetworkStatusChange: true,
-		skip: !memberId,
+		skip: !effectiveMemberId,
 		onCompleted: (data: T) => {
 			setMember(data?.getMember);
 		},
@@ -74,7 +75,14 @@ const MemberMenu = (props: MemberMenuProps) => {
 					) : (
 						<Button
 							variant="contained"
-							sx={{ background: '#ff5d18', ':hover': { background: '#ff5d18' } }}
+							sx={{
+								background: '#926A54',
+								color: '#fff !important', // ← TEXT OQ
+								':hover': {
+									background: '#a37861ff',
+									color: '#fff', // ← HOVERDA HAM OQ QOLSIN
+								},
+							}}
 							onClick={() => subscribeHandler(member?._id, getMemberRefetch, memberId)}
 						>
 							Follow

@@ -169,6 +169,17 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 								onChange={paginationHandler}
 								shape="circular"
 								color="primary"
+								sx={{
+												'& .MuiPaginationItem-root': {
+													color: 'rgba(0, 0, 0, 1)', // normal color
+													borderColor: 'rgba(0, 0, 0, 1)',
+												},
+												'& .Mui-selected': {
+													backgroundColor: 'rgba(146, 106, 84, 1) !important',
+													color: '#000000ff !important',
+												},
+											}}
+								
 							/>
 						</Stack>
 						<Stack className="total-result">

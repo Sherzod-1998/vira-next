@@ -475,7 +475,6 @@ const AddProduct: React.FC<AddProductProps> = ({ initialValues }) => {
 };
 
 // @ts-ignore
-
 AddProduct.defaultProps = {
 	initialValues: {
 		productTitle: "",
