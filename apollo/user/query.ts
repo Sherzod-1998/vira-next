@@ -583,3 +583,23 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 		}
 	}
 `;
+
+/**************************
+ *         CS        *
+ *************************/
+
+export const GET_MY_CS_INQUIRIES = gql`
+	query GetMyCsInquiries($input: MyCsInquiryInquiry!) {
+		getMyCsInquiries(input: $input) {
+			list {
+				_id
+				title
+				content
+				status
+				answer
+				createdAt
+			}
+			total
+		}
+	}
+`;

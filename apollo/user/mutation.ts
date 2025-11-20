@@ -348,3 +348,20 @@ export const UNSUBSCRIBE = gql`
 }
 
 `;
+
+/**************************
+ *         CS        *
+ *************************/
+
+export const CREATE_CS_INQUIRY = gql`
+	mutation CreateCsInquiry($input: CreateCsInquiryInput!) {
+		createCsInquiry(input: $input) {
+			_id
+			title
+			content
+			status
+			answer
+			createdAt
+		}
+	}
+`;
