@@ -70,7 +70,12 @@ const Inquiry = () => {
 					
 				/>
 
-				<Button type="submit" variant="contained" disabled={createLoading}>
+				<Button
+					type="submit"
+					variant="contained"
+					disabled={createLoading}
+					sx={{ color: '#fff' }}
+				>
 					{createLoading ? 'Sending...' : 'Send'}
 				</Button>
 			</form>
