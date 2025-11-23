@@ -176,3 +176,44 @@ export const ANSWER_CS_INQUIRY = gql`
 		}
 	}
 `;
+
+/**************************
+ *         NOTICES        *
+ *************************/
+
+
+export const DELETE_NOTICE = gql`
+	mutation DeleteNotice($noticeId: ID!) {
+		deleteNotice(noticeId: $noticeId)
+	}
+`;
+
+export const UPDATE_NOTICE = gql`
+	mutation UpdateNotice($input: UpdateNoticeInput!) {
+		updateNotice(input: $input) {
+			_id
+			noticeCategory
+			noticeStatus
+			noticeTitle
+			noticeContent
+			memberId
+			createdAt
+			updatedAt
+		}
+	}
+`;
+
+export const CREATE_NOTICE = gql`
+	mutation CreateNotice($input: CreateNoticeInput!) {
+		createNotice(input: $input) {
+			_id
+			noticeCategory
+			noticeStatus
+			noticeTitle
+			noticeContent
+			memberId
+			createdAt
+			updatedAt
+		}
+	}
+`;

@@ -603,3 +603,23 @@ export const GET_MY_CS_INQUIRIES = gql`
 		}
 	}
 `;
+
+/**************************
+ *         NOTICES        *
+ *************************/
+
+export const GET_NOTICES = gql`
+	query GetNotices($input: NoticesInquiry!) {
+		getNotices(input: $input) {
+			list {
+				_id
+				noticeCategory
+				noticeStatus
+				noticeTitle
+				noticeContent 
+				createdAt
+			}
+			total
+		}
+	}
+`;

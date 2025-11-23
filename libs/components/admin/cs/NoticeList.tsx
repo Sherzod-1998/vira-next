@@ -1,246 +1,457 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import {
-	TableCell,
-	TableHead,
-	TableBody,
-	TableRow,
-	Table,
-	TableContainer,
-	Button,
-	Menu,
-	Fade,
-	MenuItem,
 	Box,
-	Checkbox,
-	Toolbar,
+	Stack,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Button,
+	Typography,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	TextField,
+	MenuItem,
 } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import { IconButton, Tooltip } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { NotePencil } from 'phosphor-react';
+import { useQuery, useMutation } from '@apollo/client';
+import { CREATE_NOTICE, DELETE_NOTICE, UPDATE_NOTICE } from '../../../../apollo/admin/mutation';
+import { GET_ADMIN_NOTICES } from '../../../../apollo/admin/query';
 
-type Order = 'asc' | 'desc';
-
-interface Data {
-	category: string;
-	title: string;
-	id: string;
-	writer: string;
-	date: string;
-	view: number;
-	action: string;
-}
-interface HeadCell {
-	disablePadding: boolean;
-	id: keyof Data;
-	label: string;
-	numeric: boolean;
+interface Notice {
+	_id: string;
+	noticeCategory: string;
+	noticeStatus: string;
+	noticeTitle: string;
+	noticeContent: string;
+	memberId: string;
+	createdAt: string;
 }
 
-const headCells: readonly HeadCell[] = [
-	{
-		id: 'category',
-		numeric: true,
-		disablePadding: false,
-		label: 'Category',
-	},
-	{
-		id: 'title',
-		numeric: true,
-		disablePadding: false,
-		label: 'TITLE',
-	},
-	{
-		id: 'id',
-		numeric: true,
-		disablePadding: false,
-		label: 'ID',
-	},
-	{
-		id: 'writer',
-		numeric: true,
-		disablePadding: false,
-		label: 'WRITER',
-	},
-	{
-		id: 'date',
-		numeric: true,
-		disablePadding: false,
-		label: 'DATE',
-	},
-	{
-		id: 'view',
-		numeric: true,
-		disablePadding: false,
-		label: 'VIEW',
-	},
-	{
-		id: 'action',
-		numeric: false,
-		disablePadding: false,
-		label: 'ACTION',
-	},
-];
-
-interface EnhancedTableProps {
-	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	order: Order;
-	orderBy: string;
-	rowCount: number;
+interface NoticeListProps {
+	status?: string;
 }
 
-interface EnhancedTableToolbarProps {
-	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	order: Order;
-	orderBy: string;
-	rowCount: number;
-}
+export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
+	const [page, setPage] = useState(1);
+	const limit = 10;
 
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-	const [select, setSelect] = useState('');
-	const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+	/** CREATE STATE **/
+	const [createOpen, setCreateOpen] = useState(false);
+	const [newCategory, setNewCategory] = useState('GENERAL');
+	const [newTitle, setNewTitle] = useState('');
+	const [newContent, setNewContent] = useState('');
+
+	/** EDIT STATE **/
+	const [editOpen, setEditOpen] = useState(false);
+	const [editTarget, setEditTarget] = useState<Notice | null>(null);
+	const [editTitle, setEditTitle] = useState('');
+	const [editContent, setEditContent] = useState('');
+
+	const variables: any = {
+		input: {
+			page,
+			limit,
+		},
+	};
+
+	if (status) {
+		variables.input.noticeStatus = status;
+	}
+
+	const { data, loading, error, refetch } = useQuery(GET_ADMIN_NOTICES, {
+		variables,
+		fetchPolicy: 'network-only',
+	});
+
+	const [createNoticeMutation, { loading: createLoading }] = useMutation(CREATE_NOTICE);
+	const [deleteNoticeMutation, { loading: deleteLoading }] = useMutation(DELETE_NOTICE);
+	const [updateNoticeMutation, { loading: updateLoading }] = useMutation(UPDATE_NOTICE);
+
+	const list: Notice[] = data?.getAdminNotices?.list ?? [];
+	const total: number = data?.getAdminNotices?.total ?? 0;
+	const totalPages = Math.max(1, Math.ceil(total / limit));
+
+	useEffect(() => {
+		setPage(1);
+		refetch({
+			input: {
+				page: 1,
+				limit,
+				noticeStatus: status,
+			},
+		});
+	}, [status]);
+
+	const changePage = (dir: 'prev' | 'next') => {
+		let newPage = page;
+		if (dir === 'prev' && page > 1) newPage = page - 1;
+		if (dir === 'next' && page < totalPages) newPage = page + 1;
+
+		if (newPage !== page) {
+			setPage(newPage);
+			refetch({
+				input: {
+					page: newPage,
+					limit,
+					noticeStatus: status,
+				},
+			});
+		}
+	};
+
+	/** CREATE HANDLERS **/
+	const openCreateDialog = () => {
+		setCreateOpen(true);
+	};
+
+	const closeCreateDialog = () => {
+		setCreateOpen(false);
+		setNewCategory('GENERAL');
+		setNewTitle('');
+		setNewContent('');
+	};
+
+	const handleCreate = async () => {
+		if (!newTitle || !newContent) {
+			alert('Please fill title and content');
+			return;
+		}
+
+		try {
+			await createNoticeMutation({
+				variables: {
+					input: {
+						noticeCategory: newCategory,
+						noticeTitle: newTitle,
+						noticeContent: newContent,
+					},
+				},
+			});
+
+			closeCreateDialog();
+
+			await refetch({
+				input: {
+					page,
+					limit,
+					noticeStatus: status,
+				},
+			});
+		} catch (e) {
+			console.error(e);
+			alert('Notice yaratishda xatolik yuz berdi');
+		}
+	};
+
+	/** DELETE HANDLER **/
+	const handleDelete = async (id: string) => {
+		const ok = window.confirm('Ushbu notice-ni o‘chirmoqchimisiz?');
+		if (!ok) return;
+
+		try {
+			await deleteNoticeMutation({
+				variables: { noticeId: id },
+			});
+			await refetch({
+				input: {
+					page,
+					limit,
+					noticeStatus: status,
+				},
+			});
+		} catch (e) {
+			console.error(e);
+			alert('Notice o‘chirishda xatolik yuz berdi');
+		}
+	};
+
+	/** EDIT HANDLERS **/
+	const openEditDialog = (notice: Notice) => {
+		setEditTarget(notice);
+		setEditTitle(notice.noticeTitle);
+		setEditContent(notice.noticeContent);
+		setEditOpen(true);
+	};
+
+	const closeEditDialog = () => {
+		setEditOpen(false);
+		setEditTarget(null);
+		setEditTitle('');
+		setEditContent('');
+	};
+
+	const handleUpdate = async () => {
+		if (!editTarget) return;
+
+		try {
+			await updateNoticeMutation({
+				variables: {
+					input: {
+						noticeId: editTarget._id,
+						noticeTitle: editTitle,
+						noticeContent: editContent,
+					},
+				},
+			});
+
+			closeEditDialog();
+
+			await refetch({
+				input: {
+					page,
+					limit,
+					noticeStatus: status,
+				},
+			});
+		} catch (e) {
+			console.error(e);
+			alert('Notice yangilashda xatolik yuz berdi');
+		}
+	};
 
 	return (
 		<>
-			{numSelected > 0 ? (
-				<>
-					<Toolbar>
-						<Box component={'div'}>
-							<Box component={'div'} className="flex_box">
-								<Checkbox
-									color="primary"
-									indeterminate={numSelected > 0 && numSelected < rowCount}
-									checked={rowCount > 0 && numSelected === rowCount}
-									onChange={onSelectAllClick}
-									inputProps={{
-										'aria-label': 'select all',
-									}}
-								/>
-								<Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="h6" component="div">
-									{numSelected} selected
-								</Typography>
-							</Box>
-							<Button variant={'text'} size={'large'}>
-								Delete
-							</Button>
-						</Box>
-					</Toolbar>
-				</>
-			) : (
-				<TableHead>
-					<TableRow>
-						<TableCell padding="checkbox">
-							<Checkbox
-								color="primary"
-								indeterminate={numSelected > 0 && numSelected < rowCount}
-								checked={rowCount > 0 && numSelected === rowCount}
-								onChange={onSelectAllClick}
-								inputProps={{
-									'aria-label': 'select all',
-								}}
-							/>
-						</TableCell>
-						{headCells.map((headCell) => (
-							<TableCell
-								key={headCell.id}
-								align={headCell.numeric ? 'left' : 'right'}
-								padding={headCell.disablePadding ? 'none' : 'normal'}
-							>
-								{headCell.label}
-							</TableCell>
-						))}
-					</TableRow>
-				</TableHead>
-			)}
-			{numSelected > 0 ? null : null}
-		</>
-	);
-};
+			<Stack>
+				{/* CREATE BUTTON */}
+				<Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+					<Button
+						variant="contained"
+						onClick={openCreateDialog}
+						sx={{ width: 160, color: 'white' }}
+					>
+						Add Notice
+					</Button>
+				</Box>
 
-interface NoticeListType {
-	dense?: boolean;
-	membersData?: any;
-	searchMembers?: any;
-	anchorEl?: any;
-	handleMenuIconClick?: any;
-	handleMenuIconClose?: any;
-	generateMentorTypeHandle?: any;
-}
+				<TableContainer>
+					<Table sx={{ minWidth: 750 }} size="medium">
+						<TableHead>
+							<TableRow>
+								<TableCell align="left">CATEGORY</TableCell>
+								<TableCell align="left">TITLE</TableCell>
+								<TableCell align="left">CONTENT</TableCell>
+								<TableCell align="left">WRITER</TableCell>
+								<TableCell align="left">DATE</TableCell>
+								<TableCell align="center">STATUS</TableCell>
+								<TableCell align="center">ACTIONS</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{loading && (
+								<TableRow>
+									<TableCell colSpan={7}>Loading...</TableCell>
+								</TableRow>
+							)}
 
-export const NoticeList = (props: NoticeListType) => {
-	const {
-		dense,
-		membersData,
-		searchMembers,
-		anchorEl,
-		handleMenuIconClick,
-		handleMenuIconClose,
-		generateMentorTypeHandle,
-	} = props;
-	const router = useRouter();
+							{!loading && list.length === 0 && (
+								<TableRow>
+									<TableCell colSpan={7}>No notices.</TableCell>
+								</TableRow>
+							)}
 
-	/** APOLLO REQUESTS **/
-	/** LIFECYCLES **/
-	/** HANDLERS **/
+							{list.map((item) => (
+								<TableRow hover key={item._id}>
+									<TableCell align="left">{item.noticeCategory}</TableCell>
 
-	return (
-		<Stack>
-			<TableContainer>
-				<Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-					{/*@ts-ignore*/}
-					<EnhancedTableToolbar />
-					<TableBody>
-						{[1, 2, 3, 4, 5].map((ele: any, index: number) => {
-							const member_image = '/img/profile/defaultUser.svg';
-
-							return (
-								<TableRow hover key={'member._id'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-									<TableCell padding="checkbox">
-										<Checkbox color="primary" />
+									<TableCell align="left">
+										<Typography
+											sx={{
+												fontWeight: 600,
+												maxWidth: 260,
+												whiteSpace: 'nowrap',
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+											}}
+										>
+											{item.noticeTitle}
+										</Typography>
 									</TableCell>
-									<TableCell align="left">mb id</TableCell>
-									<TableCell align="left">member.mb_full_name</TableCell>
-									<TableCell align="left">member.mb_phone</TableCell>
-									<TableCell align="left" className={'name'}>
-										<Stack direction={'row'}>
-											<Link href={`/_admin/users/detail?mb_id=$'{member._id'}`}>
-												<div>
-													<Avatar alt="Remy Sharp" src={member_image} sx={{ ml: '2px', mr: '10px' }} />
-												</div>
-											</Link>
-											<Link href={`/_admin/users/detail?mb_id=${'member._id'}`}>
-												<div>member.mb_nick</div>
-											</Link>
+
+									<TableCell align="left">
+										<div
+											style={{
+												maxWidth: 260,
+												whiteSpace: 'nowrap',
+												textOverflow: 'ellipsis',
+												overflow: 'hidden',
+											}}
+										>
+											{item.noticeContent}
+										</div>
+									</TableCell>
+
+									<TableCell align="left">{item.memberId}</TableCell>
+
+									<TableCell align="left">
+										{new Date(item.createdAt).toLocaleDateString()}
+									</TableCell>
+
+									<TableCell align="center">
+										<span
+											style={{
+												padding: '4px 10px',
+												borderRadius: 6,
+												background:
+													item.noticeStatus === 'ACTIVE'
+														? '#E8F5E9'
+														: item.noticeStatus === 'HIDDEN'
+														? '#FFF3E0'
+														: '#FFEBEE',
+												color:
+													item.noticeStatus === 'ACTIVE'
+														? '#2E7D32'
+														: item.noticeStatus === 'HIDDEN'
+														? '#EF6C00'
+														: '#C62828',
+												fontSize: 12,
+											}}
+										>
+											{item.noticeStatus}
+										</span>
+									</TableCell>
+
+									<TableCell align="center">
+										<Stack direction="row" spacing={1} justifyContent="center">
+											<Button
+												variant="outlined"
+												size="small"
+												onClick={() => openEditDialog(item)}
+											>
+												Edit
+											</Button>
+											<Button
+												variant="outlined"
+												color="error"
+												size="small"
+												onClick={() => handleDelete(item._id)}
+												disabled={deleteLoading}
+											>
+												Delete
+											</Button>
 										</Stack>
 									</TableCell>
-									<TableCell align="left">member.mb_phone</TableCell>
-									<TableCell align="left">member.mb_phone</TableCell>
-									<TableCell align="right">
-										<Tooltip title={'delete'}>
-											<IconButton>
-												<DeleteRoundedIcon />
-											</IconButton>
-										</Tooltip>
-										<Tooltip title="edit">
-											<IconButton onClick={() => router.push(`/_admin/cs/notice_create?id=notice._id`)}>
-												<NotePencil size={24} weight="fill" />
-											</IconButton>
-										</Tooltip>
-									</TableCell>
 								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</Stack>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+
+				<Box
+					sx={{
+						mt: 2,
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						gap: 2,
+					}}
+				>
+					<Button
+						variant="outlined"
+						size="small"
+						onClick={() => changePage('prev')}
+						disabled={page === 1}
+					>
+						Prev
+					</Button>
+					<span>
+						{page} / {totalPages}
+					</span>
+					<Button
+						variant="outlined"
+						size="small"
+						onClick={() => changePage('next')}
+						disabled={page === totalPages}
+					>
+						Next
+					</Button>
+				</Box>
+			</Stack>
+
+			{/* CREATE DIALOG */}
+			<Dialog open={createOpen} onClose={closeCreateDialog} fullWidth maxWidth="sm">
+				<DialogTitle>Create Notice</DialogTitle>
+				<DialogContent sx={{ mt: 1 }}>
+					<TextField
+						select
+						fullWidth
+						label="Category"
+						margin="dense"
+						value={newCategory}
+						onChange={(e) => setNewCategory(e.target.value)}
+					>
+						<MenuItem value="GENERAL">GENERAL</MenuItem>
+						<MenuItem value="EVENT">EVENT</MenuItem>
+						<MenuItem value="SYSTEM">SYSTEM</MenuItem>
+					</TextField>
+
+					<TextField
+						label="Title"
+						fullWidth
+						margin="dense"
+						value={newTitle}
+						onChange={(e) => setNewTitle(e.target.value)}
+					/>
+
+					<TextField
+						label="Content"
+						fullWidth
+						multiline
+						minRows={4}
+						margin="dense"
+						value={newContent}
+						onChange={(e) => setNewContent(e.target.value)}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={closeCreateDialog}>Cancel</Button>
+					<Button
+						variant="contained"
+						onClick={handleCreate}
+						disabled={createLoading}
+						style={{ color: 'white' }}
+					>
+						{createLoading ? 'Saving...' : 'Create'}
+					</Button>
+				</DialogActions>
+			</Dialog>
+
+			{/* EDIT DIALOG */}
+			<Dialog open={editOpen} onClose={closeEditDialog} fullWidth maxWidth="sm">
+				<DialogTitle>Edit Notice</DialogTitle>
+				<DialogContent sx={{ mt: 1 }}>
+					<TextField
+						label="Title"
+						fullWidth
+						margin="dense"
+						value={editTitle}
+						onChange={(e) => setEditTitle(e.target.value)}
+					/>
+					<TextField
+						label="Content"
+						fullWidth
+						margin="dense"
+						multiline
+						minRows={4}
+						value={editContent}
+						onChange={(e) => setEditContent(e.target.value)}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={closeEditDialog}>Cancel</Button>
+					<Button
+						onClick={handleUpdate}
+						variant="contained"
+						disabled={updateLoading}
+						style={{ color: 'white' }}
+					>
+						{updateLoading ? 'Saving...' : 'Save'}
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
 	);
 };

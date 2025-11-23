@@ -114,9 +114,7 @@
                 color: #000;
                 font-family: $font;
                 font-size: 14px;
-                font-style: normal;
                 font-weight: 400;
-                line-height: normal;
                 text-transform: capitalize;
               }
             }
@@ -129,59 +127,77 @@
                 padding: 20px 14px 20px 30px;
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
+                align-items: center; // 👈 space-between o‘rniga
                 border: 1px solid #EEE;
+                gap: 16px;
 
                 &.event {
                   background: #F6D79A;
                 }
 
+                // EVENT pill yoki number
                 div {
                   padding: 6px 9px;
                   border-radius: 12px;
-                  border: 1px solid #000000;
-                  color: #000000;
+                  border: 1px solid #000;
+                  color: #000;
                   font-family: $font;
                   font-size: 12px;
-                  font-style: normal;
                   font-weight: 400;
                 }
 
                 .notice-number {
                   margin-left: 18px;
-                  width: 39px;
+                  min-width: 39px;
                   color: #BDBDBD;
                   font-family: $font;
                   font-size: 14px;
-                  font-style: normal;
                   font-weight: 400;
-                  line-height: normal;
                 }
 
-                .notice-title {
-                  width: 1060px;
-                  color: #000;
-                  font-family: $font;
-                  font-size: 16px;
-                  font-style: normal;
-                  font-weight: 400;
-                  line-height: normal;
+                // 🔸 Middle block (title + content)
+                .notice-middle {
+                  display: flex;
+                  flex-direction: row; // 🔥 yonma-yon
+                  align-items: center; // vertikal markazlash
+                  justify-content: flex-start; // gorizont markazlash
+                  text-align: center;
+                  border: none;
+                 
+                  .notice-title {
+                    max-width: 500px;
+                    color: #000;
+                    font-family: $font;
+                    font-size: 16px;
+                    font-weight: 400;
+                    white-space: nowrap; // 🔥 bitta qatorda tursin
+                  }
+
+                  .notice-content-text {
+                    max-width: 500px;
+                    color: #555;
+                    font-family: $font;
+                    font-size: 14px;
+                    font-weight: 400;
+                    white-space: nowrap; // 🔥 bu ham bitta qatorda tursin
+                  }
                 }
 
+
+                // Sana — o‘ng tomonda
                 .notice-date {
+                  margin-left: auto;
                   color: #BDBDBD;
                   font-family: $font;
                   font-size: 14px;
-                  font-style: normal;
                   font-weight: 400;
-                  line-height: normal;
                 }
               }
             }
-
           }
-
         }
+
+
 
         .faq-content {
           margin-top: 25px;
@@ -256,92 +272,92 @@
         }
 
         .inquiry-content {
-    .title {
-      margin-bottom: 25px;
-      color: #000;
-      font-family: $font;
-      font-size: 27px;
-      font-weight: 700;
-      letter-spacing: 0.54px;
-    }
-
-    .inquiry-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 20px;
-      border: 1px solid #EEE;
-      border-radius: 4px;
-      margin-bottom: 30px;
-
-      button {
-        align-self: flex-end;
-        background: rgba(146, 106, 84, 1);
-      }
-    }
-
-    .inquiry-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-
-      .inquiry-card {
-        border: 1px solid #EEE;
-        padding: 16px 20px;
-        border-radius: 4px;
-
-        .inquiry-header {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 8px;
-
-          .inquiry-title {
+          .title {
+            margin-bottom: 25px;
+            color: #000;
             font-family: $font;
-            font-weight: 600;
-            font-size: 16px;
+            font-size: 27px;
+            font-weight: 700;
+            letter-spacing: 0.54px;
           }
 
-          .inquiry-status {
-            font-size: 12px;
-            color: #757575;
-          }
-        }
+          .inquiry-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            border: 1px solid #EEE;
+            border-radius: 4px;
+            margin-bottom: 30px;
 
-        .inquiry-content-text {
-          margin: 8px 0;
-          font-size: 14px;
-        }
-
-        .inquiry-meta {
-          font-size: 12px;
-          color: #BDBDBD;
-          margin-bottom: 4px;
-        }
-
-        .inquiry-answer {
-          margin-top: 6px;
-          font-size: 14px;
-
-          .answer-label {
-            font-weight: 600;
-            margin-right: 4px;
+            button {
+              align-self: flex-end;
+              background: rgba(146, 106, 84, 1);
+            }
           }
 
-          .answer-text {
-            color: #424242;
+          .inquiry-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .inquiry-card {
+              border: 1px solid #EEE;
+              padding: 16px 20px;
+              border-radius: 4px;
+
+              .inquiry-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+
+                .inquiry-title {
+                  font-family: $font;
+                  font-weight: 600;
+                  font-size: 16px;
+                }
+
+                .inquiry-status {
+                  font-size: 12px;
+                  color: #757575;
+                }
+              }
+
+              .inquiry-content-text {
+                margin: 8px 0;
+                font-size: 14px;
+              }
+
+              .inquiry-meta {
+                font-size: 12px;
+                color: #BDBDBD;
+                margin-bottom: 4px;
+              }
+
+              .inquiry-answer {
+                margin-top: 6px;
+                font-size: 14px;
+
+                .answer-label {
+                  font-weight: 600;
+                  margin-right: 4px;
+                }
+
+                .answer-text {
+                  color: #424242;
+                }
+              }
+            }
+
+            .pagination {
+              margin-top: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 12px;
+            }
           }
         }
-      }
-
-      .pagination {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-      }
-    }
-  }
 
       }
     }
