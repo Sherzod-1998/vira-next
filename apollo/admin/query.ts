@@ -216,3 +216,20 @@ export const GET_COMMENTS = gql`
 /**************************
  *         CS        *
  *************************/
+
+export const GET_ADMIN_CS_INQUIRIES = gql`
+	query GetAdminCsInquiries($input: AdminCsInquiryInquiry!) {
+		getAdminCsInquiries(input: $input) {
+			list {
+				_id
+				title
+				content
+				status
+				answer
+				userId
+				createdAt
+			}
+			total
+		}
+	}
+`;

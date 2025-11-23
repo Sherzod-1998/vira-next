@@ -1,192 +1,288 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import {
-	TableCell,
-	TableHead,
-	TableBody,
-	TableRow,
+	Box,
+	Stack,
 	Table,
+	TableBody,
+	TableCell,
 	TableContainer,
+	TableHead,
+	TableRow,
 	Button,
-	Menu,
-	Fade,
-	MenuItem,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	TextField,
+	Typography,
 } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_ADMIN_CS_INQUIRIES } from '../../../../apollo/admin/query';
+import { ANSWER_CS_INQUIRY } from '../../../../apollo/admin/mutation';
 
-interface Data {
-	category: string;
-	qna_case_status: string;
+
+interface CsInquiry {
+	_id: string;
 	title: string;
-	writer: string;
-	date: string;
+	content: string;
+	answer: string | null;
 	status: string;
-	id?: string;
+	userId: string;
+	createdAt: string;
 }
 
-type Order = 'asc' | 'desc';
-
-interface HeadCell {
-	disablePadding: boolean;
-	id: keyof Data;
-	label: string;
-	numeric: boolean;
+interface InquiryListProps {
+	status?: 'PENDING' | 'ANSWERED'; // parentdan keladigan filter
 }
 
-const headCells: readonly HeadCell[] = [
-	{
-		id: 'category',
-		numeric: true,
-		disablePadding: false,
-		label: 'CATEGORY',
-	},
-	{
-		id: 'title',
-		numeric: true,
-		disablePadding: false,
-		label: 'TITLE',
-	},
-	{
-		id: 'writer',
-		numeric: true,
-		disablePadding: false,
-		label: 'WRITER',
-	},
-	{
-		id: 'date',
-		numeric: true,
-		disablePadding: false,
-		label: 'DATE',
-	},
-	{
-		id: 'qna_case_status',
-		numeric: false,
-		disablePadding: false,
-		label: 'QNA STATUS',
-	},
-];
+export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
+	const [page, setPage] = useState(1);
+	const limit = 10;
 
-interface EnhancedTableProps {
-	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	order: Order;
-	orderBy: string;
-	rowCount: number;
-}
+	const [selected, setSelected] = useState<CsInquiry | null>(null);
+	const [answerText, setAnswerText] = useState('');
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-	const { onSelectAllClick } = props;
+	// QUERY VARIABLES
+	const variables: any = {
+		input: {
+			page,
+			limit,
+		},
+	};
 
-	return (
-		<TableHead>
-			<TableRow>
-				{headCells.map((headCell) => (
-					<TableCell
-						key={headCell.id}
-						align={headCell.numeric ? 'left' : 'center'}
-						padding={headCell.disablePadding ? 'none' : 'normal'}
-					>
-						{headCell.label}
-					</TableCell>
-				))}
-			</TableRow>
-		</TableHead>
-	);
-}
+	if (status) {
+		variables.input.status = status; // 🔥 filter qo'shildi
+	}
 
-interface InquiryPanelListType {
-	dense?: boolean;
-	membersData?: any;
-	searchMembers?: any;
-	anchorEl?: any;
-	handleMenuIconClick?: any;
-	handleMenuIconClose?: any;
-	generateMentorTypeHandle?: any;
-}
+	const { data, loading, error, refetch } = useQuery(GET_ADMIN_CS_INQUIRIES, {
+		variables,
+		fetchPolicy: 'network-only',
+	});
 
-export const InquiryList = (props: InquiryPanelListType) => {
-	const {
-		dense,
-		membersData,
-		searchMembers,
-		anchorEl,
-		handleMenuIconClick,
-		handleMenuIconClose,
-		generateMentorTypeHandle,
-	} = props;
-	const router = useRouter();
+	const [answerCsInquiry, { loading: answerLoading }] = useMutation(ANSWER_CS_INQUIRY);
 
-	/** APOLLO REQUESTS **/
-	/** LIFECYCLES **/
-	/** HANDLERS **/
+	const list: CsInquiry[] = data?.getAdminCsInquiries?.list ?? [];
+	const total: number = data?.getAdminCsInquiries?.total ?? 0;
+	const totalPages = Math.max(1, Math.ceil(total / limit));
+
+	// status tab o'zgarganda 1-betagacha reset + refetch
+	useEffect(() => {
+		setPage(1);
+		refetch({
+			input: {
+				page: 1,
+				limit,
+				status,
+			},
+		});
+	}, [status]);
+
+	const handleOpenDialog = (item: CsInquiry) => {
+		setSelected(item);
+		setAnswerText(item.answer || '');
+	};
+
+	const handleCloseDialog = () => {
+		setSelected(null);
+		setAnswerText('');
+	};
+
+	const handleSubmitAnswer = async () => {
+		if (!selected) return;
+
+		await answerCsInquiry({
+			variables: {
+				input: {
+					inquiryId: selected._id,
+					answer: answerText,
+				},
+			},
+		});
+
+		handleCloseDialog();
+		refetch({
+			input: {
+				page,
+				limit,
+				status,
+			},
+		});
+	};
+
+	const changePage = (dir: 'prev' | 'next') => {
+		let newPage = page;
+		if (dir === 'prev' && page > 1) newPage = page - 1;
+		if (dir === 'next' && page < totalPages) newPage = page + 1;
+
+		if (newPage !== page) {
+			setPage(newPage);
+			refetch({
+				input: {
+					page: newPage,
+					limit,
+					status,
+				},
+			});
+		}
+	};
 
 	return (
 		<Stack>
 			<TableContainer>
-				<Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-					{/*@ts-ignore*/}
-					<EnhancedTableHead />
+				<Table sx={{ minWidth: 750 }} size="medium">
+					<TableHead>
+						<TableRow>
+							<TableCell align="left">TITLE</TableCell>
+							<TableCell align="left">CONTENT</TableCell>
+							<TableCell align="left">USER</TableCell>
+							<TableCell align="left">DATE</TableCell>
+							<TableCell align="center">STATUS</TableCell>
+							<TableCell align="center">ACTION</TableCell>
+						</TableRow>
+					</TableHead>
+
 					<TableBody>
-						{[1, 2, 3, 4, 5].map((ele: any, index: number) => {
-							const member_image = '/img/profile/defaultUser.svg';
+						{loading && (
+							<TableRow>
+								<TableCell colSpan={6}>Loading...</TableCell>
+							</TableRow>
+						)}
 
-							let status_class_name = '';
+						{!loading && list.length === 0 && (
+							<TableRow>
+								<TableCell colSpan={6}>No inquiries.</TableCell>
+							</TableRow>
+						)}
 
-							return (
-								<TableRow hover key={'member._id'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-									<TableCell align="left">mb id</TableCell>
-									<TableCell align="left">member.mb_full_name</TableCell>
-									<TableCell align="left" className={'name'}>
-										<Stack direction={'row'}>
-											<Link href={`/_admin/users/detail?mb_id=$'{member._id'}`}>
-												<div>
-													<Avatar alt="Remy Sharp" src={member_image} sx={{ ml: '2px', mr: '10px' }} />
-												</div>
-											</Link>
-											<Link href={`/_admin/users/detail?mb_id=${'member._id'}`}>
-												<div>member.mb_nick</div>
-											</Link>
-										</Stack>
-									</TableCell>
-									<TableCell align="left">member.mb_phone</TableCell>
-									<TableCell align="center">
-										<Button onClick={(e: any) => handleMenuIconClick(e, index)} className={'badge success'}>
-											member.mb_type
-										</Button>
+						{list.map((item) => (
+							<TableRow hover key={item._id}>
+								<TableCell align="left">{item.title}</TableCell>
 
-										<Menu
-											className={'menu-modal'}
-											MenuListProps={{
-												'aria-labelledby': 'fade-button',
-											}}
-											anchorEl={anchorEl[index]}
-											open={Boolean(anchorEl[index])}
-											onClose={handleMenuIconClose}
-											TransitionComponent={Fade}
-											sx={{ p: 1 }}
-										>
-											<MenuItem onClick={(e) => generateMentorTypeHandle('member._id', 'mentor', 'originate')}>
-												<Typography variant={'subtitle1'} component={'span'}>
-													MENTOR
-												</Typography>
-											</MenuItem>
-											<MenuItem onClick={(e) => generateMentorTypeHandle('member._id', 'user', 'remove')}>
-												<Typography variant={'subtitle1'} component={'span'}>
-													USER
-												</Typography>
-											</MenuItem>
-										</Menu>
-									</TableCell>
-								</TableRow>
-							);
-						})}
+								<TableCell align="left">
+									<div
+										style={{
+											maxWidth: 260,
+											whiteSpace: 'nowrap',
+											textOverflow: 'ellipsis',
+											overflow: 'hidden',
+										}}
+									>
+										{item.content}
+									</div>
+								</TableCell>
+
+								<TableCell align="left">{item.userId}</TableCell>
+
+								<TableCell align="left">
+									{new Date(item.createdAt).toLocaleDateString()}
+								</TableCell>
+
+								<TableCell align="center">
+									<span
+										style={{
+											padding: '4px 10px',
+											borderRadius: 6,
+											background:
+												item.status === 'PENDING'
+													? '#FFEBEE'
+													: '#E8F5E9',
+											color:
+												item.status === 'PENDING'
+													? '#C62828'
+													: '#2E7D32',
+											fontSize: 12,
+										}}
+									>
+										{item.status}
+									</span>
+								</TableCell>
+
+								<TableCell align="center">
+									<Button
+										variant="outlined"
+										size="small"
+										onClick={() => handleOpenDialog(item)}
+									>
+										{item.answer ? 'Edit Answer' : 'Answer'}
+									</Button>
+								</TableCell>
+							</TableRow>
+						))}
 					</TableBody>
 				</Table>
 			</TableContainer>
+
+			{/* Simple pagination */}
+			<Box
+				sx={{
+					mt: 2,
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					gap: 2,
+				}}
+			>
+				<Button
+					variant="outlined"
+					size="small"
+					onClick={() => changePage('prev')}
+					disabled={page === 1}
+				>
+					Prev
+				</Button>
+				<span>
+					{page} / {totalPages}
+				</span>
+				<Button
+					variant="outlined"
+					size="small"
+					onClick={() => changePage('next')}
+					disabled={page === totalPages}
+				>
+					Next
+				</Button>
+			</Box>
+
+			{/* ANSWER DIALOG */}
+			<Dialog open={!!selected} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+				<DialogTitle>Answer Inquiry</DialogTitle>
+				{selected && (
+					<>
+						<DialogContent dividers>
+							<Typography variant="subtitle2" sx={{ mb: 1 }}>
+								Title
+							</Typography>
+							<Typography sx={{ mb: 2 }}>{selected.title}</Typography>
+
+							<Typography variant="subtitle2" sx={{ mb: 1 }}>
+								Content
+							</Typography>
+							<Typography sx={{ mb: 2, whiteSpace: 'pre-line' }}>
+								{selected.content}
+							</Typography>
+
+							<TextField
+								label="Answer"
+								fullWidth
+								multiline
+								minRows={4}
+								value={answerText}
+								onChange={(e) => setAnswerText(e.target.value)}
+							/>
+						</DialogContent>
+						<DialogActions>
+							<Button onClick={handleCloseDialog}>Cancel</Button>
+							<Button
+								variant="contained"
+								onClick={handleSubmitAnswer}
+								disabled={answerLoading || !answerText.trim()}
+							>
+								{answerLoading ? 'Saving...' : 'Save'}
+							</Button>
+						</DialogActions>
+					</>
+				)}
+			</Dialog>
 		</Stack>
 	);
 };

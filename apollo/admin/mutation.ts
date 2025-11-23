@@ -156,3 +156,23 @@ export const REMOVE_COMMENT_BY_ADMIN = gql`
     }
   }
 `;
+
+/**************************
+ *         CS        *
+ *************************/
+
+export const ANSWER_CS_INQUIRY = gql`
+	mutation AnswerCsInquiry($input: AnswerCsInquiryInput!) {
+		answerCsInquiry(input: $input) {
+			_id
+			title
+			content
+			status
+			answer
+			answeredBy
+			answeredAt
+			userId
+			createdAt
+		}
+	}
+`;
