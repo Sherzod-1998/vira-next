@@ -213,114 +213,102 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 		}
 	};
 
+	const getStatusClass = (status: string) => {
+		switch (status) {
+			case 'ACTIVE':
+				return 'status-badge--active';
+			case 'HIDDEN':
+				return 'status-badge--hidden';
+			case 'DELETED':
+				return 'status-badge--deleted';
+			default:
+				return '';
+		}
+	};
+
 	return (
 		<>
-			<Stack>
+			<Stack className="notice-list">
 				{/* CREATE BUTTON */}
-				<Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-					<Button
-						variant="contained"
-						onClick={openCreateDialog}
-						sx={{ width: 160, color: 'white' }}
-					>
+				<Box className="notice-list__toolbar">
+					<Button variant="contained" onClick={openCreateDialog} className="notice-list__add-btn">
 						Add Notice
 					</Button>
 				</Box>
 
-				<TableContainer>
-					<Table sx={{ minWidth: 750 }} size="medium">
+				<TableContainer className="notice-list__table-container">
+					<Table className="notice-list__table" size="medium">
 						<TableHead>
 							<TableRow>
-								<TableCell align="left">CATEGORY</TableCell>
-								<TableCell align="left">TITLE</TableCell>
-								<TableCell align="left">CONTENT</TableCell>
-								<TableCell align="left">WRITER</TableCell>
-								<TableCell align="left">DATE</TableCell>
-								<TableCell align="center">STATUS</TableCell>
-								<TableCell align="center">ACTIONS</TableCell>
+								<TableCell className="notice-list__head-cell" align="left">
+									CATEGORY
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="left">
+									TITLE
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="left">
+									CONTENT
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="left">
+									WRITER
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="left">
+									DATE
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="center">
+									STATUS
+								</TableCell>
+								<TableCell className="notice-list__head-cell" align="center">
+									ACTIONS
+								</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{loading && (
 								<TableRow>
-									<TableCell colSpan={7}>Loading...</TableCell>
+									<TableCell colSpan={7} align="center">
+										Loading...
+									</TableCell>
 								</TableRow>
 							)}
 
 							{!loading && list.length === 0 && (
 								<TableRow>
-									<TableCell colSpan={7}>No notices.</TableCell>
+									<TableCell colSpan={7} align="center">
+										No notices.
+									</TableCell>
 								</TableRow>
 							)}
 
 							{list.map((item) => (
-								<TableRow hover key={item._id}>
-									<TableCell align="left">{item.noticeCategory}</TableCell>
-
-									<TableCell align="left">
-										<Typography
-											sx={{
-												fontWeight: 600,
-												maxWidth: 260,
-												whiteSpace: 'nowrap',
-												overflow: 'hidden',
-												textOverflow: 'ellipsis',
-											}}
-										>
-											{item.noticeTitle}
-										</Typography>
+								<TableRow hover key={item._id} className="notice-list__row">
+									<TableCell align="left" className="notice-list__cell notice-list__cell--category">
+										{item.noticeCategory}
 									</TableCell>
 
-									<TableCell align="left">
-										<div
-											style={{
-												maxWidth: 260,
-												whiteSpace: 'nowrap',
-												textOverflow: 'ellipsis',
-												overflow: 'hidden',
-											}}
-										>
-											{item.noticeContent}
-										</div>
+									<TableCell align="left" className="notice-list__cell notice-list__cell--title">
+										<Typography className="notice-list__title">{item.noticeTitle}</Typography>
 									</TableCell>
 
-									<TableCell align="left">{item.memberId}</TableCell>
+									<TableCell align="left" className="notice-list__cell notice-list__cell--content">
+										<div className="notice-list__content">{item.noticeContent}</div>
+									</TableCell>
 
-									<TableCell align="left">
+									<TableCell align="left" className="notice-list__cell notice-list__cell--writer">
+										{item.memberId}
+									</TableCell>
+
+									<TableCell align="left" className="notice-list__cell notice-list__cell--date">
 										{new Date(item.createdAt).toLocaleDateString()}
 									</TableCell>
 
-									<TableCell align="center">
-										<span
-											style={{
-												padding: '4px 10px',
-												borderRadius: 6,
-												background:
-													item.noticeStatus === 'ACTIVE'
-														? '#E8F5E9'
-														: item.noticeStatus === 'HIDDEN'
-														? '#FFF3E0'
-														: '#FFEBEE',
-												color:
-													item.noticeStatus === 'ACTIVE'
-														? '#2E7D32'
-														: item.noticeStatus === 'HIDDEN'
-														? '#EF6C00'
-														: '#C62828',
-												fontSize: 12,
-											}}
-										>
-											{item.noticeStatus}
-										</span>
+									<TableCell align="center" className="notice-list__cell notice-list__cell--status">
+										<span className={`status-badge ${getStatusClass(item.noticeStatus)}`}>{item.noticeStatus}</span>
 									</TableCell>
 
-									<TableCell align="center">
-										<Stack direction="row" spacing={1} justifyContent="center">
-											<Button
-												variant="outlined"
-												size="small"
-												onClick={() => openEditDialog(item)}
-											>
+									<TableCell align="center" className="notice-list__cell notice-list__cell--actions">
+										<Stack direction="row" spacing={1} justifyContent="center" className="notice-list__actions">
+											<Button variant="outlined" size="small" onClick={() => openEditDialog(item)}>
 												Edit
 											</Button>
 											<Button
@@ -340,32 +328,14 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 					</Table>
 				</TableContainer>
 
-				<Box
-					sx={{
-						mt: 2,
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						gap: 2,
-					}}
-				>
-					<Button
-						variant="outlined"
-						size="small"
-						onClick={() => changePage('prev')}
-						disabled={page === 1}
-					>
+				<Box className="notice-list__pagination">
+					<Button variant="outlined" size="small" onClick={() => changePage('prev')} disabled={page === 1}>
 						Prev
 					</Button>
-					<span>
+					<span className="notice-list__page-info">
 						{page} / {totalPages}
 					</span>
-					<Button
-						variant="outlined"
-						size="small"
-						onClick={() => changePage('next')}
-						disabled={page === totalPages}
-					>
+					<Button variant="outlined" size="small" onClick={() => changePage('next')} disabled={page === totalPages}>
 						Next
 					</Button>
 				</Box>
@@ -384,8 +354,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 						onChange={(e) => setNewCategory(e.target.value)}
 					>
 						<MenuItem value="GENERAL">GENERAL</MenuItem>
-						<MenuItem value="EVENT">EVENT</MenuItem>
-						<MenuItem value="SYSTEM">SYSTEM</MenuItem>
+						
 					</TextField>
 
 					<TextField
@@ -399,8 +368,6 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 					<TextField
 						label="Content"
 						fullWidth
-						multiline
-						minRows={4}
 						margin="dense"
 						value={newContent}
 						onChange={(e) => setNewContent(e.target.value)}
@@ -408,12 +375,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={closeCreateDialog}>Cancel</Button>
-					<Button
-						variant="contained"
-						onClick={handleCreate}
-						disabled={createLoading}
-						style={{ color: 'white' }}
-					>
+					<Button variant="contained" onClick={handleCreate} disabled={createLoading} style={{ color: 'white' }}>
 						{createLoading ? 'Saving...' : 'Create'}
 					</Button>
 				</DialogActions>
@@ -442,12 +404,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={closeEditDialog}>Cancel</Button>
-					<Button
-						onClick={handleUpdate}
-						variant="contained"
-						disabled={updateLoading}
-						style={{ color: 'white' }}
-					>
+					<Button onClick={handleUpdate} variant="contained" disabled={updateLoading} style={{ color: 'white' }}>
 						{updateLoading ? 'Saving...' : 'Save'}
 					</Button>
 				</DialogActions>

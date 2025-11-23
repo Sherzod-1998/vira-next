@@ -264,8 +264,6 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 							<TextField
 								label="Answer"
 								fullWidth
-								multiline
-								minRows={4}
 								value={answerText}
 								onChange={(e) => setAnswerText(e.target.value)}
 							/>

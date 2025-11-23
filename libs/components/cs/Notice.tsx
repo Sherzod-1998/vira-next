@@ -84,7 +84,6 @@ const Notice = () => {
 
 										{/* O‘rta: title + content markazda */}
 										<Box className="notice-middle">
-											
 											<span className={'notice-content-text'}>{notice.noticeContent}</span>
 										</Box>
 

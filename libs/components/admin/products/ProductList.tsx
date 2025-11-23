@@ -123,14 +123,8 @@ interface ProductPanelListType {
 }
 
 export const ProductPanelList = (props: ProductPanelListType) => {
-	const {
-		products,
-		anchorEl,
-		menuIconClickHandler,
-		menuIconCloseHandler,
-		updateProductHandler,
-		removeProductHandler,
-	} = props;
+	const { products, anchorEl, menuIconClickHandler, menuIconCloseHandler, updateProductHandler, removeProductHandler } =
+		props;
 
 	return (
 		<Stack>
