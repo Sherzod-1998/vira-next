@@ -17,17 +17,10 @@
     }
   }
   .aside {
-    .logo-box {
-      display: flex;
-      flex-direction: row;
-      padding: 16px 0;
-      img {
-        width: 90px;
-        height: 90px;
-      }
-    }
+    
     .user {
       background: #f5f5f5;
+      margin-top: 60px;
     }
     hr {
       margin: 24px 0;
