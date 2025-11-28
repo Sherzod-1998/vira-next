@@ -22,14 +22,16 @@ import { CREATE_NOTICE, DELETE_NOTICE, UPDATE_NOTICE } from '../../../../apollo/
 import { GET_ADMIN_NOTICES } from '../../../../apollo/admin/query';
 
 interface Notice {
-	_id: string;
-	noticeCategory: string;
-	noticeStatus: string;
-	noticeTitle: string;
-	noticeContent: string;
-	memberId: string;
-	createdAt: string;
+  _id: string;
+  noticeCategory: string;
+  noticeStatus: string;
+  noticeTitle: string;
+  noticeContent: string;
+  memberId: string;
+  createdAt: string;
+  memberNick?: string; // 🔹 qo'shildi
 }
+
 
 interface NoticeListProps {
 	status?: string;
@@ -294,9 +296,10 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 										<div className="notice-list__content">{item.noticeContent}</div>
 									</TableCell>
 
-									<TableCell align="left" className="notice-list__cell notice-list__cell--writer">
-										{item.memberId}
-									</TableCell>
+									<TableCell align="left">
+  {item.memberNick ?? item.memberId}
+</TableCell>
+
 
 									<TableCell align="left" className="notice-list__cell notice-list__cell--date">
 										{new Date(item.createdAt).toLocaleDateString()}

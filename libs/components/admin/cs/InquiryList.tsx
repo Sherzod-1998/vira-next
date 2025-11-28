@@ -20,7 +20,6 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_ADMIN_CS_INQUIRIES } from '../../../../apollo/admin/query';
 import { ANSWER_CS_INQUIRY } from '../../../../apollo/admin/mutation';
 
-
 interface CsInquiry {
 	_id: string;
 	title: string;
@@ -173,23 +172,15 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 
 								<TableCell align="left">{item.userId}</TableCell>
 
-								<TableCell align="left">
-									{new Date(item.createdAt).toLocaleDateString()}
-								</TableCell>
+								<TableCell align="left">{new Date(item.createdAt).toLocaleDateString()}</TableCell>
 
 								<TableCell align="center">
 									<span
 										style={{
 											padding: '4px 10px',
 											borderRadius: 6,
-											background:
-												item.status === 'PENDING'
-													? '#FFEBEE'
-													: '#E8F5E9',
-											color:
-												item.status === 'PENDING'
-													? '#C62828'
-													: '#2E7D32',
+											background: item.status === 'PENDING' ? '#FFEBEE' : '#E8F5E9',
+											color: item.status === 'PENDING' ? '#C62828' : '#2E7D32',
 											fontSize: 12,
 										}}
 									>
@@ -198,11 +189,7 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 								</TableCell>
 
 								<TableCell align="center">
-									<Button
-										variant="outlined"
-										size="small"
-										onClick={() => handleOpenDialog(item)}
-									>
+									<Button variant="outlined" size="small" onClick={() => handleOpenDialog(item)}>
 										{item.answer ? 'Edit Answer' : 'Answer'}
 									</Button>
 								</TableCell>
@@ -222,23 +209,13 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 					gap: 2,
 				}}
 			>
-				<Button
-					variant="outlined"
-					size="small"
-					onClick={() => changePage('prev')}
-					disabled={page === 1}
-				>
+				<Button variant="outlined" size="small" onClick={() => changePage('prev')} disabled={page === 1}>
 					Prev
 				</Button>
 				<span>
 					{page} / {totalPages}
 				</span>
-				<Button
-					variant="outlined"
-					size="small"
-					onClick={() => changePage('next')}
-					disabled={page === totalPages}
-				>
+				<Button variant="outlined" size="small" onClick={() => changePage('next')} disabled={page === totalPages}>
 					Next
 				</Button>
 			</Box>
@@ -257,24 +234,13 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 							<Typography variant="subtitle2" sx={{ mb: 1 }}>
 								Content
 							</Typography>
-							<Typography sx={{ mb: 2, whiteSpace: 'pre-line' }}>
-								{selected.content}
-							</Typography>
+							<Typography sx={{ mb: 2, whiteSpace: 'pre-line' }}>{selected.content}</Typography>
 
-							<TextField
-								label="Answer"
-								fullWidth
-								value={answerText}
-								onChange={(e) => setAnswerText(e.target.value)}
-							/>
+							<TextField label="Answer" fullWidth value={answerText} onChange={(e) => setAnswerText(e.target.value)} />
 						</DialogContent>
 						<DialogActions>
 							<Button onClick={handleCloseDialog}>Cancel</Button>
-							<Button
-								variant="contained"
-								onClick={handleSubmitAnswer}
-								disabled={answerLoading || !answerText.trim()}
-							>
+							<Button variant="contained" onClick={handleSubmitAnswer} disabled={answerLoading || !answerText.trim()}>
 								{answerLoading ? 'Saving...' : 'Save'}
 							</Button>
 						</DialogActions>

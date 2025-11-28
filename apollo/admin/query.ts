@@ -239,18 +239,20 @@ export const GET_ADMIN_CS_INQUIRIES = gql`
  *************************/
 
 export const GET_ADMIN_NOTICES = gql`
-	query GetAdminNotices($input: NoticesInquiry!) {
-		getAdminNotices(input: $input) {
-			list {
-				_id
-				noticeCategory
-				noticeStatus
-				noticeTitle
-				noticeContent
-				memberId
-				createdAt
-			}
-			total
-		}
-	}
+  query GetAdminNotices($input: NoticesInquiry!) {
+    getAdminNotices(input: $input) {
+      list {
+        _id
+        noticeCategory
+        noticeStatus
+        noticeTitle
+        noticeContent
+        memberId
+        memberNick
+        createdAt
+      }
+      total
+    }
+  }
 `;
+
