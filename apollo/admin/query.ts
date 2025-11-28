@@ -227,6 +227,7 @@ export const GET_ADMIN_CS_INQUIRIES = gql`
 				status
 				answer
 				userId
+                memberNick
 				createdAt
 			}
 			total

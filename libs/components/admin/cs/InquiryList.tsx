@@ -21,6 +21,7 @@ import { GET_ADMIN_CS_INQUIRIES } from '../../../../apollo/admin/query';
 import { ANSWER_CS_INQUIRY } from '../../../../apollo/admin/mutation';
 
 interface CsInquiry {
+	memberNick: ReactNode;
 	_id: string;
 	title: string;
 	content: string;
@@ -170,7 +171,7 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 									</div>
 								</TableCell>
 
-								<TableCell align="left">{item.userId}</TableCell>
+								<TableCell align="left">{item.memberNick}</TableCell>
 
 								<TableCell align="left">{new Date(item.createdAt).toLocaleDateString()}</TableCell>
 
