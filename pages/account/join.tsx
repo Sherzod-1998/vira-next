@@ -3,6 +3,8 @@ import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
@@ -49,7 +51,7 @@ const Join: NextPage = () => {
 		} catch (err: any) {
 			await sweetMixinErrorAlert(err.message);
 		}
-	}, [input]);
+	}, [input, router]);
 
 	const doSignUp = useCallback(async () => {
 		console.warn(input);
@@ -59,54 +61,70 @@ const Join: NextPage = () => {
 		} catch (err: any) {
 			await sweetMixinErrorAlert(err.message);
 		}
-	}, [input]);
-
-	console.log('+input: ', input);
+	}, [input, router]);
 
 	if (device === 'mobile') {
-		return <div>LOGIN MOBILE</div>;
+		return <div> LOGIN MOBILE</div>;
 	} else {
 		return (
 			<Stack className={'join-page'}>
 				<Stack className={'container'}>
 					<Stack className={'main'}>
 						<Stack className={'left'}>
-							{/* @ts-ignore */}
-							<Box className={'logo'}>
-								<img src="/img/logo/logoText.svg" alt="" />
-								<span>Vira</span>
-							</Box>
+							{/* TOP COLORED RECTANGLE */}
+							<Box className={'hero-block'} />
+
+							{/* TITLE */}
 							<Box className={'info'}>
-								<span>{loginView ? 'login' : 'signup'}</span>
-								<p>{loginView ? 'Login' : 'Sign'} in with this account across the following sites.</p>
+								<span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
+								<p>
+									{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED WITH YOUR 30DAYS FREE TRIAL"}
+								</p>
 							</Box>
+
+							{/* SOCIAL GOOGLE */}
+							<Box className={'social-btn google'}>
+								<div className="icon">
+									<GoogleIcon />
+								</div>
+								<span>Login With Google</span>
+							</Box>
+
+							{/* OR DIVIDER */}
+							<Box className={'divider-or'}>
+								<span>Or</span>
+							</Box>
+
+							{/* INPUTS */}
 							<Box className={'input-wrap'}>
 								<div className={'input-box'}>
-									<span>Nickname</span>
+									<span>{loginView ? 'Email / Nickname' : 'Email'}</span>
 									<input
 										type="text"
-										placeholder={'Enter Nickname'}
+										placeholder={loginView ? 'Enter your email' : 'Enter email / nickname'}
 										onChange={(e) => handleInput('nick', e.target.value)}
 										required={true}
 										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
+											if (event.key === 'Enter' && loginView) doLogin();
+											if (event.key === 'Enter' && !loginView) doSignUp();
 										}}
 									/>
 								</div>
+
 								<div className={'input-box'}>
 									<span>Password</span>
 									<input
-										type="text"
-										placeholder={'Enter Password'}
+										type="password"
+										placeholder={'Password'}
 										onChange={(e) => handleInput('password', e.target.value)}
 										required={true}
 										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
+											if (event.key === 'Enter' && loginView) doLogin();
+											if (event.key === 'Enter' && !loginView) doSignUp();
 										}}
 									/>
 								</div>
+
 								{!loginView && (
 									<div className={'input-box'}>
 										<span>Phone</span>
@@ -116,12 +134,14 @@ const Join: NextPage = () => {
 											onChange={(e) => handleInput('phone', e.target.value)}
 											required={true}
 											onKeyDown={(event) => {
-												if (event.key == 'Enter') doSignUp();
+												if (event.key === 'Enter') doSignUp();
 											}}
 										/>
 									</div>
 								)}
 							</Box>
+
+							{/* REGISTER / REMEMBER ROW */}
 							<Box className={'register'}>
 								{!loginView && (
 									<div className={'type-option'}>
@@ -134,7 +154,7 @@ const Join: NextPage = () => {
 															size="small"
 															name={'USER'}
 															onChange={checkUserTypeHandler}
-															checked={input?.type == 'USER'}
+															checked={input?.type === 'USER'}
 														/>
 													}
 													label="User"
@@ -147,10 +167,10 @@ const Join: NextPage = () => {
 															size="small"
 															name={'SELLER'}
 															onChange={checkUserTypeHandler}
-															checked={input?.type == 'SELLER'}
+															checked={input?.type === 'SELLER'}
 														/>
 													}
-													label="seller"
+													label="Seller"
 												/>
 											</FormGroup>
 										</div>
@@ -160,17 +180,17 @@ const Join: NextPage = () => {
 								{loginView && (
 									<div className={'remember-info'}>
 										<FormGroup>
-											<FormControlLabel control={<Checkbox defaultChecked size="small" />} label="Remember me" />
+											<FormControlLabel control={<Checkbox size="small" />} label="Remember Me" />
 										</FormGroup>
-										<a>Lost your password?</a>
+										<a>Forgot Password?</a>
 									</div>
 								)}
 
 								{loginView ? (
 									<Button
 										variant="contained"
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-										disabled={input.nick == '' || input.password == ''}
+										className="primary-btn"
+										disabled={input.nick === '' || input.password === ''}
 										onClick={doLogin}
 									>
 										LOGIN
@@ -178,25 +198,32 @@ const Join: NextPage = () => {
 								) : (
 									<Button
 										variant="contained"
-										disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == ''}
+										className="primary-btn"
+										disabled={input.nick === '' || input.password === '' || input.phone === '' || input.type === ''}
 										onClick={doSignUp}
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
 									>
 										SIGNUP
 									</Button>
 								)}
 							</Box>
+
+							{/* OR + FACEBOOK BUTTON */}
+							<Box className="divider-or second">
+								<span>Or</span>
+							</Box>
+							<Box className={'social-btn facebook'}>
+								<div className="icon">
+									<FacebookIcon />
+								</div>
+								<span>Login With Facebook</span>
+							</Box>
+
+							{/* BOTTOM TEXT */}
 							<Box className={'ask-info'}>
 								{loginView ? (
 									<p>
-										Not registered yet?
-										<b
-											onClick={() => {
-												viewChangeHandler(false);
-											}}
-										>
-											SIGNUP
-										</b>
+										Don&apos;t Have An Account?
+										<b onClick={() => viewChangeHandler(false)}> Create An Account</b>
 									</p>
 								) : (
 									<p>
@@ -206,7 +233,9 @@ const Join: NextPage = () => {
 								)}
 							</Box>
 						</Stack>
-						<Stack className={'right'}></Stack>
+
+						{/* RIGHT SIDE END – dizaynda yo‘q, shuning uchun yashirdik */}
+						<Stack className={'right'} />
 					</Stack>
 				</Stack>
 			</Stack>
