@@ -977,6 +977,7 @@
       }
     }
   }
+
   .top-sellers--mobile {
     padding: 32px 0 32px;
     height: auto;
@@ -1058,509 +1059,523 @@
    MOBILE COMMUNITY BOARD (SWIPE SLIDER)
    =========================================== */
 
-.community-board--mobile {
-  padding: 32px 0 24px;
-  width: 100%;
-  display: flex;
-
-  .container {
+  .community-board--mobile {
+    padding: 32px 0 24px;
     width: 100%;
-    max-width: 100%;
-    padding: 0 16px;
     display: flex;
-    flex-direction: column;
-  }
 
-  /* HEADER */
-  .mobile-header {
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .mobile-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .mobile-view-all {
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      cursor: pointer;
-      opacity: 0.7;
-    }
-  }
-
-  /* LOADING / ERROR */
-  .grid-placeholder,
-  .grid-error {
-    font-size: 13px;
-    margin-top: 8px;
-  }
-
-  /* SCROLL SLIDER */
-  .latest-slider {
-    margin-top: 12px;
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 6px;
-
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  /* ===========================================
-     MOBILE CARD STYLE
-     =========================================== */
-  .mobile-post-card {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    border-radius: 16px;
-    background: #ffffff;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    width: 240px;
-    height: auto;
-
-    /* IMAGE AREA */
-    .media {
-      position: relative;
+    .container {
       width: 100%;
-      height: 150px;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-      }
-
-      .date-badge {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        padding: 3px 8px;
-        font-size: 10px;
-        font-weight: 600;
-        border-radius: 999px;
-        background: rgba(146, 106, 84, 1);
-        color: #fff;
-        white-space: nowrap;
-      }
-    }
-
-    /* TEXT AREA */
-    .card-body {
-      height: 150px;
-      padding: 10px 12px 12px;
+      max-width: 100%;
+      padding: 0 16px;
       display: flex;
       flex-direction: column;
+    }
 
-      /* TAGS */
-      .meta-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        margin-bottom: 4px;
+    /* HEADER */
+    .mobile-header {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-        .chip {
-          font-size: 9px;
-          font-weight: 600;
-          background: rgba(239, 239, 239, 1);
-          color: #000;
-          border-radius: 999px;
-          padding: 2px 6px;
-          text-transform: uppercase;
-        }
-      }
-
-      /* TITLE */
-      .title {
-        font-size: 14px;
+      .mobile-title {
+        font-size: 18px;
         font-weight: 700;
-        margin: 2px 0 4px;
-        color: #2b2b2b;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
 
-      /* PREVIEW */
-      .excerpt {
+      .mobile-view-all {
         font-size: 12px;
-        color: #666;
-        line-height: 1.4;
-        margin-bottom: 6px;
-
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      /* FOOTER */
-      .card-footer {
-        margin-top: auto;
-        display: flex;
-        align-items: center;
-        font-size: 11px;
-
-        .round-btn {
-          margin-left: auto;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: rgba(146, 106, 84, 1);
-          color: #fff;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-
-          svg {
-            width: 14px;
-            height: 14px;
-          }
-        }
+        font-weight: 500;
+        text-transform: uppercase;
+        cursor: pointer;
+        opacity: 0.7;
       }
     }
-  }
-}
-@media (max-width: 768px) {
-  .community-main {
-    display: none !important;
-  }
-}
 
-.benefits {
-  padding: 40px 20px;
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-
-    /* Tablet: 2 ustun */
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(2, 1fr);
+    /* LOADING / ERROR */
+    .grid-placeholder,
+    .grid-error {
+      font-size: 13px;
+      margin-top: 8px;
     }
 
-    /* Mobile: horizontal swipe */
-    @media (max-width: 600px) {
-      display: flex;                 // grid o‘rniga flex
-      flex-wrap: nowrap;
+    /* SCROLL SLIDER */
+    .latest-slider {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
       overflow-x: auto;
       overflow-y: hidden;
-      gap: 12px;
       padding-bottom: 6px;
 
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
 
       &::-webkit-scrollbar {
-        display: none;               // scrollbarni yashirish
-      }
-    }
-  }
-
-  .card {
-    background: #e9e1da;
-    border: 1px solid #d8d2cc;
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
-    transition: all 0.3s ease;
-    min-height: 180px;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    }
-
-    .icon-wrap {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-
-      img {
-        width: 32px;
-        height: 32px;
+        display: none;
       }
     }
 
-    h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1b1d23;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 14px;
-      color: #5c5f64;
-      line-height: 1.6;
-    }
-
-    /* Mobile uchun: kartani biroz torroq va swipe-friendly qilamiz */
-    @media (max-width: 600px) {
-      min-width: 240px;        // har bir card slayder item
+    /* ===========================================
+     MOBILE CARD STYLE
+     =========================================== */
+    .mobile-post-card {
+      flex: 0 0 260px;
       scroll-snap-align: start;
-      padding: 20px 16px;
-    }
-  }
-}
-
-  #footer {
-    padding: 24px 16px 16px;
-    width: 100%;
-    background: #212121;
-
-    .mobile-footer {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      color: #fff;
-      font-family: Karla, system-ui, -apple-system, sans-serif;
+      border-radius: 16px;
+      background: #ffffff;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      width: 240px;
+      height: auto;
+
+      /* IMAGE AREA */
+      .media {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+        }
+
+        .date-badge {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          padding: 3px 8px;
+          font-size: 10px;
+          font-weight: 600;
+          border-radius: 999px;
+          background: rgba(146, 106, 84, 1);
+          color: #fff;
+          white-space: nowrap;
+        }
+      }
+
+      /* TEXT AREA */
+      .card-body {
+        height: 150px;
+        padding: 10px 12px 12px;
+        display: flex;
+        flex-direction: column;
+
+        /* TAGS */
+        .meta-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-bottom: 4px;
+
+          .chip {
+            font-size: 9px;
+            font-weight: 600;
+            background: rgba(239, 239, 239, 1);
+            color: #000;
+            border-radius: 999px;
+            padding: 2px 6px;
+            text-transform: uppercase;
+          }
+        }
+
+        /* TITLE */
+        .title {
+          font-size: 14px;
+          font-weight: 700;
+          margin: 2px 0 4px;
+          color: #2b2b2b;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* PREVIEW */
+        .excerpt {
+          font-size: 12px;
+          color: #666;
+          line-height: 1.4;
+          margin-bottom: 6px;
+
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* FOOTER */
+        .card-footer {
+          margin-top: auto;
+          display: flex;
+          align-items: center;
+          font-size: 11px;
+
+          .round-btn {
+            margin-left: auto;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(146, 106, 84, 1);
+            color: #fff;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+
+            svg {
+              width: 14px;
+              height: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .community-main {
+      display: none !important;
+    }
+  }
+
+  .benefits {
+    padding: 40px 20px;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+
+      /* Tablet: 2 ustun */
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* Mobile: horizontal swipe */
+      @media (max-width: 600px) {
+        display: flex; // grid o‘rniga flex
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 12px;
+        padding-bottom: 6px;
+
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+          display: none; // scrollbarni yashirish
+        }
+      }
     }
 
-    /* 🔹 SUBSCRIBE BLOK */
-    .m-subscribe {
-      background: #926a54;
-      border-radius: 16px;
-      padding: 13px;
+    .card {
+      background: #e9e1da;
+      border: 1px solid #d8d2cc;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      min-height: 180px;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      }
+
+      .icon-wrap {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1b1d23;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #5c5f64;
+        line-height: 1.6;
+      }
+
+      /* Mobile uchun: kartani biroz torroq va swipe-friendly qilamiz */
+      @media (max-width: 600px) {
+        min-width: 240px; // har bir card slayder item
+        scroll-snap-align: start;
+        padding: 20px 16px;
+      }
+    }
+  }
+
+  #footer {
+  padding: 24px 16px 24px;
+  width: 100%;
+  background: rgba(33, 33, 33, 1);
+  display: flex;
+  justify-content: center;
+
+  .mobile-footer {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    color: #ffffff;
+    font-family: Karla, system-ui, -apple-system, sans-serif;
+  }
+
+  /* 🔹 SUBSCRIBE CARD */
+  .m-subscribe {
+    background: rgba(146, 106, 84, 1); // subscribe kartochka rangi
+    border-radius: 18px;
+    padding: 20px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+
+    .m-subscribe-text {
+      span {
+        display: block;
+        color: #ffffff;
+        font-family: Unbounded, system-ui, -apple-system, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      p {
+        margin-top: 4px;
+        color: #fef4e5;
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+    }
+
+    .m-subscribe-input {
+      margin-top: 6px;
+      width: 100%;
+      max-width: 320px;
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 6px 6px 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: #8a8a8a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .m-subscribe-button {
+        border: none;
+        outline: none;
+        background: #000000;
+        border-radius: 999px;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        span {
+          color: #ffffff;
+          font-family: Unbounded, system-ui, -apple-system, sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+      }
+    }
+  }
+
+  /* 🔹 MAIN CONTENT */
+  .m-main {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+
+    /* Brand + store badges */
+    .m-brand {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
+      text-align: center;
 
-      .m-subscribe-text {
-        span {
-          color: rgba(255, 255, 255, 1);
-          font-family: Unbounded;
-          font-size: 16px;
-          font-weight: 700;
-          line-height: 22px;
-          letter-spacing: 0%;
-          text-align: center;
-        }
-
-        p {
-          color: rgba(255, 255, 255, 1);
-          font-family: Karla;
-          font-style: italic;
-          font-size: 10px;
-          font-weight: 400;
-          line-height: 15px;
-          letter-spacing: 0%;
-          text-align: center;
-        }
+      .m-logo {
+        color: #ffffff;
+        font-family: Unbounded, system-ui, -apple-system, sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        text-transform: uppercase;
       }
 
-      .m-subscribe-input {
-        border-radius: 500px;
-        margin-top: 6px;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 8px 10px;
+      .m-desc {
+        margin: 0;
+        color: #e4e4e4;
+        font-family: Karla, system-ui, -apple-system, sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 1.6;
+        max-width: 260px;
+      }
+
+      .m-store-badges {
+        margin-top: 4px;
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
+        gap: 10px;
+        justify-content: center;
 
-        p {
-          margin: 0;
-          font-size: 13px;
-          color: #777;
-        }
-
-        .m-subscribe-button {
-          border: none;
-          outline: none;
-          background: #000;
-          border-radius: 999px;
-          padding: 6px 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-
-          span {
-            color: #fff;
-            font-family: Unbounded, system-ui, -apple-system, sans-serif;
-            font-size: 11px;
-            text-transform: uppercase;
-          }
+        img {
+          width: 120px;
+          height: auto;
+          display: block;
         }
       }
     }
 
-    .m-main {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    /* Address / Legal / Categories / Resources bloklari */
+    .m-block {
+      .m-title {
+        font-family: Unbounded, system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 10px 0;
+      }
 
-      .m-brand {
+      .m-info {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 9px;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 8px;
 
-        .m-logo {
-          color: rgba(255, 255, 255, 1);
-          font-family: Unbounded;
-          font-size: 30px;
-          font-weight: 700;
-          line-height: 35px;
-          letter-spacing: 0%;
-          text-align: center;
-          text-transform: uppercase;
+        .m-icon {
+          margin-top: 3px;
+          font-size: 15px;
+          color: #f1f1f1;
         }
 
-        .m-desc {
-          color: rgba(255, 255, 255, 1);
-
-          font-family: Karla;
-          font-style: italic;
-          font-size: 10px;
-          font-weight: 400;
-          line-height: 16px;
-          letter-spacing: 0%;
-          text-align: center;
-          text-transform: capitalize;
-        }
-
-        .m-store-badges {
-          display: flex;
-          gap: 10px;
-
-          img {
-            width: 120px;
-            height: auto;
-            display: block;
-          }
+        p,
+        a {
+          font-size: 13px;
+          line-height: 20px;
+          color: #dddddd;
+          text-decoration: none;
         }
       }
 
-      .m-block {
-        .m-title {
-          font-family: Unbounded, system-ui, -apple-system, sans-serif;
-          font-size: 16px;
-          font-weight: 500;
-          margin: 0 0 8px 0;
+      .m-socials {
+        margin-top: 10px;
+        display: flex;
+        gap: 14px;
+
+        a {
+          color: #ffffff;
+          font-size: 18px;
         }
+      }
 
-        .m-info {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          margin-bottom: 8px;
+      .m-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
 
-          .m-icon {
-            margin-top: 2px;
-            font-size: 16px;
-            color: #ccc;
-          }
-
-          p,
+        li {
           a {
-            font-size: 14px;
-            line-height: 20px;
-            color: #ddd;
+            font-size: 13px;
+            color: #dddddd;
             text-decoration: none;
-          }
-        }
 
-        .m-socials {
-          margin-top: 8px;
-          display: flex;
-          gap: 12px;
-
-          a {
-            color: #fff;
-            font-size: 18px;
-          }
-        }
-
-        .m-list {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-
-          li {
-            a {
-              font-size: 14px;
-              color: #ddd;
-              text-decoration: none;
-
-              &:hover {
-                color: #bbb;
-              }
+            &:hover {
+              color: #ffffff;
             }
           }
         }
       }
     }
 
-    /* 🔹 BOTTOM QISM */
-    .m-bottom {
-      margin-top: 8px;
-
-      .m-divider {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        margin: 0 0 10px 0;
-      }
-
-      .m-bottom-content {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .m-copy {
-        margin: 0;
-        font-size: 13px;
-        color: #ccc;
-      }
-
-      .m-bottom-links {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-
-        a {
-          color: #ccc;
-          text-decoration: none;
-
-          &:hover {
-            color: #fff;
-          }
-        }
-
-        span {
-          color: rgba(255, 255, 255, 0.6);
-        }
+    /* Istasangiz 2 ustunli ko‘rinish ham berish mumkin */
+    @media (min-width: 380px) {
+      .m-block {
+        /* hammasini birdan gridga tiqmaymiz, faqat spacing uchun */
       }
     }
   }
+
+  /* 🔹 BOTTOM */
+  .m-bottom {
+    margin-top: 4px;
+
+    .m-divider {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin: 0 0 12px 0;
+    }
+
+    .m-bottom-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .m-copy {
+      margin: 0;
+      font-size: 12px;
+      color: #cccccc;
+    }
+
+    .m-bottom-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+
+      a {
+        color: #cccccc;
+        text-decoration: none;
+
+        &:hover {
+          color: #ffffff;
+        }
+      }
+
+      span {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}
 }
