@@ -28,6 +28,7 @@ const Home: NextPage = () => {
 			<ProductsTabsSection />
 			<HeroSections />
 			<TopSellers />
+			<CommunityBoards />
 		</Stack>;
 	} else {
 		return (
