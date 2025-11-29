@@ -1,6 +1,8 @@
 // apps/vira-frontend/src/components/Top.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
@@ -30,52 +32,12 @@ import { useReactiveVar, useQuery, useMutation, gql } from '@apollo/client';
 import { socketVar, unreadNotificationCountVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
-
-/* ============================
-   GraphQL Queries & Mutations
-============================ */
-
-const GET_MY_NOTIFICATIONS = gql`
-	query GetMyNotifications($input: GetMyNotificationsInput!) {
-		getMyNotifications(input: $input) {
-			list {
-				_id
-				notificationType
-				notificationStatus
-				notificationGroup
-				notificationTitle
-				notificationDesc
-				authorId
-				receiverId
-				productId
-				articleId
-				createdAt
-				updatedAt
-			}
-			total
-			page
-			limit
-		}
-	}
-`;
-
-const GET_MY_UNREAD_NOTIFICATIONS_COUNT = gql`
-	query GetMyUnreadNotificationsCount {
-		getMyUnreadNotificationsCount
-	}
-`;
-
-const MARK_NOTIFICATION_READ = gql`
-	mutation MarkNotificationRead($notificationId: ID!) {
-		markNotificationRead(notificationId: $notificationId)
-	}
-`;
-
-const MARK_ALL_NOTIFICATIONS_READ = gql`
-	mutation MarkAllNotificationsRead {
-		markAllNotificationsRead
-	}
-`;
+import {
+	GET_MY_NOTIFICATIONS,
+	GET_MY_UNREAD_NOTIFICATIONS_COUNT,
+	MARK_NOTIFICATION_READ,
+	MARK_ALL_NOTIFICATIONS_READ,
+} from '../../apollo/user/query';
 
 /* ============================
    Types
@@ -135,11 +97,10 @@ const StyledMenu = styled((props: MenuProps) => (
 	},
 }));
 
-/* ============================
-   Component
-============================ */
+
 
 const Top: React.FC = () => {
+	const [menuOpen, setMenuOpen] = useState(false);
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const unread = useReactiveVar(unreadNotificationCountVar);
@@ -172,10 +133,7 @@ const Top: React.FC = () => {
 		fetchPolicy: 'cache-and-network',
 	});
 
-	const {
-		data: unreadData,
-		refetch: refetchUnreadCount,
-	} = useQuery(GET_MY_UNREAD_NOTIFICATIONS_COUNT, {
+	const { data: unreadData, refetch: refetchUnreadCount } = useQuery(GET_MY_UNREAD_NOTIFICATIONS_COUNT, {
 		skip: !user?._id,
 		pollInterval: 30000, // 30s da bir marta backend bilan sync
 	});
@@ -308,22 +266,208 @@ const Top: React.FC = () => {
 
 	if (device === 'mobile') {
 		return (
-			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('Home')}</div>
-				</Link>
-				<Link href={'/product'}>
-					<div>{t('Products')}</div>
-				</Link>
-				<Link href={'/seller'}>
-					<div>{t('Sellers')}</div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div>{t('Community')}</div>
-				</Link>
-				<Link href={'/cs'}>
-					<div>{t('CS')}</div>
-				</Link>
+			<Stack className={'navbar'}>
+				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
+					<Stack className={'container'}>
+
+						{/* Router links */}
+						<Box className={'router-box'}>
+							<Link href={'/'}>
+								<div>{t('Home')}</div>
+							</Link>
+							<Link href={'/product'}>
+								<div>{t('Products')}</div>
+							</Link>
+							<Link href={'/seller'}>
+								<div>{t('Sellers')}</div>
+							</Link>
+							<Link href={'/community?articleCategory=FREE'}>
+								<div>{t('Community')}</div>
+							</Link>
+							{user?._id && (
+								<Link href={'/mypage'}>
+									<div>{t('My Page')}</div>
+								</Link>
+							)}
+							<Link href={'/cs'}>
+								<div>{t('CS')}</div>
+							</Link>
+						</Box>
+
+						{/* User box */}
+						<Box className={'user-box'}>
+							{user?._id ? (
+								<>
+									<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
+										<img
+											src={
+												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.png'
+											}
+											alt=""
+										/>
+									</div>
+									<Menu
+										id="basic-menu"
+										anchorEl={logoutAnchor}
+										open={logoutOpen}
+										onClose={() => setLogoutAnchor(null)}
+										sx={{ mt: '5px' }}
+									>
+										<MenuItem onClick={() => logOut()}>
+											<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
+											Logout
+										</MenuItem>
+									</Menu>
+								</>
+							) : (
+								<Link href={'/account/join'}>
+									<div className={'join-box'}>
+										<AccountCircleOutlinedIcon />
+										<span>
+											{t('Login')} / {t('Register')}
+										</span>
+									</div>
+								</Link>
+							)}
+
+							{/* Notifications + Lang */}
+							<div className={'lan-box'}>
+								{user?._id && (
+									<>
+										<IconButton onClick={handleOpen}>
+											<Badge color="primary" badgeContent={unread > 99 ? '99+' : unread} invisible={unread === 0}>
+												<NotificationsOutlinedIcon className="notification-icon" />
+											</Badge>
+										</IconButton>
+
+										<Popover
+											id={id}
+											open={open}
+											anchorEl={anchorEl}
+											onClose={handleClose}
+											anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+											transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+										>
+											<Box sx={{ width: 360, maxHeight: 400, display: 'flex', flexDirection: 'column' }}>
+												{/* Header */}
+												<Box
+													sx={{
+														px: 2,
+														py: 1.5,
+														display: 'flex',
+														alignItems: 'center',
+														justifyContent: 'space-between',
+														borderBottom: '1px solid rgba(0,0,0,0.06)',
+													}}
+												>
+													<Typography variant="subtitle1" fontWeight={600}>
+														{t('Notifications')}
+													</Typography>
+
+													<Button
+														size="small"
+														variant="text"
+														onClick={handleMarkAllRead}
+														disabled={markAllLoading || notifications.length === 0}
+													>
+														{t('Mark all as read')}
+													</Button>
+												</Box>
+
+												{/* Content */}
+												<Box sx={{ flex: 1, overflowY: 'auto' }}>
+													{notificationsLoading && !notificationsData ? (
+														<Box sx={{ py: 3, display: 'flex', justifyContent: 'center' }}>
+															<CircularProgress size={22} />
+														</Box>
+													) : notificationsError ? (
+														<Box sx={{ p: 2 }}>
+															<Typography color="error" variant="body2">
+																{t('An error occurred. Please try again.')}
+															</Typography>
+														</Box>
+													) : notifications.length === 0 ? (
+														<Box sx={{ p: 2 }}>
+															<Typography variant="body2" color="text.secondary">
+																{t('You have no new notifications.')}
+															</Typography>
+														</Box>
+													) : (
+														<List disablePadding>
+															{notifications.map((item) => {
+																const isUnread = item.notificationStatus === 'WAIT';
+
+																return (
+																	<React.Fragment key={item._id}>
+																		<ListItem
+																			button
+																			onClick={() => handleClickNotification(item)}
+																			sx={{
+																				alignItems: 'flex-start',
+																				bgcolor: isUnread ? 'rgba(25, 118, 210, 0.08)' : 'inherit',
+																			}}
+																		>
+																			<ListItemText
+																				primary={
+																					<Typography
+																						variant="body2"
+																						fontWeight={isUnread ? 600 : 400}
+																						sx={{ mb: 0.5 }}
+																					>
+																						{item.notificationTitle}
+																					</Typography>
+																				}
+																				secondary={
+																					item.notificationDesc && (
+																						<Typography variant="caption" color="text.secondary">
+																							{item.notificationDesc}
+																						</Typography>
+																					)
+																				}
+																			/>
+																		</ListItem>
+																		<Divider component="li" />
+																	</React.Fragment>
+																);
+															})}
+														</List>
+													)}
+												</Box>
+											</Box>
+										</Popover>
+									</>
+								)}
+
+								{/* Language selector */}
+								<Button
+									disableRipple
+									className="btn-lang"
+									onClick={langClick}
+									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
+								>
+									<Box className={'flag'}>
+										<img src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} />
+									</Box>
+								</Button>
+
+								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
+									<MenuItem disableRipple onClick={langChoice} id="en">
+										<img className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} />
+										{t('English')}
+									</MenuItem>
+									<MenuItem disableRipple onClick={langChoice} id="kr">
+										<img className="img-flag" src={'/img/flag/langkr.png'} alt={'koreanFlag'} />
+										{t('Korean')}
+									</MenuItem>
+									<MenuItem disableRipple onClick={langChoice} id="ru">
+										<img className="img-flag" src={'/img/flag/langru.png'} alt={'russiaFlag'} />
+										{t('Russian')}
+									</MenuItem>
+								</StyledMenu>
+							</div>
+						</Box>
+					</Stack>
+				</Stack>
 			</Stack>
 		);
 	}
@@ -406,11 +550,7 @@ const Top: React.FC = () => {
 							{user?._id && (
 								<>
 									<IconButton onClick={handleOpen}>
-										<Badge
-											color="primary"
-											badgeContent={unread > 99 ? '99+' : unread}
-											invisible={unread === 0}
-										>
+										<Badge color="primary" badgeContent={unread > 99 ? '99+' : unread} invisible={unread === 0}>
 											<NotificationsOutlinedIcon className="notification-icon" />
 										</Badge>
 									</IconButton>
@@ -479,27 +619,18 @@ const Top: React.FC = () => {
 																		onClick={() => handleClickNotification(item)}
 																		sx={{
 																			alignItems: 'flex-start',
-																			bgcolor: isUnread
-																				? 'rgba(25, 118, 210, 0.08)'
-																				: 'inherit',
+																			bgcolor: isUnread ? 'rgba(25, 118, 210, 0.08)' : 'inherit',
 																		}}
 																	>
 																		<ListItemText
 																			primary={
-																				<Typography
-																					variant="body2"
-																					fontWeight={isUnread ? 600 : 400}
-																					sx={{ mb: 0.5 }}
-																				>
+																				<Typography variant="body2" fontWeight={isUnread ? 600 : 400} sx={{ mb: 0.5 }}>
 																					{item.notificationTitle}
 																				</Typography>
 																			}
 																			secondary={
 																				item.notificationDesc && (
-																					<Typography
-																						variant="caption"
-																						color="text.secondary"
-																					>
+																					<Typography variant="caption" color="text.secondary">
 																						{item.notificationDesc}
 																					</Typography>
 																				)

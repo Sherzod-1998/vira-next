@@ -1,13 +1,385 @@
 @import '/scss/variables.scss';
 
 #mobile-wrap {
-  .top {
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+  .navbar {
+    .navbar-main {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+
+      padding: 10px 0;
+      width: 100%;
+      height: auto;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+
+      background-color: rgb(33, 33, 33);
+      border-top: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+      &.transparent {
+        background-color: rgba(33, 33, 33, 0.96); // mobile’da ham doim qoraroq
+      }
+
+      .container {
+        width: 100%;
+        padding: 0 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+
+        /* 🔹 1-qator: logo + user / lang */
+
+
+        .user-box {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          width: auto; // desktopdagi 270px kerak emas
+
+          .join-box {
+            height: 38px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid #ffffff;
+            cursor: pointer;
+
+            svg {
+              color: #ffffff;
+              margin-right: 6px;
+              font-size: 18px;
+            }
+
+            span {
+              font-size: 12px;
+              font-weight: 600;
+              color: #ffffff;
+              white-space: nowrap;
+            }
+          }
+
+          .login-user {
+            display: flex;
+            align-items: center;
+
+            img {
+              width: 34px;
+              height: 34px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .lan-box {
+          margin-left: 8px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .notification-icon {
+            color: #ffffff;
+            font-size: 20px;
+          }
+
+          .btn-lang {
+            min-width: auto;
+            padding: 4px 6px;
+            border-radius: 6px;
+
+            .flag {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              img {
+                width: 22px;
+                height: 16px;
+                border-radius: 2px;
+              }
+            }
+
+            svg {
+              margin-left: 4px;
+            }
+          }
+
+          .img-flag {
+            width: 22px;
+            height: 16px;
+            border-radius: 2px;
+            margin-right: 8px;
+          }
+        }
+
+        /* 🔹 2-qator: router links (scrollable bar) */
+        .router-box {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 16px;
+          margin-top: 4px;
+
+          /* Horizontal scroll – agar linklar ko‘p bo‘lsa */
+          overflow-x: auto;
+          overflow-y: hidden;
+          padding-bottom: 4px;
+
+          /* scrollbar’ni biroz chiroyliroq yoki yashirin qilish */
+          &::-webkit-scrollbar {
+            height: 3px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 999px;
+          }
+
+          div {
+            white-space: nowrap;
+            color: #eeeeee;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 0;
+
+            &:hover {
+              color: #ffffff;
+            }
+
+            .community_menu {
+              display: none; // mobile’da community drop-down ishlatmasak
+            }
+          }
+        }
+      }
+    }
   }
+
+
+  .header-main {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 520px;
+    padding: 100px 16px 24px; // navbardan keyin pastroq
+    background-color: #2b2017;
+    background-image: url('/img/banner/header1.webp');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    margin-top: 103px;
+    display: flex;
+    flex-direction: column;
+
+    /* Kontent blok */
+    .header-content {
+      
+      margin-top: 30px;
+      width: 100%;
+      margin: 0;
+
+      /* tepada masofa navbarga bog‘liq bo‘ladi */
+      .header-content__inner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        .header-content__text {
+          width: 110px !important;
+          height: 110px !important;
+          border-radius: 50%;
+          overflow: hidden;
+
+          svg {
+            width: 110px;
+            height: 110px;
+          }
+
+          text {
+            font-size: 16px;
+          }
+
+          polygon {
+            transform: scale(0.8);
+          }
+        }
+
+        .circle-image {
+          width: 110px !important;
+          height: 110px !important;
+          left: -16px !important;
+        }
+      }
+
+      .header-content__title {
+
+        /* h1 larni ichida */
+        h1.header-content__title-text {
+          font-family: Unbounded, system-ui, -apple-system, sans-serif;
+          font-size: 24px;
+          font-weight: 400;
+          line-height: 32px;
+          color: #ffffff;
+          text-align: left;
+          margin: 0;
+        }
+
+        h1.header-content__title-text_2 {
+          font-family: Karla, system-ui, -apple-system, sans-serif;
+          font-size: 13px;
+          line-height: 20px;
+          font-style: italic;
+          font-weight: 400;
+          margin: 8px 0 0 0;
+          color: #f5f5f5;
+          text-align: left;
+        }
+      }
+
+      .buttons {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        .more-detail,
+        .shop_now {
+          width: auto;
+          min-width: 130px;
+          height: 40px;
+          border-radius: 999px;
+          border: 2px solid #ffffff;
+          background: transparent;
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0 16px;
+          transition: background 0.3s ease, color 0.3s ease;
+
+          &:hover {
+            background: #ffffff;
+            color: #000000;
+          }
+        }
+      }
+    }
+
+    /* Agar header ichida container + search-box ishlatilsa (desktopdagi qismi)
+	   mobil uchun soddalashtiramiz */
+    .container {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .search-box {
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-sizing: border-box;
+
+        .select-box {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .box {
+            width: 100%;
+            height: auto;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+
+            span {
+              font-size: 13px;
+              line-height: 18px;
+            }
+          }
+        }
+
+        .search-box-other {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 4px;
+
+          .advanced-filter {
+            display: flex;
+            align-items: center;
+
+            img {
+              margin-right: 6px;
+              width: 20px;
+              height: 18px;
+            }
+
+            span {
+              font-size: 13px;
+              color: #ffffff;
+            }
+          }
+
+          .search-btn {
+            margin-left: 8px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f17742;
+
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+
+        /* filter-location/type/rooms mobil layoutda odatda modal qilib qilinadi,
+			   hozircha standardni soddalashtirib, full-width panel ko‘rinishida qoldiramiz */
+        .filter-location,
+        .filter-type,
+        .filter-rooms {
+          position: static;
+          width: 100%;
+          min-height: auto;
+          padding: 12px;
+          margin-top: 8px;
+          border-radius: 10px;
+          box-shadow: none;
+          background: #ffffff;
+          visibility: visible; // agar react bilan boshqarayotgan bo‘lsangiz SCSSda emas, class bilan o‘ynaysiz
+        }
+      }
+    }
+  }
+
 
   .info-box {
     width: 100%;
@@ -913,7 +1285,7 @@
       }
     }
 
-    .m-main { 
+    .m-main {
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -923,6 +1295,7 @@
         flex-direction: column;
         align-items: center;
         gap: 9px;
+
         .m-logo {
           color: rgba(255, 255, 255, 1);
           font-family: Unbounded;
@@ -1064,9 +1437,4 @@
       }
     }
   }
-
-
-
 }
-
-// NEW STYLES //
