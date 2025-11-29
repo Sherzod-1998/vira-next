@@ -26,6 +26,7 @@ const Home: NextPage = () => {
 		return <Stack className={'home-page'}>
 			<GorgeousCollection />
 			<ProductsTabsSection />
+			<HeroSections />
 		</Stack>;
 	} else {
 		return (
