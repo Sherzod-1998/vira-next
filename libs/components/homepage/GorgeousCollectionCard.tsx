@@ -8,9 +8,18 @@ type Props = {
 	onClick?: () => void;
 	className?: string;
 	tabIndex?: number;
+	variant?: 'desktop' | 'mobile';
 };
 
-const GorgeousCollectionCard: React.FC<Props> = ({ src, label, count = 0, onClick, className, tabIndex = 0 }) => {
+const GorgeousCollectionCard: React.FC<Props> = ({
+	src,
+	label,
+	count = 0,
+	onClick,
+	className,
+	tabIndex = 0,
+	variant = 'desktop',
+}) => {
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
@@ -20,7 +29,7 @@ const GorgeousCollectionCard: React.FC<Props> = ({ src, label, count = 0, onClic
 
 	return (
 		<div
-			className={`circle-img-wrapper ${className ?? ''}`}
+			className={`circle-img-wrapper ${variant} ${className ?? ''}`}
 			role="button"
 			tabIndex={tabIndex}
 			onClick={onClick}

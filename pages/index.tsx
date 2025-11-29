@@ -23,22 +23,19 @@ const Home: NextPage = () => {
 	const device = useDeviceDetect();
 
 	if (device === 'mobile') {
-		return (
-			<Stack className={'home-page'}>
-				
-			</Stack>
-		);
+		return <Stack className={'home-page'}>
+			<GorgeousCollection />
+		</Stack>;
 	} else {
 		return (
 			<Stack className={'home-page'}>
 				<GorgeousCollection />
 				<ProductsTabsSection />
-				<HeroSections/>
+				<HeroSections />
 				<ExquisiteJewelry />
 				<TopSellers />
 				<CommunityBoards />
-				<BenefitsRow/>
-				
+				<BenefitsRow />
 			</Stack>
 		);
 	}
