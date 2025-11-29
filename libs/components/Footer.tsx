@@ -105,19 +105,19 @@ const Footer = () => {
 						{/* Address */}
 						<Stack direction="row" alignItems="center" spacing={1} className="info">
 							<FaMapMarkerAlt className="icon" />
-							<p>9826 Painter Ave, Whittier, CA, United States.</p>
+							<p>77 Myeongdong-gil, Jung-gu, Seoul 04536, South Korea.</p>
 						</Stack>
 
 						{/* Phone */}
 						<Stack direction="row" alignItems="center" spacing={1} className="info">
 							<FaPhoneAlt className="icon" />
-							<a href="tel:+1800396756">+1 800 396 756</a>
+							<a href="tel:+1800396756">+82 10 9910 5777</a>
 						</Stack>
 
 						{/* Email */}
 						<Stack direction="row" alignItems="center" spacing={1} className="info">
 							<FaEnvelope className="icon" />
-							<a href="mailto:support@anikalan.com">support@anikalan.com</a>
+							<a href="mailto:support@anikalan.com">support@vira.com</a>
 						</Stack>
 
 						{/* Social Icons */}
