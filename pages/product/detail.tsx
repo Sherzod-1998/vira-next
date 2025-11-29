@@ -196,7 +196,198 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 	}
 
 	if (device === 'mobile') {
-		return <div>PRODUCTS DETAIL PAGE</div>;
+		return (
+			<div id="m-product-detail-page">
+				<div className="m-container">
+					{/* GALLERY */}
+					<Stack className="m-gallery">
+						<div className="m-main-img">
+							<img
+								src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
+								alt="product-main"
+							/>
+						</div>
+
+						{product?.productImages?.length ? (
+							<div className="m-thumbs">
+								{product.productImages.map((subImg: string) => {
+									const imagePath = `${REACT_APP_API_URL}/${subImg}`;
+									const active = subImg === slideImage;
+									return (
+										<button
+											type="button"
+											key={subImg}
+											className={`m-thumb ${active ? 'is-active' : ''}`}
+											onClick={() => changeImageHandler(subImg)}
+										>
+											<img src={imagePath} alt="thumb" />
+										</button>
+									);
+								})}
+							</div>
+						) : null}
+					</Stack>
+
+					{/* MAIN INFO */}
+					<Stack className="m-info" spacing={2}>
+						{product?.productType && (
+							<Typography className="m-category">{product.productType}</Typography>
+						)}
+
+						<Typography className="m-title">{product?.productTitle}</Typography>
+
+						<Stack direction="row" justifyContent="space-between" alignItems="center" className="m-price-row">
+							<Typography className="m-price">
+								{product?.productPrice ? `$${product.productPrice}` : ''}
+							</Typography>
+
+							<Stack direction="row" alignItems="center" spacing={0.5} className="m-rating">
+								<span className="m-stars">★★★★★</span>
+								<Typography className="m-rating-text">
+									{commentTotal || 0} reviews
+								</Typography>
+							</Stack>
+						</Stack>
+
+						{product?.productDesc && (
+							<Typography className="m-desc">{product.productDesc}</Typography>
+						)}
+
+						<Stack className="m-meta">
+							{product?.productMaterial && (
+								<p>
+									<span className="label">Material:</span> {product.productMaterial}
+								</p>
+							)}
+							{product?.productLocation && (
+								<p>
+									<span className="label">Location:</span> {product.productLocation}
+								</p>
+							)}
+							{product?.productAddress && (
+								<p>
+									<span className="label">Address:</span> {product.productAddress}
+								</p>
+							)}
+						</Stack>
+
+						{/* QUANTITY */}
+						<Stack className="m-qty" spacing={1}>
+							<span className="m-qty-label">Quantity</span>
+							<div className="m-qty-control">
+								<button
+									type="button"
+									onClick={() => setQuantity(Math.max(1, quantity - 1))}
+								>
+									-
+								</button>
+								<span>{quantity}</span>
+								<button
+									type="button"
+									onClick={() => setQuantity(quantity + 1)}
+								>
+									+
+								</button>
+							</div>
+						</Stack>
+
+						{/* ACTION BUTTONS */}
+						<Stack className="m-actions" spacing={1}>
+							<button type="button" className="m-btn-outline">
+								Add to cart
+							</button>
+							<button type="button" className="m-btn-primary">
+								Buy it now
+							</button>
+						</Stack>
+
+						{/* SELLER INFO */}
+						{product?.memberData && (
+							<Stack className="m-seller" spacing={1.5}>
+								<span className="m-seller-label">Seller</span>
+								<Stack direction="row" spacing={1.5} alignItems="center">
+									<img
+										className="m-seller-img"
+										src={
+											product.memberData.memberImage
+												? `${REACT_APP_API_URL}/${product.memberData.memberImage}`
+												: '/img/profile/defaultUser.svg'
+										}
+										alt="seller"
+									/>
+									<Stack spacing={0.3}>
+										<Link href={`/member?memberId=${product.memberData._id}`}>
+											<Typography className="m-seller-name">
+												{product.memberData.memberNick}
+											</Typography>
+										</Link>
+										{product.memberData.memberPhone && (
+											<Typography className="m-seller-phone">
+												{product.memberData.memberPhone}
+											</Typography>
+										)}
+									</Stack>
+								</Stack>
+							</Stack>
+						)}
+
+						{/* SOCIAL (ixtiyoriy, oddiyroq) */}
+						<Stack direction="row" spacing={2} className="m-social">
+							<InstagramIcon />
+							<FacebookIcon />
+							<YouTubeIcon />
+						</Stack>
+
+						{/* SHORT REVIEWS LIST */}
+						<Stack className="m-reviews" spacing={1.5}>
+							<Typography className="m-reviews-title">
+								Reviews ({commentTotal})
+							</Typography>
+
+							{productComments.slice(0, 2).map((comment: Comment) => (
+								<Review comment={comment} key={comment?._id} />
+							))}
+
+							
+						</Stack>
+
+						{/* LEAVE REVIEW */}
+						<Stack className="m-leave-review" spacing={1.2}>
+							<Typography className="m-leave-title">Leave a review</Typography>
+							<textarea
+								placeholder="Write your review..."
+								value={insertCommentData.commentContent}
+								onChange={({ target: { value } }) =>
+									setInsertCommentData({ ...insertCommentData, commentContent: value })
+								}
+							/>
+							<button
+								type="button"
+								className="m-btn-primary m-submit-review"
+								disabled={insertCommentData.commentContent === '' || !user?._id}
+								onClick={createCommentHandler}
+							>
+								Submit review
+							</button>
+						</Stack>
+
+						{/* RELATED PRODUCTS (horizontal scroll) */}
+						{destinationProducts.length !== 0 && (
+							<Stack className="m-related" spacing={1.5}>
+								<Typography className="m-related-title">Related products</Typography>
+								<div className="m-related-scroll">
+									{destinationProducts.map((p: Product) => (
+										<div className="m-related-card" key={p._id}>
+											<MainProductCard product={p} onLike={onLike} />
+										</div>
+									))}
+								</div>
+							</Stack>
+						)}
+					</Stack>
+				</div>
+			</div>
+		);
 	} else {
 		return (
 			<div id={'product-detail-page'}>

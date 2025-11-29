@@ -39,10 +39,7 @@ const Footer = () => {
 							aria-label="Email address"
 							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
 						/>
-						<button
-							className="m-subscribe-button"
-							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-						>
+						<button className="m-subscribe-button" style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
 							<span>send</span>
 						</button>
 					</div>
@@ -155,10 +152,8 @@ const Footer = () => {
 					</Box>
 
 					{/* Categories */}
-					
 
 					{/* Resources */}
-					
 				</Stack>
 
 				{/* BOTTOM */}
