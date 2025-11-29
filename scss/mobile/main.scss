@@ -1336,244 +1336,194 @@
   .mobile-footer {
     width: 100%;
     max-width: 480px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 28px;
-    color: #ffffff;
-    font-family: Karla, system-ui, -apple-system, sans-serif;
-  }
+    color: #fff;
 
-  /* 🔹 SUBSCRIBE CARD */
-  .m-subscribe {
-    background: rgba(146, 106, 84, 1); // subscribe kartochka rangi
-    border-radius: 18px;
-    padding: 20px 18px 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    text-align: center;
-
-    .m-subscribe-text {
-      span {
-        display: block;
-        color: #ffffff;
-        font-family: Unbounded, system-ui, -apple-system, sans-serif;
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 1.4;
-      }
-
-      p {
-        margin-top: 4px;
-        color: #fef4e5;
-        font-size: 11px;
-        font-weight: 400;
-        line-height: 1.5;
-      }
-    }
-
-    .m-subscribe-input {
-      margin-top: 6px;
-      width: 100%;
-      max-width: 320px;
-      background: #ffffff;
-      border-radius: 999px;
-      padding: 6px 6px 6px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-
-      p {
-        margin: 0;
-        font-size: 12px;
-        color: #8a8a8a;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .m-subscribe-button {
-        border: none;
-        outline: none;
-        background: #000000;
-        border-radius: 999px;
-        padding: 8px 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        span {
-          color: #ffffff;
-          font-family: Unbounded, system-ui, -apple-system, sans-serif;
-          font-size: 10px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-        }
-      }
-    }
-  }
-
-  /* 🔹 MAIN CONTENT */
-  .m-main {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-
-    /* Brand + store badges */
-    .m-brand {
+    /* ========== SUBSCRIBE BLOCK ========== */
+    .m-subscribe {
+      background: rgba(146, 106, 84, 1);
+      padding: 20px 18px;
+      border-radius: 18px;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      text-align: center;
+      gap: 12px;
 
-      .m-logo {
-        color: #ffffff;
-        font-family: Unbounded, system-ui, -apple-system, sans-serif;
-        font-size: 28px;
-        font-weight: 700;
-        line-height: 1.2;
-        text-transform: uppercase;
-      }
-
-      .m-desc {
-        margin: 0;
-        color: #e4e4e4;
-        font-family: Karla, system-ui, -apple-system, sans-serif;
-        font-size: 11px;
-        font-weight: 400;
-        line-height: 1.6;
-        max-width: 260px;
-      }
-
-      .m-store-badges {
-        margin-top: 4px;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-
-        img {
-          width: 120px;
-          height: auto;
-          display: block;
-        }
-      }
-    }
-
-    /* Address / Legal / Categories / Resources bloklari */
-    .m-block {
-      .m-title {
-        font-family: Unbounded, system-ui, -apple-system, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        margin: 0 0 10px 0;
-      }
-
-      .m-info {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 8px;
-
-        .m-icon {
-          margin-top: 3px;
-          font-size: 15px;
-          color: #f1f1f1;
-        }
-
-        p,
-        a {
-          font-size: 13px;
-          line-height: 20px;
-          color: #dddddd;
-          text-decoration: none;
-        }
-      }
-
-      .m-socials {
-        margin-top: 10px;
-        display: flex;
-        gap: 14px;
-
-        a {
-          color: #ffffff;
+      .m-subscribe-text {
+        span {
+          font-family: Unbounded;
           font-size: 18px;
+          font-weight: 700;
+        }
+        p {
+          font-size: 11px;
+          margin-top: 4px;
+          opacity: 0.9;
         }
       }
 
-      .m-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+      .m-subscribe-input {
+        background: #fff;
+        border-radius: 999px;
+        padding: 6px 6px 6px 14px;
         display: flex;
-        flex-direction: column;
-        gap: 4px;
+        justify-content: space-between;
+        align-items: center;
 
-        li {
-          a {
-            font-size: 13px;
-            color: #dddddd;
-            text-decoration: none;
+        p {
+          font-size: 12px;
+          color: #888;
+        }
 
-            &:hover {
-              color: #ffffff;
-            }
+        .m-subscribe-button {
+          background: #000;
+          border-radius: 999px;
+          padding: 8px 16px;
+          span {
+            color: #fff;
+            font-size: 10px;
+            text-transform: uppercase;
           }
         }
       }
     }
 
-    /* Istasangiz 2 ustunli ko‘rinish ham berish mumkin */
-    @media (min-width: 380px) {
-      .m-block {
-        /* hammasini birdan gridga tiqmaymiz, faqat spacing uchun */
-      }
-    }
-  }
-
-  /* 🔹 BOTTOM */
-  .m-bottom {
-    margin-top: 4px;
-
-    .m-divider {
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      margin: 0 0 12px 0;
-    }
-
-    .m-bottom-content {
+    /* ========== MAIN CONTENT ========== */
+    .m-main {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
+      gap: 26px;
 
-    .m-copy {
-      margin: 0;
-      font-size: 12px;
-      color: #cccccc;
-    }
+      /* Brand */
+      .m-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
 
-    .m-bottom-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
+        .m-logo {
+          font-family: Unbounded;
+          font-size: 28px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
 
-      a {
-        color: #cccccc;
-        text-decoration: none;
+        .m-desc {
+          font-size: 11px;
+          opacity: 0.9;
+          max-width: 260px;
+          text-align: center;
+        }
 
-        &:hover {
-          color: #ffffff;
+        .m-store-badges {
+          display: flex;
+          gap: 10px;
+          img {
+            width: 120px;
+          }
         }
       }
 
-      span {
-        color: rgba(255, 255, 255, 0.6);
+      /* == 2 USTUN (Our Address + Get To Know Us) == */
+      .m-two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        .m-block {
+          .m-title {
+            font-family: Unbounded;
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+
+          .m-info {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            .m-icon {
+              font-size: 15px;
+              margin-top: 3px;
+            }
+            p, a {
+              font-size: 13px;
+              color: #ddd;
+            }
+          }
+
+          .m-socials {
+            margin-top: 10px;
+            display: flex;
+            gap: 12px;
+            a {
+              font-size: 18px;
+              color: #fff;
+            }
+          }
+
+          .m-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            li a {
+              font-size: 13px;
+              color: #ddd;
+            }
+          }
+        }
+      }
+
+      /* Qolgan bloklar */
+      .m-block {
+        .m-title {
+          font-family: Unbounded;
+          font-size: 14px;
+          margin-bottom: 10px;
+        }
+        .m-list {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          li a {
+            font-size: 13px;
+            color: #ddd;
+          }
+        }
+      }
+    }
+
+    /* ========== BOTTOM ========== */
+    .m-bottom {
+      .m-divider {
+        border: 1px solid rgba(255,255,255,0.2);
+        margin-bottom: 12px;
+      }
+
+      .m-bottom-content {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .m-copy {
+          font-size: 12px;
+          color: #ccc;
+        }
+
+        .m-bottom-links {
+          display: flex;
+          gap: 6px;
+          font-size: 12px;
+
+          a {
+            color: #ccc;
+          }
+
+          span {
+            color: rgba(255,255,255,0.5);
+          }
+        }
       }
     }
   }

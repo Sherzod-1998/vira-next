@@ -29,17 +29,28 @@ const Footer = () => {
 						<span>Subscribe to VIRA</span>
 						<p>Get updates about new products & special offers.</p>
 					</div>
+
 					<div className="m-subscribe-input">
-						<p>your email here</p>
-						<button className="m-subscribe-button">
+						<input
+							type="email"
+							name="email"
+							className="m-input"
+							placeholder="Enter your email"
+							aria-label="Email address"
+							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+						/>
+						<button
+							className="m-subscribe-button"
+							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+						>
 							<span>send</span>
 						</button>
 					</div>
 				</Stack>
 
-				{/* MAIN INFO */}
+				{/* MAIN */}
 				<Stack className="m-main" spacing={3}>
-					{/* Brand & short desc */}
+					{/* Brand */}
 					<Box className="m-brand">
 						<span className="m-logo">vira</span>
 						<p className="m-desc">
@@ -52,70 +63,73 @@ const Footer = () => {
 						</div>
 					</Box>
 
-					{/* Address & contact */}
-					<Box className="m-block">
-						<h3 className="m-title">Our address</h3>
+					{/* 2 USTUNLIK QISM */}
+					<Box className="m-two-col">
+						{/* Our Address */}
+						<Box className="m-block">
+							<h3 className="m-title">Our address</h3>
 
-						<div className="m-info">
-							<FaMapMarkerAlt className="m-icon" />
-							<p>77 Myeongdong-gil, Jung-gu, Seoul 04536, South Korea.</p>
-						</div>
+							<div className="m-info">
+								<FaMapMarkerAlt className="m-icon" />
+								<p>77 Myeongdong-gil, Jung-gu, Seoul 04536, South Korea.</p>
+							</div>
 
-						<div className="m-info">
-							<FaPhoneAlt className="m-icon" />
-							<a href="tel:+821099105777">+82 10 9910 5777</a>
-						</div>
+							<div className="m-info">
+								<FaPhoneAlt className="m-icon" />
+								<a href="tel:+821099105777">+82 10 9910 5777</a>
+							</div>
 
-						<div className="m-info">
-							<FaEnvelope className="m-icon" />
-							<a href="mailto:support@vira.com">support@vira.com</a>
-						</div>
+							<div className="m-info">
+								<FaEnvelope className="m-icon" />
+								<a href="mailto:support@vira.com">support@vira.com</a>
+							</div>
 
-						<div className="m-socials">
-							<a href="#">
-								<FaInstagram />
-							</a>
-							<a href="#">
-								<FaFacebookF />
-							</a>
-							<a href="#">
-								<FaYoutube />
-							</a>
-							<a href="#">
-								<FaPinterest />
-							</a>
-						</div>
+							<div className="m-socials">
+								<a href="#">
+									<FaInstagram />
+								</a>
+								<a href="#">
+									<FaFacebookF />
+								</a>
+								<a href="#">
+									<FaYoutube />
+								</a>
+								<a href="#">
+									<FaPinterest />
+								</a>
+							</div>
+						</Box>
+
+						{/* Get To Know Us */}
+						<Box className="m-block">
+							<h3 className="m-title">Get To Know Us</h3>
+							<ul className="m-list">
+								<li>
+									<a href="#">Careers</a>
+								</li>
+								<li>
+									<a href="#">About Us</a>
+								</li>
+								<li>
+									<a href="#">Investor Relations</a>
+								</li>
+								<li>
+									<a href="#">Devices</a>
+								</li>
+								<li>
+									<a href="#">Customer Reviews</a>
+								</li>
+								<li>
+									<a href="#">Social Responsibility</a>
+								</li>
+								<li>
+									<a href="#">Store Locations</a>
+								</li>
+							</ul>
+						</Box>
 					</Box>
 
-					{/* Links: Get To Know Us */}
-					<Box className="m-block">
-						<h3 className="m-title">Get To Know Us</h3>
-						<ul className="m-list">
-							<li>
-								<a href="#">Careers</a>
-							</li>
-							<li>
-								<a href="#">About Us</a>
-							</li>
-							<li>
-								<a href="#">Investor Relations</a>
-							</li>
-							<li>
-								<a href="#">Devices</a>
-							</li>
-							<li>
-								<a href="#">Customer Reviews</a>
-							</li>
-							<li>
-								<a href="#">Social Responsibility</a>
-							</li>
-							<li>
-								<a href="#">Store Locations</a>
-							</li>
-						</ul>
-					</Box>
-
-					{/* Links: Legal */}
+					{/* Legal */}
 					<Box className="m-block">
 						<h3 className="m-title">Legal</h3>
 						<ul className="m-list">
@@ -139,6 +153,12 @@ const Footer = () => {
 							</li>
 						</ul>
 					</Box>
+
+					{/* Categories */}
+					
+
+					{/* Resources */}
+					
 				</Stack>
 
 				{/* BOTTOM */}
