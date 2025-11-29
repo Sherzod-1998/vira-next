@@ -1,45 +1,228 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useState } from 'react';
+// apps/vira-frontend/src/components/Top.tsx
+
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack, Box, IconButton, Tooltip, Popover } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
+import {
+	Stack,
+	Box,
+	IconButton,
+	Popover,
+	Badge,
+	List,
+	ListItem,
+	ListItemText,
+	Typography,
+	CircularProgress,
+	Divider,
+	Button,
+	MenuItem,
+} from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../apollo/store';
+import { useReactiveVar, useQuery, useMutation, gql } from '@apollo/client';
+import { socketVar, unreadNotificationCountVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 
-const Top = () => {
+/* ============================
+   GraphQL Queries & Mutations
+============================ */
+
+const GET_MY_NOTIFICATIONS = gql`
+	query GetMyNotifications($input: GetMyNotificationsInput!) {
+		getMyNotifications(input: $input) {
+			list {
+				_id
+				notificationType
+				notificationStatus
+				notificationGroup
+				notificationTitle
+				notificationDesc
+				authorId
+				receiverId
+				productId
+				articleId
+				createdAt
+				updatedAt
+			}
+			total
+			page
+			limit
+		}
+	}
+`;
+
+const GET_MY_UNREAD_NOTIFICATIONS_COUNT = gql`
+	query GetMyUnreadNotificationsCount {
+		getMyUnreadNotificationsCount
+	}
+`;
+
+const MARK_NOTIFICATION_READ = gql`
+	mutation MarkNotificationRead($notificationId: ID!) {
+		markNotificationRead(notificationId: $notificationId)
+	}
+`;
+
+const MARK_ALL_NOTIFICATIONS_READ = gql`
+	mutation MarkAllNotificationsRead {
+		markAllNotificationsRead
+	}
+`;
+
+/* ============================
+   Types
+============================ */
+
+type NotificationItem = {
+	_id: string;
+	notificationType: string;
+	notificationStatus: string;
+	notificationGroup: string;
+	notificationTitle: string;
+	notificationDesc?: string | null;
+	authorId: string;
+	receiverId: string;
+	productId?: string | null;
+	articleId?: string | null;
+	createdAt: string;
+	updatedAt: string;
+};
+
+/* ============================
+   Styled Menu
+============================ */
+
+const StyledMenu = styled((props: MenuProps) => (
+	<Menu
+		elevation={0}
+		anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+		transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+		{...props}
+	/>
+))(({ theme }) => ({
+	'& .MuiPaper-root': {
+		top: '109px',
+		borderRadius: 6,
+		marginTop: theme.spacing(1),
+		minWidth: 160,
+		color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+		boxShadow:
+			'rgb(255, 255, 255) 0px 0px 0px 0px, ' +
+			'rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, ' +
+			'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, ' +
+			'rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+		'& .MuiMenu-list': {
+			padding: '4px 0',
+		},
+		'& .MuiMenuItem-root': {
+			'& .MuiSvgIcon-root': {
+				fontSize: 18,
+				color: theme.palette.text.secondary,
+				marginRight: theme.spacing(1.5),
+			},
+			'&:active': {
+				backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+			},
+		},
+	},
+}));
+
+/* ============================
+   Component
+============================ */
+
+const Top: React.FC = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const { t, i18n } = useTranslation('common');
+	const unread = useReactiveVar(unreadNotificationCountVar);
+	const socket = useReactiveVar(socketVar);
+
+	const { t } = useTranslation('common');
 	const router = useRouter();
 
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string | null>('en');
 	const drop = Boolean(anchorEl2);
+
 	const [colorChange, setColorChange] = useState(false);
-	const [anchorEl, setAnchorEl] = useState<any | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [bgColor, setBgColor] = useState<boolean>(false);
 	const [logoutAnchor, setLogoutAnchor] = useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
 
+	/* ========== Notifications Queries & Mutations ========== */
+
+	const {
+		data: notificationsData,
+		loading: notificationsLoading,
+		error: notificationsError,
+		refetch: refetchNotifications,
+	} = useQuery(GET_MY_NOTIFICATIONS, {
+		variables: { input: { page: 1, limit: 10 } },
+		skip: !user?._id,
+		fetchPolicy: 'cache-and-network',
+	});
+
+	const {
+		data: unreadData,
+		refetch: refetchUnreadCount,
+	} = useQuery(GET_MY_UNREAD_NOTIFICATIONS_COUNT, {
+		skip: !user?._id,
+		pollInterval: 30000, // 30s da bir marta backend bilan sync
+	});
+
+	const [markNotificationRead] = useMutation(MARK_NOTIFICATION_READ);
+	const [markAllNotificationsRead, { loading: markAllLoading }] = useMutation(MARK_ALL_NOTIFICATIONS_READ);
+
+	const notifications: NotificationItem[] = notificationsData?.getMyNotifications?.list ?? [];
+
+	// backenddan kelgan unread count ni global reactiveVar ga yozamiz
 	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
+		if (typeof unreadData?.getMyUnreadNotificationsCount === 'number') {
+			unreadNotificationCountVar(unreadData.getMyUnreadNotificationsCount);
+		}
+	}, [unreadData]);
+
+	/* ========== WebSocket orqali real-time notification ========== */
+
+	useEffect(() => {
+		if (!socket) return;
+
+		const handler = (msg: MessageEvent) => {
+			try {
+				const data = JSON.parse(msg.data as any);
+				if (data?.event === 'NEW_NOTIFICATION') {
+					unreadNotificationCountVar(unreadNotificationCountVar() + 1);
+				}
+			} catch (e) {
+				console.error('WS parse error:', e);
+			}
+		};
+
+		socket.addEventListener('message', handler);
+		return () => {
+			socket.removeEventListener('message', handler);
+		};
+	}, [socket]);
+
+	/* ========== Language & Layout effects ========== */
+
+	useEffect(() => {
+		const stored = typeof window !== 'undefined' ? localStorage.getItem('locale') : null;
+		if (!stored) {
 			localStorage.setItem('locale', 'en');
 			setLang('en');
 		} else {
-			setLang(localStorage.getItem('locale'));
+			setLang(stored);
 		}
 	}, [router]);
 
@@ -49,21 +232,39 @@ const Top = () => {
 				setBgColor(true);
 				break;
 			default:
+				setBgColor(false);
 				break;
 		}
-	}, [router]);
+	}, [router.pathname]);
 
 	useEffect(() => {
 		const jwt = getJwtToken();
 		if (jwt) updateUserInfo(jwt);
 	}, []);
 
-	const langClick = (e: any) => setAnchorEl2(e.currentTarget);
+	// scroll bo'yicha navbar rangini o'zgartirish
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const handler = () => {
+			setColorChange(window.scrollY >= 50);
+		};
+		window.addEventListener('scroll', handler);
+		return () => window.removeEventListener('scroll', handler);
+	}, []);
+
+	/* ========== Handlers ========== */
+
+	const langClick = (e: React.MouseEvent<HTMLElement>) => setAnchorEl2(e.currentTarget);
 	const langClose = () => setAnchorEl2(null);
 
-	const handleOpen = (event: { currentTarget: any }) => {
+	const handleOpen = async (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
+		if (user?._id) {
+			await Promise.all([refetchNotifications(), refetchUnreadCount()]);
+		}
 	};
+
+	const handleClose = () => setAnchorEl(null);
 
 	const langChoice = useCallback(
 		async (e: any) => {
@@ -75,59 +276,35 @@ const Top = () => {
 		[router],
 	);
 
-	const changeNavbarColor = () => {
-		setColorChange(window.scrollY >= 50);
-	};
-
-	const handleClose = () => setAnchorEl(null);
-	const handleHover = (event: any) => {
-		setAnchorEl(anchorEl !== event.currentTarget ? event.currentTarget : null);
-	};
-
-	const handleOpenNotifications = () => {
-		console.log('Bildirishnomalar ochildi');
-	};
-
 	const id = open ? 'notification-popover' : undefined;
 
-	const StyledMenu = styled((props: MenuProps) => (
-		<Menu
-			elevation={0}
-			anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-			transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-			{...props}
-		/>
-	))(({ theme }) => ({
-		'& .MuiPaper-root': {
-			top: '109px',
-			borderRadius: 6,
-			marginTop: theme.spacing(1),
-			minWidth: 160,
-			color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-			boxShadow:
-				'rgb(255, 255, 255) 0px 0px 0px 0px, ' +
-				'rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, ' +
-				'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, ' +
-				'rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-			'& .MuiMenu-list': {
-				padding: '4px 0',
-			},
-			'& .MuiMenuItem-root': {
-				'& .MuiSvgIcon-root': {
-					fontSize: 18,
-					color: theme.palette.text.secondary,
-					marginRight: theme.spacing(1.5),
-				},
-				'&:active': {
-					backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-				},
-			},
-		},
-	}));
+	const handleClickNotification = async (item: NotificationItem) => {
+		try {
+			if (item.notificationStatus === 'WAIT') {
+				await markNotificationRead({
+					variables: { notificationId: item._id },
+				});
+				await Promise.all([refetchNotifications(), refetchUnreadCount()]);
+			}
+			// Agar keyinchalik mahsulot / article linkka o'tkazmoqchi bo'lsangiz,
+			// bu yerga router.push qo'yasiz:
+			// example: if (item.productId) router.push(`/product/detail?productId=${item.productId}`);
+		} catch (err) {
+			console.error(err);
+		}
+	};
 
-	if (typeof window !== 'undefined') {
-		window.addEventListener('scroll', changeNavbarColor);
-	}
+	const handleMarkAllRead = async () => {
+		try {
+			await markAllNotificationsRead();
+			unreadNotificationCountVar(0); // badge-ni zudlik bilan tozalaymiz
+			await Promise.all([refetchNotifications(), refetchUnreadCount()]);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	/* ========== Mobile simple top ========== */
 
 	if (device === 'mobile') {
 		return (
@@ -151,15 +328,20 @@ const Top = () => {
 		);
 	}
 
+	/* ========== Desktop navbar ========== */
+
 	return (
 		<Stack className={'navbar'}>
 			<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
 				<Stack className={'container'}>
+					{/* Logo */}
 					<Box className={'logo-box'}>
 						<Link href={'/'}>
 							<h1 className="logo-text">VIRA</h1>
 						</Link>
 					</Box>
+
+					{/* Router links */}
 					<Box className={'router-box'}>
 						<Link href={'/'}>
 							<div>{t('Home')}</div>
@@ -182,6 +364,8 @@ const Top = () => {
 							<div>{t('CS')}</div>
 						</Link>
 					</Box>
+
+					{/* User box */}
 					<Box className={'user-box'}>
 						{user?._id ? (
 							<>
@@ -217,12 +401,20 @@ const Top = () => {
 							</Link>
 						)}
 
+						{/* Notifications + Lang */}
 						<div className={'lan-box'}>
 							{user?._id && (
 								<>
 									<IconButton onClick={handleOpen}>
-										<NotificationsOutlinedIcon className="notification-icon" />
+										<Badge
+											color="primary"
+											badgeContent={unread > 99 ? '99+' : unread}
+											invisible={unread === 0}
+										>
+											<NotificationsOutlinedIcon className="notification-icon" />
+										</Badge>
 									</IconButton>
+
 									<Popover
 										id={id}
 										open={open}
@@ -231,15 +423,102 @@ const Top = () => {
 										anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 										transformOrigin={{ vertical: 'top', horizontal: 'left' }}
 									>
-										<div className="notification-box">
-											Notifications
-											<div className="notification-content">
-												<p>{t('You have no new notifications.')}</p>
-											</div>
-										</div>
+										<Box sx={{ width: 360, maxHeight: 400, display: 'flex', flexDirection: 'column' }}>
+											{/* Header */}
+											<Box
+												sx={{
+													px: 2,
+													py: 1.5,
+													display: 'flex',
+													alignItems: 'center',
+													justifyContent: 'space-between',
+													borderBottom: '1px solid rgba(0,0,0,0.06)',
+												}}
+											>
+												<Typography variant="subtitle1" fontWeight={600}>
+													{t('Notifications')}
+												</Typography>
+
+												<Button
+													size="small"
+													variant="text"
+													onClick={handleMarkAllRead}
+													disabled={markAllLoading || notifications.length === 0}
+												>
+													{t('Mark all as read')}
+												</Button>
+											</Box>
+
+											{/* Content */}
+											<Box sx={{ flex: 1, overflowY: 'auto' }}>
+												{notificationsLoading && !notificationsData ? (
+													<Box sx={{ py: 3, display: 'flex', justifyContent: 'center' }}>
+														<CircularProgress size={22} />
+													</Box>
+												) : notificationsError ? (
+													<Box sx={{ p: 2 }}>
+														<Typography color="error" variant="body2">
+															{t('An error occurred. Please try again.')}
+														</Typography>
+													</Box>
+												) : notifications.length === 0 ? (
+													<Box sx={{ p: 2 }}>
+														<Typography variant="body2" color="text.secondary">
+															{t('You have no new notifications.')}
+														</Typography>
+													</Box>
+												) : (
+													<List disablePadding>
+														{notifications.map((item) => {
+															const isUnread = item.notificationStatus === 'WAIT';
+
+															return (
+																<React.Fragment key={item._id}>
+																	<ListItem
+																		button
+																		onClick={() => handleClickNotification(item)}
+																		sx={{
+																			alignItems: 'flex-start',
+																			bgcolor: isUnread
+																				? 'rgba(25, 118, 210, 0.08)'
+																				: 'inherit',
+																		}}
+																	>
+																		<ListItemText
+																			primary={
+																				<Typography
+																					variant="body2"
+																					fontWeight={isUnread ? 600 : 400}
+																					sx={{ mb: 0.5 }}
+																				>
+																					{item.notificationTitle}
+																				</Typography>
+																			}
+																			secondary={
+																				item.notificationDesc && (
+																					<Typography
+																						variant="caption"
+																						color="text.secondary"
+																					>
+																						{item.notificationDesc}
+																					</Typography>
+																				)
+																			}
+																		/>
+																	</ListItem>
+																	<Divider component="li" />
+																</React.Fragment>
+															);
+														})}
+													</List>
+												)}
+											</Box>
+										</Box>
 									</Popover>
 								</>
 							)}
+
+							{/* Language selector */}
 							<Button
 								disableRipple
 								className="btn-lang"
@@ -250,6 +529,7 @@ const Top = () => {
 									<img src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} />
 								</Box>
 							</Button>
+
 							<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
 								<MenuItem disableRipple onClick={langChoice} id="en">
 									<img className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} />

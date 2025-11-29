@@ -623,3 +623,49 @@ export const GET_NOTICES = gql`
 		}
 	}
 `;
+
+/**************************
+ *      NOTIFICATIONS     *
+ *************************/
+
+
+export const GET_MY_NOTIFICATIONS = gql`
+  query GetMyNotifications($input: GetMyNotificationsInput!) {
+    getMyNotifications(input: $input) {
+      list {
+        _id
+        notificationType
+        notificationStatus
+        notificationGroup
+        notificationTitle
+        notificationDesc
+        authorId
+        receiverId
+        productId
+        articleId
+        createdAt
+      }
+      total
+      page
+      limit
+    }
+  }
+`;
+
+export const GET_MY_UNREAD_NOTIFICATIONS_COUNT = gql`
+  query GetMyUnreadNotificationsCount {
+    getMyUnreadNotificationsCount
+  }
+`;
+
+export const MARK_NOTIFICATION_READ = gql`
+  mutation MarkNotificationRead($notificationId: ID!) {
+    markNotificationRead(notificationId: $notificationId)
+  }
+`;
+
+export const MARK_ALL_NOTIFICATIONS_READ = gql`
+  mutation MarkAllNotificationsRead {
+    markAllNotificationsRead
+  }
+`;

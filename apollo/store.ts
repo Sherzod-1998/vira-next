@@ -1,7 +1,5 @@
 import { makeVar } from '@apollo/client';
-
 import { CustomJwtPayload } from '../libs/types/customJwtPayload';
-export const themeVar = makeVar({});
 
 export const userVar = makeVar<CustomJwtPayload>({
 	_id: '',
@@ -24,5 +22,8 @@ export const userVar = makeVar<CustomJwtPayload>({
 	memberBlocks: 0,
 });
 
-// @ts-ignore
-export const socketVar = makeVar<WebSocket>();
+// WebSocket instance
+export const socketVar = makeVar<WebSocket | null>(null);
+
+// 🔔 Unread count
+export const unreadNotificationCountVar = makeVar<number>(0);
