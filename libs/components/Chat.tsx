@@ -43,40 +43,39 @@ const Chat = () => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
-	/** WS INIT – faqat chat uchun alohida socket */
+	/** WEBSOCKET CONNECTION **/
 	useEffect(() => {
-		if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return;
 
-		const baseUrl =
-			process.env.NEXT_PUBLIC_CHAT_WS_URL ||
-			process.env.REACT_APP_API_WS ||
-			'ws://localhost:3007';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_CHAT_WS_URL || 'ws://localhost:3007';
 
-		const token = getJwtToken();
-		const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
+  const token = getJwtToken();
+  const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
 
-		console.log('[Chat] opening WS:', CHAT_WS_URL);
+  console.log('[Chat] opening WS:', CHAT_WS_URL);
 
-		const ws = new WebSocket(CHAT_WS_URL);
+  const ws = new WebSocket(CHAT_WS_URL);
 
-		ws.onopen = () => {
-			console.log('[Chat] Chat WebSocket OPEN');
-		};
+  ws.onopen = () => {
+    console.log('[Chat] Chat WebSocket OPEN');
+  };
 
-		ws.onerror = (e) => {
-			console.error('[Chat] Chat WebSocket ERROR', e);
-		};
+  ws.onerror = (e) => {
+    console.error('[Chat] Chat WebSocket ERROR', e);
+  };
 
-		ws.onclose = (e) => {
-			console.log('[Chat] Chat WebSocket CLOSED', e.code, e.reason);
-		};
+  ws.onclose = (e) => {
+    console.log('[Chat] Chat WebSocket CLOSED', e.code, e.reason);
+  };
 
-		setSocket(ws);
+  setSocket(ws);
 
-		return () => {
-			ws.close();
-		};
-	}, []);
+  return () => {
+    ws.close();
+  };
+}, []);
+
 
 	/** WS MESSAGE HANDLER */
 	useEffect(() => {
