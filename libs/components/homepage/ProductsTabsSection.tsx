@@ -1,16 +1,19 @@
 'use client';
+
 import React from 'react';
 import { Box, Tabs, Tab, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
+
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
-import { Direction } from '../../enums/common.enum'; // yo'lni loyihangizga moslang
+import { Direction } from '../../enums/common.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { Product } from '../../types/product/product';
 import MainProductCard from './MainProductCard';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 type TabKey = 'popular' | 'trending' | 'top';
 const TAB_INDEX: Record<TabKey, number> = { popular: 0, trending: 1, top: 2 };
@@ -26,26 +29,48 @@ function TabPanel(props: { children?: React.ReactNode; value: number; index: num
 			aria-labelledby={`products-tab-${index}`}
 			{...other}
 		>
-			{value === index && <Box sx={{ pt: 3, minHeight: 560 }}>{children}</Box>}
+			{value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
 		</div>
 	);
 }
+
 const a11y = (i: number) => ({ id: `products-tab-${i}`, 'aria-controls': `products-tabpanel-${i}` });
 
 const inputs: Record<TabKey, ProductsInquiry> = {
-	popular: { page: 1, limit: 12, sort: 'productViews', direction: Direction.DESC, search: {
-		materialList: undefined
-	} },
-	trending: { page: 1, limit: 12, sort: 'productLikes', direction: Direction.DESC, search: {
-		materialList: undefined
-	} },
-	top: { page: 1, limit: 12, sort: 'createdAt', direction: Direction.DESC, search: {
-		materialList: undefined
-	} },
+	popular: {
+		page: 1,
+		limit: 12,
+		sort: 'productViews',
+		direction: Direction.DESC,
+		search: {
+			materialList: undefined,
+		},
+	},
+	trending: {
+		page: 1,
+		limit: 12,
+		sort: 'productLikes',
+		direction: Direction.DESC,
+		search: {
+			materialList: undefined,
+		},
+	},
+	top: {
+		page: 1,
+		limit: 12,
+		sort: 'createdAt',
+		direction: Direction.DESC,
+		search: {
+			materialList: undefined,
+		},
+	},
 };
 
 const ProductsTabsSection: React.FC = () => {
 	const router = useRouter();
+	const device = useDeviceDetect();
+	const isMobile = device === 'mobile';
+
 	const initialKey = (router.query.tab as TabKey) || 'popular';
 	const [value, setValue] = React.useState<number>(TAB_INDEX[initialKey] ?? 0);
 
@@ -57,6 +82,7 @@ const ProductsTabsSection: React.FC = () => {
 		variables,
 		notifyOnNetworkStatusChange: true,
 	});
+
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
 	const onLike = async (id: string) => {
@@ -77,16 +103,19 @@ const ProductsTabsSection: React.FC = () => {
 		});
 	};
 
-	// Shared selectors (faqat aktiv TabPanel mount bo‘ladi, shuning uchun collision bo‘lmaydi)
-	const navPrev = `.swiper-tabs-prev`;
-	const navNext = `.swiper-tabs-next`;
-	const pagEl = `.swiper-tabs-pagination`;
+	// 🔹 Swiper config – mobile va desktop uchun alohida
+	const mobileSwiperProps = {
+		modules: [Autoplay, Pagination],
+		pagination: { el: '.swiper-tabs-pagination', clickable: true },
+		spaceBetween: 12,
+		slidesPerView: 1.2 as const,
+		centeredSlides: true,
+	};
 
-	// Swiper config
-	const swiperProps = {
+	const desktopSwiperProps = {
 		modules: [Autoplay, Navigation, Pagination],
-		navigation: { prevEl: navPrev, nextEl: navNext },
-		pagination: { el: pagEl, clickable: true },
+		navigation: { prevEl: '.swiper-tabs-prev', nextEl: '.swiper-tabs-next' },
+		pagination: { el: '.swiper-tabs-pagination', clickable: true },
 		spaceBetween: 20,
 		slidesPerView: 4 as const,
 		breakpoints: {
@@ -97,27 +126,20 @@ const ProductsTabsSection: React.FC = () => {
 		},
 	};
 
+	const swiperProps = isMobile ? mobileSwiperProps : desktopSwiperProps;
+
 	return (
-		<Stack className="products-tabs-section"
-            direction="column"
-            justifyContent="center"
-            
-        >
+		<Stack className={`products-tabs-section ${isMobile ? 'mobile' : ''}`} direction="column" justifyContent="center">
 			<Box className="products-tabs car-like">
 				<Box className="products-tabs__header">
 					<h2 className="products-tabs__title">Featured Product Listings</h2>
+
 					<div className="products-tabs__nav">
-						<button className="nav-icon swiper-tabs-prev" aria-label="Prev">
-							{'←'}
-						</button>
 						<div className="dots">
 							<span className="dot" />
 							<span className="dot" />
 							<span className="dot" />
 						</div>
-						<button className="nav-icon swiper-tabs-next" aria-label="Next">
-							{'→'}
-						</button>
 					</div>
 				</Box>
 

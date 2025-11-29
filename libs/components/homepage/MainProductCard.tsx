@@ -4,6 +4,7 @@ import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import { Product } from '../../types/product/product';
 import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 export interface MainProductCardProps {
 	product: Product;
@@ -12,6 +13,9 @@ export interface MainProductCardProps {
 
 const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) => {
 	const router = useRouter();
+	const device = useDeviceDetect();
+	const isMobile = device === 'mobile';
+
 	const data = product;
 
 	// backenddan kelgan "men like qilganmanmi?"
@@ -46,7 +50,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 
 	return (
 		<Stack
-			className="product-card"
+			className={`product-card ${isMobile ? 'mobile' : ''}`}
 			direction="column"
 			onClick={() => pushDetailHandler(data._id)}
 			sx={{ position: 'relative' }}
