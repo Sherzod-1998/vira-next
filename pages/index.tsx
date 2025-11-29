@@ -29,6 +29,7 @@ const Home: NextPage = () => {
 			<HeroSections />
 			<TopSellers />
 			<CommunityBoards />
+			<BenefitsRow />
 		</Stack>;
 	} else {
 		return (
