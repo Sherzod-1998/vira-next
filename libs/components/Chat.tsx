@@ -1,9 +1,4 @@
-import React, {
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, Box, Stack } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
@@ -45,37 +40,35 @@ const Chat = () => {
 
 	/** WEBSOCKET CONNECTION **/
 	useEffect(() => {
-  if (typeof window === 'undefined') return;
+		if (typeof window === 'undefined') return;
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_CHAT_WS_URL || 'ws://localhost:3007';
+		const baseUrl = process.env.NEXT_PUBLIC_CHAT_WS_URL || 'ws://localhost:3007';
 
-  const token = getJwtToken();
-  const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
+		const token = getJwtToken();
+		const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
 
-  console.log('[Chat] opening WS:', CHAT_WS_URL);
+		console.log('[Chat] opening WS:', CHAT_WS_URL);
 
-  const ws = new WebSocket(CHAT_WS_URL);
+		const ws = new WebSocket(CHAT_WS_URL);
 
-  ws.onopen = () => {
-    console.log('[Chat] Chat WebSocket OPEN');
-  };
+		ws.onopen = () => {
+			console.log('[Chat] Chat WebSocket OPEN');
+		};
 
-  ws.onerror = (e) => {
-    console.error('[Chat] Chat WebSocket ERROR', e);
-  };
+		ws.onerror = (e) => {
+			console.error('[Chat] Chat WebSocket ERROR', e);
+		};
 
-  ws.onclose = (e) => {
-    console.log('[Chat] Chat WebSocket CLOSED', e.code, e.reason);
-  };
+		ws.onclose = (e) => {
+			console.log('[Chat] Chat WebSocket CLOSED', e.code, e.reason);
+		};
 
-  setSocket(ws);
+		setSocket(ws);
 
-  return () => {
-    ws.close();
-  };
-}, []);
-
+		return () => {
+			ws.close();
+		};
+	}, []);
 
 	/** WS MESSAGE HANDLER */
 	useEffect(() => {
@@ -108,8 +101,7 @@ const Chat = () => {
 					}
 					case 'message': {
 						// backend: { event:'message', text, memberData }
-						const payload: MessagePayload =
-							data.data && data.data.text ? data.data : data;
+						const payload: MessagePayload = data.data && data.data.text ? data.data : data;
 
 						console.log('[Chat] new message payload:', payload);
 						setMessagesList((prev) => [...prev, payload]);
@@ -149,12 +141,9 @@ const Chat = () => {
 		setOpen((prevState) => !prevState);
 	};
 
-	const getInputMessageHandler = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setMessageInput(e.target.value);
-		},
-		[],
-	);
+	const getInputMessageHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		setMessageInput(e.target.value);
+	}, []);
 
 	const getKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
@@ -174,10 +163,7 @@ const Chat = () => {
 		}
 
 		if (socket.readyState !== WebSocket.OPEN) {
-			console.log(
-				'[Chat] chat socket OPEN emas, readyState =',
-				socket.readyState,
-			);
+			console.log('[Chat] chat socket OPEN emas, readyState =', socket.readyState);
 			setMessageInput('');
 			return;
 		}
@@ -207,26 +193,13 @@ const Chat = () => {
 			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
 				<Box className={'chat-top'} component={'div'}>
 					<div style={{ fontFamily: 'Nunito' }}>Online Chat</div>
-					<RippleBadge
-						style={{ margin: '-18px 0 0 21px' }}
-						badgeContent={onlineUsers}
-					/>
+					<RippleBadge style={{ margin: '-18px 0 0 21px' }} badgeContent={onlineUsers} />
 				</Box>
 
-				<Box
-					className={'chat-content'}
-					id="chat-content"
-					ref={chatContentRef}
-					component={'div'}
-				>
+				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
 					<ScrollableFeed>
 						<Stack className={'chat-main'}>
-							<Box
-								flexDirection={'row'}
-								style={{ display: 'flex' }}
-								sx={{ m: '10px 0px' }}
-								component={'div'}
-							>
+							<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
 								<div className={'welcome'}>Welcome to Live chat!</div>
 							</Box>
 
@@ -263,10 +236,7 @@ const Chat = () => {
 										sx={{ m: '10px 0px' }}
 										component={'div'}
 									>
-										<Avatar
-											alt={memberData?.memberNick || 'user'}
-											src={memberImages}
-										/>
+										<Avatar alt={memberData?.memberNick || 'user'} src={memberImages} />
 										<div className={'msg-left'}>{text}</div>
 									</Box>
 								);

@@ -14,6 +14,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+
     span {
       color: #181a20;
       font-family: $font;
@@ -23,6 +24,7 @@
       line-height: 150%;
       letter-spacing: -0.646px;
       text-transform: capitalize;
+
       &.white {
         color: #ffffff;
       }
@@ -36,14 +38,17 @@
     height: auto;
     display: flex;
     flex-direction: row;
+
     .container {
       width: 100%;
       flex-direction: column;
+
       .card-box {
         position: relative;
         margin-top: 25px;
         display: flex;
         flex-direction: row;
+
         .empty-list {
           width: 100%;
           height: 280px;
@@ -51,21 +56,25 @@
           justify-content: center;
           align-items: center;
         }
+
         .trend-product-swiper {
           width: 100%;
           height: 400px;
           display: flex;
           flex-direction: row;
+
           .trend-product-slide {
             width: 98%;
             height: auto;
             display: flex;
+
             .trend-card-box {
               position: relative;
               width: 100%;
               height: 375px;
               display: flex;
               flex-direction: column;
+
               .card-img {
                 position: relative;
                 width: 100%;
@@ -73,6 +82,7 @@
                 background-size: cover;
                 border-radius: 12px 12px 0px 0px;
                 cursor: pointer;
+
                 div {
                   position: absolute;
                   padding: 8px 12px;
@@ -88,6 +98,7 @@
                   line-height: normal;
                 }
               }
+
               .info {
                 padding: 20px 22px 17px;
                 display: flex;
@@ -98,6 +109,7 @@
                 border-top: none;
                 background: #fff;
                 box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
                 .title {
                   overflow: hidden;
                   color: #181a20;
@@ -111,6 +123,7 @@
                   text-transform: capitalize;
                   cursor: pointer;
                 }
+
                 .desc {
                   margin-top: 5px;
                   overflow: hidden;
@@ -123,19 +136,23 @@
                   text-overflow: ellipsis;
                   white-space: nowrap;
                 }
+
                 .options {
                   margin-top: 15px;
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
+
                   div {
                     display: flex;
                     flex-direction: row;
+
                     img {
                       margin-right: 5px;
                       width: 17px;
                       height: 17px;
                     }
+
                     span {
                       color: #181a20;
                       font-family: $font;
@@ -146,11 +163,13 @@
                     }
                   }
                 }
+
                 .bott {
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
                   align-items: center;
+
                   p {
                     color: #181a20;
                     font-family: $font;
@@ -160,17 +179,20 @@
                     line-height: normal;
                     text-transform: capitalize;
                   }
+
                   button {
                     margin-left: 7px;
                     width: 16px;
                     height: 16px;
                     box-sizing: border-box;
                   }
+
                   .view-like-box {
                     display: flex;
                     flex-direction: row;
                     gap: 7px;
                     align-items: center;
+
                     .view-cnt {
                       color: #717171;
                       font-family: $font;
@@ -186,12 +208,14 @@
             }
           }
         }
+
         .trend-card-box {
           position: relative;
           width: 300px;
           height: 375px;
           display: flex;
           flex-direction: column;
+
           .card-img {
             position: relative;
             width: 100%;
@@ -199,6 +223,7 @@
             background-size: cover;
             border-radius: 12px 12px 0px 0px;
             cursor: pointer;
+
             div {
               position: absolute;
               padding: 8px 12px;
@@ -214,6 +239,7 @@
               line-height: normal;
             }
           }
+
           .info {
             padding: 20px 22px 17px;
             display: flex;
@@ -224,6 +250,7 @@
             border-top: none;
             background: #fff;
             box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
             .title {
               overflow: hidden;
               color: #181a20;
@@ -237,6 +264,7 @@
               text-transform: capitalize;
               cursor: pointer;
             }
+
             .desc {
               margin-top: 5px;
               overflow: hidden;
@@ -249,19 +277,23 @@
               text-overflow: ellipsis;
               white-space: nowrap;
             }
+
             .options {
               margin-top: 15px;
               display: flex;
               flex-direction: row;
               justify-content: space-between;
+
               div {
                 display: flex;
                 flex-direction: row;
+
                 img {
                   margin-right: 5px;
                   width: 17px;
                   height: 17px;
                 }
+
                 span {
                   color: #181a20;
                   font-family: $font;
@@ -272,11 +304,13 @@
                 }
               }
             }
+
             .bott {
               display: flex;
               flex-direction: row;
               justify-content: space-between;
               align-items: center;
+
               p {
                 color: #181a20;
                 font-family: $font;
@@ -286,17 +320,20 @@
                 line-height: normal;
                 text-transform: capitalize;
               }
+
               button {
                 margin-left: 7px;
                 width: 16px;
                 height: 16px;
                 box-sizing: border-box;
               }
+
               .view-like-box {
                 display: flex;
                 flex-direction: row;
                 gap: 7px;
                 align-items: center;
+
                 .view-cnt {
                   color: #717171;
                   font-family: $font;
@@ -321,10 +358,12 @@
     display: flex;
     flex-direction: row;
     background: #f6f6f6;
+
     .container {
       width: 100%;
       flex-direction: column;
       align-items: center;
+
       .card-box {
         margin-top: 25px;
         width: 100%;
@@ -332,23 +371,27 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+
         .popular-product-swiper {
           width: 100%;
           height: 390px;
           display: flex;
           flex-direction: row;
+
           .popular-product-slide {
             width: 98%;
             height: auto;
             display: flex;
           }
         }
+
         .popular-card-box {
           position: relative;
           width: 100%;
           height: 425px;
           display: flex;
           flex-direction: column;
+
           .card-img {
             position: relative;
             width: 100%;
@@ -356,6 +399,7 @@
             background-size: cover;
             border-radius: 12px 12px 0px 0px;
             cursor: pointer;
+
             div.status {
               position: absolute;
               padding: 6px 34px;
@@ -365,10 +409,12 @@
               align-items: center;
               border-radius: 6px;
               background: rgba(146, 106, 84, 1);
+
               img {
                 width: 14px;
                 height: 14px;
               }
+
               span {
                 margin-left: 5px;
                 color: #fff;
@@ -380,6 +426,7 @@
                 text-transform: uppercase;
               }
             }
+
             div.price {
               position: absolute;
               padding: 8px 12px;
@@ -395,6 +442,7 @@
               line-height: normal;
             }
           }
+
           .info {
             padding: 20px 22px 17px;
             display: flex;
@@ -405,6 +453,7 @@
             border-top: none;
             background: #fff;
             box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
             .title {
               overflow: hidden;
               color: #181a20;
@@ -418,6 +467,7 @@
               text-transform: capitalize;
               cursor: pointer;
             }
+
             .desc {
               margin-top: 5px;
               overflow: hidden;
@@ -430,19 +480,23 @@
               text-overflow: ellipsis;
               white-space: nowrap;
             }
+
             .options {
               margin-top: 15px;
               display: flex;
               flex-direction: row;
               justify-content: space-between;
+
               div {
                 display: flex;
                 flex-direction: row;
+
                 img {
                   margin-right: 5px;
                   width: 17px;
                   height: 17px;
                 }
+
                 span {
                   color: #181a20;
                   font-family: $font;
@@ -453,11 +507,13 @@
                 }
               }
             }
+
             .bott {
               display: flex;
               flex-direction: row;
               justify-content: space-between;
               align-items: center;
+
               p {
                 color: #181a20;
                 font-family: $font;
@@ -467,17 +523,20 @@
                 line-height: normal;
                 text-transform: capitalize;
               }
+
               button {
                 margin-left: 7px;
                 width: 16px;
                 height: 16px;
                 box-sizing: border-box;
               }
+
               .view-like-box {
                 display: flex;
                 flex-direction: row;
                 gap: 7px;
                 align-items: center;
+
                 .view-cnt {
                   color: #717171;
                   font-family: $font;
@@ -492,18 +551,22 @@
           }
         }
       }
+
       .pagination-box {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
+
         .swiper-pagination-bullet.swiper-pagination-bullet-active {
           background: #000000;
         }
+
         .swiper-popular-next {
           margin-left: 20px;
           cursor: pointer;
         }
+
         .swiper-popular-prev {
           margin-right: 20px;
           cursor: pointer;
@@ -518,30 +581,36 @@
     height: auto;
     display: flex;
     flex-direction: row;
+
     .container {
       width: 100%;
       display: flex;
       flex-direction: column;
+
       .card-box {
         position: relative;
         margin-top: 25px;
         display: flex;
         flex-direction: row;
+
         .top-product-swiper {
           width: 100%;
           height: 400px;
           display: flex;
           flex-direction: row;
+
           .top-product-slide {
             width: 98%;
             height: auto;
             display: flex;
+
             .top-card-box {
               position: relative;
               width: 100%;
               height: 375px;
               display: flex;
               flex-direction: column;
+
               .card-img {
                 position: relative;
                 width: 100%;
@@ -549,6 +618,7 @@
                 background-size: cover;
                 border-radius: 12px 12px 0px 0px;
                 cursor: pointer;
+
                 div {
                   position: absolute;
                   padding: 8px 12px;
@@ -564,6 +634,7 @@
                   line-height: normal;
                 }
               }
+
               .info {
                 padding: 20px 22px 17px;
                 display: flex;
@@ -574,6 +645,7 @@
                 border-top: none;
                 background: #fff;
                 box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
                 .title {
                   overflow: hidden;
                   color: #181a20;
@@ -587,6 +659,7 @@
                   text-transform: capitalize;
                   cursor: pointer;
                 }
+
                 .desc {
                   margin-top: 5px;
                   overflow: hidden;
@@ -599,19 +672,23 @@
                   text-overflow: ellipsis;
                   white-space: nowrap;
                 }
+
                 .options {
                   margin-top: 15px;
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
+
                   div {
                     display: flex;
                     flex-direction: row;
+
                     img {
                       margin-right: 5px;
                       width: 17px;
                       height: 17px;
                     }
+
                     span {
                       color: #181a20;
                       font-family: $font;
@@ -622,11 +699,13 @@
                     }
                   }
                 }
+
                 .bott {
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
                   align-items: center;
+
                   p {
                     color: #181a20;
                     font-family: $font;
@@ -636,17 +715,20 @@
                     line-height: normal;
                     text-transform: capitalize;
                   }
+
                   button {
                     margin-left: 7px;
                     width: 16px;
                     height: 16px;
                     box-sizing: border-box;
                   }
+
                   .view-like-box {
                     display: flex;
                     flex-direction: row;
                     gap: 7px;
                     align-items: center;
+
                     .view-cnt {
                       color: #717171;
                       font-family: $font;
@@ -675,32 +757,38 @@
     display: flex;
     flex-direction: row;
     background: #f6f6f6;
+
     .container {
       position: relative;
       width: 100%;
       flex-direction: column;
       align-items: center;
+
       .wrapper {
         width: 100%;
         margin-top: 25px;
         display: flex;
         flex-direction: row;
         align-items: center;
+
         .top-sellers-swiper {
           width: 100%;
           height: 280px;
           display: flex;
           flex-direction: row;
+
           .top-sellers-slide {
             width: 98%;
             height: auto;
             display: flex;
+
             .top-seller-card {
               width: 100%;
               height: 280px;
               display: flex;
               flex-direction: column;
               align-items: center;
+
               img {
                 width: 209px;
                 height: 209px;
@@ -708,6 +796,7 @@
                 cursor: pointer;
                 object-fit: cover;
               }
+
               strong {
                 margin-top: 10px;
                 color: #181a20;
@@ -720,6 +809,7 @@
                 text-transform: capitalize;
                 cursor: pointer;
               }
+
               span {
                 color: #181a20;
                 text-align: center;
@@ -737,115 +827,246 @@
   }
 
   #footer {
-    position: relative;
-    padding: 60px 0px 18px 0px;
+    padding: 24px 16px 16px;
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    background: #181a20;
-    .footer-container {
-      padding: 0 10px;
+    background: #212121;
+
+    .mobile-footer {
+      width: 100%;
+      max-width: 480px;
       margin: 0 auto;
-      width: 1300px;
-      height: auto;
-      .main {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      color: #fff;
+      font-family: Karla, system-ui, -apple-system, sans-serif;
+    }
+
+    /* 🔹 SUBSCRIBE BLOK */
+    .m-subscribe {
+      background: #926a54;
+      border-radius: 16px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      .m-subscribe-text {
+        span {
+          color: rgba(255, 255, 255, 1);
+          font-family: Unbounded;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 22px;
+          letter-spacing: 0%;
+          text-align: center;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 1);
+          font-family: Karla;
+          font-style: italic;
+          font-size: 10px;
+          font-weight: 400;
+          line-height: 15px;
+          letter-spacing: 0%;
+          text-align: center;
+        }
+      }
+
+      .m-subscribe-input {
+        border-radius: 500px;
+        margin-top: 6px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 8px 10px;
         display: flex;
-        flex-direction: column;
-        .left {
-          height: 360px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+
+        p {
+          margin: 0;
+          font-size: 13px;
+          color: #777;
+        }
+
+        .m-subscribe-button {
+          border: none;
+          outline: none;
+          background: #000;
+          border-radius: 999px;
+          padding: 6px 14px;
           display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          .footer-box {
-            display: flex;
-            flex-direction: column;
-            .logo {
-              width: 128px;
-              height: 52px;
-              cursor: pointer;
-            }
-            span {
-              color: #bebdbd;
-              font-family: $font;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 400;
-              text-transform: capitalize;
-            }
-            p {
-              color: #fff;
-              font-family: $font;
-              font-size: 15px;
-              font-style: normal;
-              font-weight: 600;
-              line-height: normal;
-              text-transform: capitalize;
-            }
-            .media-box {
-              margin-top: 12px;
-              color: #929495;
-              svg {
-                font-size: 32px;
-                margin-right: 22px;
-                cursor: pointer;
-              }
-            }
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+
+          span {
+            color: #fff;
+            font-family: Unbounded, system-ui, -apple-system, sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
           }
         }
-        .right {
+      }
+    }
+
+    .m-main { 
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .m-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 9px;
+        .m-logo {
+          color: rgba(255, 255, 255, 1);
+          font-family: Unbounded;
+          font-size: 30px;
+          font-weight: 700;
+          line-height: 35px;
+          letter-spacing: 0%;
+          text-align: center;
+          text-transform: uppercase;
+        }
+
+        .m-desc {
+          color: rgba(255, 255, 255, 1);
+
+          font-family: Karla;
+          font-style: italic;
+          font-size: 10px;
+          font-weight: 400;
+          line-height: 16px;
+          letter-spacing: 0%;
+          text-align: center;
+          text-transform: capitalize;
+        }
+
+        .m-store-badges {
+          display: flex;
+          gap: 10px;
+
+          img {
+            width: 120px;
+            height: auto;
+            display: block;
+          }
+        }
+      }
+
+      .m-block {
+        .m-title {
+          font-family: Unbounded, system-ui, -apple-system, sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          margin: 0 0 8px 0;
+        }
+
+        .m-info {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          margin-bottom: 8px;
+
+          .m-icon {
+            margin-top: 2px;
+            font-size: 16px;
+            color: #ccc;
+          }
+
+          p,
+          a {
+            font-size: 14px;
+            line-height: 20px;
+            color: #ddd;
+            text-decoration: none;
+          }
+        }
+
+        .m-socials {
+          margin-top: 8px;
+          display: flex;
+          gap: 12px;
+
+          a {
+            color: #fff;
+            font-size: 18px;
+          }
+        }
+
+        .m-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
           display: flex;
           flex-direction: column;
-          .bottom {
-            margin-top: 60px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            div {
-              display: flex;
-              flex-direction: column;
-              strong {
-                margin-bottom: 3px;
-                color: #fff;
-                font-family: $font;
-                font-size: 15px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-                text-transform: capitalize;
-              }
-              span {
-                margin-top: 25px;
-                color: #bebdbd;
-                font-family: $font;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 400;
-                cursor: pointer;
+          gap: 4px;
+
+          li {
+            a {
+              font-size: 14px;
+              color: #ddd;
+              text-decoration: none;
+
+              &:hover {
+                color: #bbb;
               }
             }
           }
         }
       }
-      .second {
-        margin-top: 60px;
-        height: 45px;
-        border-top: 1px solid #212329;
+    }
+
+    /* 🔹 BOTTOM QISM */
+    .m-bottom {
+      margin-top: 8px;
+
+      .m-divider {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin: 0 0 10px 0;
+      }
+
+      .m-bottom-content {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-end;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .m-copy {
+        margin: 0;
+        font-size: 13px;
+        color: #ccc;
+      }
+
+      .m-bottom-links {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+
+        a {
+          color: #ccc;
+          text-decoration: none;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+
         span {
-          color: #bebdbd;
-          font-family: $font;
-          font-size: 14px;
-          font-style: normal;
-          font-weight: 400;
-          line-height: normal;
+          color: rgba(255, 255, 255, 0.6);
         }
       }
     }
   }
+
+
+
 }
 
 // NEW STYLES //
