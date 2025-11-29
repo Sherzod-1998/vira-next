@@ -22,16 +22,15 @@ import { CREATE_NOTICE, DELETE_NOTICE, UPDATE_NOTICE } from '../../../../apollo/
 import { GET_ADMIN_NOTICES } from '../../../../apollo/admin/query';
 
 interface Notice {
-  _id: string;
-  noticeCategory: string;
-  noticeStatus: string;
-  noticeTitle: string;
-  noticeContent: string;
-  memberId: string;
-  createdAt: string;
-  memberNick?: string; // 🔹 qo'shildi
+	_id: string;
+	noticeCategory: string;
+	noticeStatus: string;
+	noticeTitle: string;
+	noticeContent: string;
+	memberId: string;
+	createdAt: string;
+	memberNick?: string; // 🔹 qo'shildi
 }
-
 
 interface NoticeListProps {
 	status?: string;
@@ -233,7 +232,19 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 			<Stack className="notice-list">
 				{/* CREATE BUTTON */}
 				<Box className="notice-list__toolbar">
-					<Button variant="contained" onClick={openCreateDialog} className="notice-list__add-btn">
+					<Button
+						variant="contained"
+						onClick={openCreateDialog}
+						sx={{
+							backgroundColor: 'rgba(146, 106, 84, 1)',
+							color: '#fff',
+							fontWeight: 500,
+							textTransform: 'none',
+							'&:hover': {
+								backgroundColor: 'rgba(146, 106, 84, 0.85)',
+							},
+						}}
+					>
 						Add Notice
 					</Button>
 				</Box>
@@ -296,10 +307,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 										<div className="notice-list__content">{item.noticeContent}</div>
 									</TableCell>
 
-									<TableCell align="left">
-  {item.memberNick ?? item.memberId}
-</TableCell>
-
+									<TableCell align="left">{item.memberNick ?? item.memberId}</TableCell>
 
 									<TableCell align="left" className="notice-list__cell notice-list__cell--date">
 										{new Date(item.createdAt).toLocaleDateString()}
@@ -357,7 +365,6 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 						onChange={(e) => setNewCategory(e.target.value)}
 					>
 						<MenuItem value="GENERAL">GENERAL</MenuItem>
-						
 					</TextField>
 
 					<TextField
@@ -378,7 +385,20 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={closeCreateDialog}>Cancel</Button>
-					<Button variant="contained" onClick={handleCreate} disabled={createLoading} style={{ color: 'white' }}>
+					<Button
+						variant="contained"
+						onClick={handleCreate}
+						disabled={createLoading}
+						sx={{
+							backgroundColor: 'rgba(146, 106, 84, 1)',
+							color: '#fff',
+							fontWeight: 500,
+							textTransform: 'none',
+							'&:hover': {
+								backgroundColor: 'rgba(146, 106, 84, 0.85)',
+							},
+						}}
+					>
 						{createLoading ? 'Saving...' : 'Create'}
 					</Button>
 				</DialogActions>
@@ -399,15 +419,26 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 						label="Content"
 						fullWidth
 						margin="dense"
-						multiline
-						minRows={4}
 						value={editContent}
 						onChange={(e) => setEditContent(e.target.value)}
 					/>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={closeEditDialog}>Cancel</Button>
-					<Button onClick={handleUpdate} variant="contained" disabled={updateLoading} style={{ color: 'white' }}>
+					<Button
+						onClick={handleUpdate}
+						variant="contained"
+						disabled={updateLoading}
+						sx={{
+							backgroundColor: 'rgba(146, 106, 84, 1)',
+							color: '#fff',
+							fontWeight: 500,
+							textTransform: 'none',
+							'&:hover': {
+								backgroundColor: 'rgba(146, 106, 84, 0.85)',
+							},
+						}}
+					>
 						{updateLoading ? 'Saving...' : 'Save'}
 					</Button>
 				</DialogActions>

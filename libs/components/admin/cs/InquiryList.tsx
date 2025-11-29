@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
 	Box,
 	Stack,
@@ -19,21 +19,7 @@ import {
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ADMIN_CS_INQUIRIES } from '../../../../apollo/admin/query';
 import { ANSWER_CS_INQUIRY } from '../../../../apollo/admin/mutation';
-
-interface CsInquiry {
-	memberNick: ReactNode;
-	_id: string;
-	title: string;
-	content: string;
-	answer: string | null;
-	status: string;
-	userId: string;
-	createdAt: string;
-}
-
-interface InquiryListProps {
-	status?: 'PENDING' | 'ANSWERED'; // parentdan keladigan filter
-}
+import { CsInquiry, InquiryListProps } from '../../../types/cs/cs';
 
 export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 	const [page, setPage] = useState(1);
@@ -51,7 +37,7 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 	};
 
 	if (status) {
-		variables.input.status = status; // 🔥 filter qo'shildi
+		variables.input.status = status;
 	}
 
 	const { data, loading, error, refetch } = useQuery(GET_ADMIN_CS_INQUIRIES, {
@@ -241,7 +227,26 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 						</DialogContent>
 						<DialogActions>
 							<Button onClick={handleCloseDialog}>Cancel</Button>
-							<Button variant="contained" onClick={handleSubmitAnswer} disabled={answerLoading || !answerText.trim()}>
+							<Button
+								variant="contained"
+								onClick={handleSubmitAnswer}
+								disabled={answerLoading || !answerText.trim()}
+								sx={{
+									backgroundColor: 'rgba(146, 106, 84, 1) !important',
+									color: '#fff !important',
+									fontWeight: 500,
+									textTransform: 'none',
+									boxShadow: 'none !important',
+									'&:hover': {
+										backgroundColor: 'rgba(146, 106, 84, 0.85) !important',
+										boxShadow: 'none !important',
+									},
+									'&.Mui-disabled': {
+										backgroundColor: 'rgba(146, 106, 84, 0.5) !important',
+										color: '#fff !important',
+									},
+								}}
+							>
 								{answerLoading ? 'Saving...' : 'Save'}
 							</Button>
 						</DialogActions>
