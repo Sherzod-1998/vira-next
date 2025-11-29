@@ -486,6 +486,7 @@
   .products-tabs-section.mobile {
     padding: 24px 16px;
     width: 100%;
+
     .products-tabs.car-like {
       max-width: 100%;
       height: auto;
@@ -709,275 +710,351 @@
   }
 
   .hero-mobile {
-  padding: 24px 16px 32px;
-  background: #f6f6f6;
+    padding: 24px 16px 32px;
+    background: #f6f6f6;
 
-  .hero-mobile__inner {
-    max-width: 480px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+    .hero-mobile__inner {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-  .hero-mobile__top {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    .hero-mobile__top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-  .hero-mobile__title {
-    font-family: Unbounded, system-ui, -apple-system, sans-serif;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.3;
-    text-transform: uppercase;
-    color: #1d1d1d;
-  }
+    .hero-mobile__title {
+      font-family: Unbounded, system-ui, -apple-system, sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-transform: uppercase;
+      color: #1d1d1d;
+    }
 
-  .hero-mobile__gradA {
-    background: linear-gradient(180deg, #b77a60 0%, #9b634e 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+    .hero-mobile__gradA {
+      background: linear-gradient(180deg, #b77a60 0%, #9b634e 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-  .hero-mobile__gradB {
-    background: linear-gradient(180deg, #e5a37a 0%, #c07b58 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+    .hero-mobile__gradB {
+      background: linear-gradient(180deg, #e5a37a 0%, #c07b58 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-  .hero-mobile__copy {
-    margin-top: 4px;
-    color: #1d1d1d;
-    font-family: Karla, system-ui, -apple-system, sans-serif;
-    font-size: 14px;
-    line-height: 1.7;
-    font-style: italic;
-  }
+    .hero-mobile__copy {
+      margin-top: 4px;
+      color: #1d1d1d;
+      font-family: Karla, system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      font-style: italic;
+    }
 
-  .hero-mobile__cta {
-    margin-top: 8px;
-    border-radius: 999px !important;
-    padding: 10px 18px !important;
-    text-transform: none !important;
-    font-weight: 700 !important;
-    background: #000 !important;
-    color: #fff !important;
-  }
+    .hero-mobile__cta {
+      margin-top: 8px;
+      border-radius: 999px !important;
+      padding: 10px 18px !important;
+      text-transform: none !important;
+      font-weight: 700 !important;
+      background: #000 !important;
+      color: #fff !important;
+    }
 
-  .hero-mobile__cards {
-    margin-top: 12px;
-  }
+    .hero-mobile__cards {
+      margin-top: 12px;
+    }
 
-  .hero-mobile__card {
-    margin-top: 12px;
-  }
+    .hero-mobile__card {
+      margin-top: 12px;
+    }
 
-  /* Base card (mobile) */
-  .card {
-    border-radius: 20px;
-    padding: 16px;
-    box-shadow: 0 1px 4px rgba(16, 20, 24, 0.06);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    min-height: auto;
-  }
+    /* Base card (mobile) */
+    .card {
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(16, 20, 24, 0.06);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: auto;
+    }
 
-  /* ----- Dark card (mobile) ----- */
-  .card--dark {
-    position: relative;
-    color: #e7e7e7;
-    padding: 20px 18px;
-    overflow: hidden;
-    border: 0;
-    min-height: 210px;
-    background: #111;
+    /* ----- Dark card (mobile) ----- */
+    .card--dark {
+      position: relative;
+      color: #e7e7e7;
+      padding: 20px 18px;
+      overflow: hidden;
+      border: 0;
+      min-height: 210px;
+      background: #111;
 
-    .card-bg {
-      position: absolute;
-      inset: 0;
+      .card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        z-index: 0;
+      }
+
+      .card-bg.is-visible {
+        opacity: 1;
+      }
+
+      .card-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(120% 90% at 80% 20%,
+            rgba(0, 0, 0, 0.05) 0%,
+            rgba(0, 0, 0, 0.65) 60%,
+            rgba(0, 0, 0, 0.85) 100%);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      >*:not(.card-bg):not(.card-overlay) {
+        position: relative;
+        z-index: 2;
+      }
+
+      .card__kicker {
+        letter-spacing: 0.24em;
+        font-size: 10px;
+        opacity: 0.9;
+        margin-bottom: 4px;
+      }
+
+      .card__dark-title {
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+
+      .card__dark-text {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #f1f1f1;
+      }
+
+      .card__dark-btn {
+        margin-top: 10px;
+        background: rgba(146, 106, 84, 1);
+        color: #fff !important;
+        text-transform: none !important;
+        font-weight: 700 !important;
+        border-radius: 999px !important;
+        padding: 8px 16px !important;
+        width: fit-content !important;
+        font-size: 13px !important;
+      }
+    }
+
+    /* ----- Light comments card (mobile) ----- */
+    .card--light {
+      background: #f6f6f8;
+      border: 1px solid #eceff3;
+
+      .card__avatars {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+
+        img {
+          width: 42px;
+          height: 42px;
+          border-radius: 999px;
+          object-fit: cover;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        img:not(:first-child) {
+          margin-left: -8px;
+        }
+
+        .pill {
+          margin-left: -4px;
+          background: rgba(146, 106, 84, 1);
+          color: #fff;
+          font-weight: 700;
+          font-size: 11px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          border: 2px solid #fff;
+        }
+      }
+
+      .card__headline {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 6px;
+
+        .star {
+          flex: 0 0 16px;
+        }
+
+        .card__headline-text {
+          font-family: Unbounded, system-ui, -apple-system, sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          text-transform: uppercase;
+          color: #1d1d1d;
+        }
+      }
+
+      .card__title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 4px;
+      }
+
+      .card__text {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #636a71;
+      }
+    }
+
+    /* ----- Watches card (mobile) ----- */
+    .card--pale {
+      background-image: url('/img/collections/3.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      z-index: 0;
-    }
-
-    .card-bg.is-visible {
-      opacity: 1;
-    }
-
-    .card-overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(
-        120% 90% at 80% 20%,
-        rgba(0, 0, 0, 0.05) 0%,
-        rgba(0, 0, 0, 0.65) 60%,
-        rgba(0, 0, 0, 0.85) 100%
-      );
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    > *:not(.card-bg):not(.card-overlay) {
-      position: relative;
-      z-index: 2;
-    }
-
-    .card__kicker {
-      letter-spacing: 0.24em;
-      font-size: 10px;
-      opacity: 0.9;
-      margin-bottom: 4px;
-    }
-
-    .card__dark-title {
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
-
-    .card__dark-text {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #f1f1f1;
-    }
-
-    .card__dark-btn {
-      margin-top: 10px;
-      background: rgba(146, 106, 84, 1);
-      color: #fff !important;
-      text-transform: none !important;
-      font-weight: 700 !important;
-      border-radius: 999px !important;
-      padding: 8px 16px !important;
-      width: fit-content !important;
-      font-size: 13px !important;
-    }
-  }
-
-  /* ----- Light comments card (mobile) ----- */
-  .card--light {
-    background: #f6f6f8;
-    border: 1px solid #eceff3;
-
-    .card__avatars {
+      border: 1px solid #e3e6ea;
+      padding: 14px;
+      min-height: 120px;
       display: flex;
-      align-items: center;
-      margin-bottom: 8px;
+      flex-direction: column;
+      justify-content: flex-end;
 
-      img {
-        width: 42px;
-        height: 42px;
-        border-radius: 999px;
-        object-fit: cover;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-      }
-
-      img:not(:first-child) {
-        margin-left: -8px;
-      }
-
-      .pill {
-        margin-left: -4px;
-        background: rgba(146, 106, 84, 1);
-        color: #fff;
-        font-weight: 700;
-        font-size: 11px;
-        padding: 4px 8px;
-        border-radius: 999px;
-        border: 2px solid #fff;
-      }
-    }
-
-    .card__headline {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-
-      .star {
-        flex: 0 0 16px;
-      }
-
-      .card__headline-text {
-        font-family: Unbounded, system-ui, -apple-system, sans-serif;
-        font-size: 16px;
-        font-weight: 500;
-        text-transform: uppercase;
-        color: #1d1d1d;
-      }
-    }
-
-    .card__title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #111;
-      margin-bottom: 4px;
-    }
-
-    .card__text {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #636a71;
-    }
-  }
-
-  /* ----- Watches card (mobile) ----- */
-  .card--pale {
-    background-image: url('/img/collections/3.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: 1px solid #e3e6ea;
-    padding: 14px;
-    min-height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    .pale__meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      h4 {
-        color: #000;
-        font-family: Unbounded;
-        font-size: 14px;
-        font-weight: 500;
-        text-transform: uppercase;
-      }
-
-      .tiny-badge {
-        display: inline-flex;
+      .pale__meta {
+        display: flex;
         align-items: center;
-        justify-content: center;
-        border: none;
-        cursor: pointer;
-        width: 38px;
-        height: 18px;
-        border-radius: 999px;
-        background: rgba(146, 106, 84, 1);
-        color: #fff;
+        justify-content: space-between;
 
-        svg {
-          width: 18px;
-          height: 14px;
+        h4 {
+          color: #000;
+          font-family: Unbounded;
+          font-size: 14px;
+          font-weight: 500;
+          text-transform: uppercase;
+        }
+
+        .tiny-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          cursor: pointer;
+          width: 38px;
+          height: 18px;
+          border-radius: 999px;
+          background: rgba(146, 106, 84, 1);
+          color: #fff;
+
+          svg {
+            width: 18px;
+            height: 14px;
+          }
         }
       }
     }
   }
-}
+
+  /* 🔹 TOP SELLERS – MOBILE VERSION */
+  .top-sellers--mobile {
+    padding: 32px 0 32px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: #ffffff; // xohlasang #f6f6f6 ham qilsa bo'ladi
+
+    .container {
+      width: 100%;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    /* Title */
+    .info-box {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      span {
+        color: #181a20;
+        font-family: Unbounded, system-ui, -apple-system, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+    }
+
+    .wrapper {
+      margin-top: 16px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .top-sellers-swiper {
+        width: 100%;
+        padding-bottom: 8px;
+
+        .top-sellers-slide {
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+
+    /* TopSellerCard ichidagi default desktop o'lchamlar juda katta bo'lsa,
+     mobilga mos kichraytirib qo'yish mumkin: */
+    .top-seller-card {
+      width: 180px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      img {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      strong {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      span {
+        font-size: 13px;
+        line-height: 20px;
+      }
+    }
+  }
 
   #footer {
     padding: 24px 16px 16px;

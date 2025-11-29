@@ -12,7 +12,6 @@ import { GET_SELLERS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { T } from '../../types/common';
 
-
 interface TopSellersProps {
 	initialInput: SellersInquiry;
 }
@@ -28,92 +27,94 @@ const TopSellers = (props: TopSellersProps) => {
 		loading: getSellersLoading,
 		data: getSellersData,
 		error: getSellersError,
-		refetch: getSellersRefetch,
 	} = useQuery(GET_SELLERS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setTopSellers(data?.getSellers?.list);
+			setTopSellers(data?.getSellers?.list || []);
 		},
 	});
+
 	/** HANDLERS **/
 
+	/* 🔹 MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
-			<Stack className={'top-sellers'}>
+			<Stack className={'top-sellers top-sellers--mobile'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<span>Top Sellers</span>
 					</Stack>
+
 					<Stack className={'wrapper'}>
 						<Swiper
 							className={'top-sellers-swiper'}
 							slidesPerView={'auto'}
 							centeredSlides={true}
-							spaceBetween={29}
+							spaceBetween={16}
 							modules={[Autoplay]}
 						>
-							{topSellers.map((seller: Member) => {
-								return (
-									<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
-										<TopsellerCard seller={seller} key={seller?.memberNick} />
-									</SwiperSlide>
-								);
-							})}
+							{topSellers.map((seller: Member) => (
+								<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
+									<TopsellerCard seller={seller} />
+								</SwiperSlide>
+							))}
 						</Swiper>
 					</Stack>
 				</Stack>
 			</Stack>
 		);
-	} else {
-		return (
-			<Stack className={'top-sellers'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Top Sellers</span>
-							<p>Our Top Sellers always ready to serve you</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'more-box'}>
-								<span>See All Sellers</span>
-								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'wrapper'}>
-						<Box component={'div'} className={'switch-btn swiper-sellers-prev'}>
-							<ArrowBackIosNewIcon />
-						</Box>
-						<Box component={'div'} className={'card-wrapper'}>
-							<Swiper
-								className={'top-sellers-swiper'}
-								slidesPerView={'auto'}
-								spaceBetween={29}
-								modules={[Autoplay, Navigation, Pagination]}
-								navigation={{
-									nextEl: '.swiper-sellers-next',
-									prevEl: '.swiper-sellers-prev',
-								}}
-							>
-								{topSellers.map((seller: Member) => {
-									return (
-										<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
-											<TopsellerCard seller={seller} key={seller?.memberNick} />
-										</SwiperSlide>
-									);
-								})}
-							</Swiper>
-						</Box>
-						<Box component={'div'} className={'switch-btn swiper-sellers-next'}>
-							<ArrowBackIosNewIcon />
-						</Box>
-					</Stack>
+	}
+
+	/* 🔹 DESKTOP LAYOUT */
+	return (
+		<Stack className={'top-sellers'}>
+			<Stack className={'container'}>
+				<Stack className={'info-box'}>
+					<Box component={'div'} className={'left'}>
+						<span>Top Sellers</span>
+						<p>Our Top Sellers always ready to serve you</p>
+					</Box>
+					<Box component={'div'} className={'right'}>
+						<div className={'more-box'}>
+							<span>See All Sellers</span>
+							<img src="/img/icons/rightup.svg" alt="" />
+						</div>
+					</Box>
+				</Stack>
+
+				<Stack className={'wrapper'}>
+					<Box component={'div'} className={'switch-btn swiper-sellers-prev'}>
+						<ArrowBackIosNewIcon />
+					</Box>
+
+					<Box component={'div'} className={'card-wrapper'}>
+						<Swiper
+							className={'top-sellers-swiper'}
+							slidesPerView={'auto'}
+							spaceBetween={29}
+							modules={[Autoplay, Navigation, Pagination]}
+							navigation={{
+								nextEl: '.swiper-sellers-next',
+								prevEl: '.swiper-sellers-prev',
+							}}
+						>
+							{topSellers.map((seller: Member) => (
+								<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
+									<TopsellerCard seller={seller} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</Box>
+
+					<Box component={'div'} className={'switch-btn swiper-sellers-next'}>
+						<ArrowBackIosNewIcon />
+					</Box>
 				</Stack>
 			</Stack>
-		);
-	}
+		</Stack>
+	);
 };
 
 TopSellers.defaultProps = {
