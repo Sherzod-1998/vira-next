@@ -30,21 +30,30 @@ const Notice = () => {
 	const list = data?.getNotices?.list ?? [];
 
 	if (device === 'mobile') {
-		// Hozircha oddiy ko'rinish, xohlasangiz keyin alohida layout qilamiz
 		if (loading) return <div>Loading...</div>;
 		if (error) return <div>Error...</div>;
 
 		return (
-			<div>
-				<h3>Notice</h3>
-				<ul>
-					{list.map((notice: any, idx: number) => (
-						<li key={notice._id}>
-							<b>{notice.noticeTitle}</b> - {formatDate(notice.createdAt)}
-						</li>
-					))}
-				</ul>
-			</div>
+			<Stack className="m-notice-content">
+				<span className="m-title">Notice</span>
+				<Stack className="m-list">
+					{list.map((notice: any, idx: number) => {
+						const isEvent = notice.noticeCategory === 'EVENT';
+						return (
+							<Stack
+								key={notice._id}
+								className={`m-notice-card ${isEvent ? 'event' : ''}`}
+							>
+								<Stack className="m-row-top">
+									{isEvent && <span className="m-badge">Event</span>}
+									<span className="m-date">{formatDate(notice.createdAt)}</span>
+								</Stack>
+								<span className="m-text">{notice.noticeContent}</span>
+							</Stack>
+						);
+					})}
+				</Stack>
+			</Stack>
 		);
 	} else {
 		return (

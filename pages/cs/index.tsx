@@ -34,8 +34,49 @@ const CS: NextPage = () => {
 	const tab = (router.query.tab as string) ?? 'notice';
 
 	if (device === 'mobile') {
-		return <h1>CS PAGE MOBILE</h1>;
-	} else {
+		return (
+			<Stack className="m-cs-page">
+				<Stack className="m-container">
+					{/* HEADER */}
+					<Box component="div" className="m-cs-main-info">
+						<Box component="div" className="m-info">
+							<span>CS Center</span>
+							<p>We will answer your questions</p>
+						</Box>
+
+						<Box component="div" className="m-btns">
+							<div
+								className={tab === 'notice' ? 'active' : ''}
+								onClick={() => changeTabHandler('notice')}
+							>
+								Notice
+							</div>
+							<div
+								className={tab === 'faq' ? 'active' : ''}
+								onClick={() => changeTabHandler('faq')}
+							>
+								FAQ
+							</div>
+							<div
+								className={tab === 'inquiry' ? 'active' : ''}
+								onClick={() => changeTabHandler('inquiry')}
+							>
+								1:1 Inquiry
+							</div>
+						</Box>
+					</Box>
+
+					{/* CONTENT */}
+					<Box component="div" className="m-cs-content">
+						{tab === 'notice' && <Notice />}
+						{tab === 'faq' && <Faq />}
+						{tab === 'inquiry' && <Inquiry />}
+					</Box>
+				</Stack>
+			</Stack>
+		);
+	} 
+	else {
 		return (
 			<Stack className={'cs-page'}>
 				<Stack className={'container'}>

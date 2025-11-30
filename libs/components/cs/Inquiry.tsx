@@ -5,7 +5,6 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { GET_MY_CS_INQUIRIES } from '../../../apollo/user/query';
 import { CREATE_CS_INQUIRY } from '../../../apollo/user/mutation';
 import { userVar } from '../../../apollo/store';
-import { ReactI18NextChild } from 'react-i18next';
 
 const Inquiry = () => {
 	const device = useDeviceDetect();
@@ -13,7 +12,9 @@ const Inquiry = () => {
 
 	if (!user?._id) {
 		return (
-			<Box sx={{ padding: 5, textAlign: 'center', fontSize: 18 }}>You must be logged in to use Inquiry service.</Box>
+			<Box sx={{ padding: 5, textAlign: 'center', fontSize: 18 }}>
+				You must be logged in to use Inquiry service.
+			</Box>
 		);
 	}
 
@@ -48,33 +49,93 @@ const Inquiry = () => {
 		refetch({ input: { page: 1, limit } });
 	};
 
-	const list = data?.getMyCsInquiries.list ?? [];
+	const list = data?.getMyCsInquiries?.list ?? [];
 
-	if (device === 'mobile') return <div>Inquiry MOBILE</div>;
+	/* 🔹 MOBILE LAYOUT */
+	if (device === 'mobile') {
+		return (
+			<Stack className="m-inquiry-content">
+				<span className="m-title">1:1 Inquiry</span>
 
+				<form className="m-inquiry-form" onSubmit={handleSubmit}>
+					<TextField
+						label="Title"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+						fullWidth
+						size="small"
+					/>
+					<TextField
+						label="Content"
+						value={content}
+						onChange={(e) => setContent(e.target.value)}
+						fullWidth
+						size="small"
+					
+					/>
+
+					<Button
+						type="submit"
+						variant="contained"
+						disabled={createLoading}
+						className="m-submit-btn"
+					>
+						{createLoading ? 'Sending...' : 'Send'}
+					</Button>
+				</form>
+
+				<Box className="m-inquiry-list">
+					{loading && <p>Loading...</p>}
+					{!loading && list.length === 0 && <p>No inquiries yet.</p>}
+
+					{list.map((item: any) => (
+						<Box key={item._id} className="m-inquiry-card">
+							<div className="m-inquiry-header">
+								<span className="m-inquiry-title">{item.title}</span>
+								<span className="m-inquiry-status">{item.status}</span>
+							</div>
+							<p className="m-inquiry-content-text">{item.content}</p>
+							<div className="m-inquiry-answer">
+								<span className="answer-label">Answer:&nbsp;</span>
+								<span className="answer-text">
+									{item.answer ? item.answer : 'No answer yet'}
+								</span>
+							</div>
+						</Box>
+					))}
+				</Box>
+			</Stack>
+		);
+	}
+
+	/* 🔹 PC LAYOUT */
 	return (
 		<Stack className="inquiry-content">
 			<span className="title">1:1 Inquiry</span>
 
 			<form className="inquiry-form" onSubmit={handleSubmit}>
-				<TextField label="Title" 
-				value={title} 
-				onChange={(e) => setTitle(e.target.value)} 
-				fullWidth size="small" />
+				<TextField
+					label="Title"
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+					fullWidth
+					size="small"
+				/>
 				<TextField
 					label="Content"
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
-					fullWidth size='small'
-					
-					
+					fullWidth
+					size="small"
+					multiline
+					rows={3}
 				/>
 
 				<Button
 					type="submit"
 					variant="contained"
 					disabled={createLoading}
-					sx={{ color: '#fff' }}
+					sx={{ color: '#fff', background: 'rgba(146, 106, 84, 1)' }}
 				>
 					{createLoading ? 'Sending...' : 'Send'}
 				</Button>
@@ -82,65 +143,23 @@ const Inquiry = () => {
 
 			<Box className="inquiry-list">
 				{loading && <p>Loading...</p>}
-				{list.length === 0 && !loading && <p>No inquiries yet.</p>}
+				{!loading && list.length === 0 && <p>No inquiries yet.</p>}
 
-				{list.map(
-					(item: {
-						_id: any;
-						title:
-							| string
-							| number
-							| boolean
-							| React.ReactElement<any, string | React.JSXElementConstructor<any>>
-							| React.ReactFragment
-							| React.ReactPortal
-							| Iterable<ReactI18NextChild>
-							| null
-							| undefined;
-						status:
-							| string
-							| number
-							| boolean
-							| React.ReactElement<any, string | React.JSXElementConstructor<any>>
-							| React.ReactFragment
-							| React.ReactPortal
-							| Iterable<ReactI18NextChild>
-							| null
-							| undefined;
-						content:
-							| string
-							| number
-							| boolean
-							| React.ReactElement<any, string | React.JSXElementConstructor<any>>
-							| React.ReactFragment
-							| React.ReactPortal
-							| Iterable<ReactI18NextChild>
-							| null
-							| undefined;
-						answer:
-							| string
-							| number
-							| boolean
-							| React.ReactElement<any, string | React.JSXElementConstructor<any>>
-							| React.ReactFragment
-							| React.ReactPortal
-							| Iterable<ReactI18NextChild>
-							| null
-							| undefined;
-					}) => (
-						<Box key={item._id} className="inquiry-card">
-							<div className="inquiry-header">
-								<span className="inquiry-title">{item.title}</span>
-								<span className="inquiry-status">{item.status}</span>
-							</div>
-							<p className="inquiry-content-text">{item.content}</p>
-							<div className="inquiry-answer">
-								<strong>Answer: </strong>
+				{list.map((item: any) => (
+					<Box key={item._id} className="inquiry-card">
+						<div className="inquiry-header">
+							<span className="inquiry-title">{item.title}</span>
+							<span className="inquiry-status">{item.status}</span>
+						</div>
+						<p className="inquiry-content-text">{item.content}</p>
+						<div className="inquiry-answer">
+							<span className="answer-label">Answer:&nbsp;</span>
+							<span className="answer-text">
 								{item.answer ? item.answer : 'No answer yet'}
-							</div>
-						</Box>
-					),
-				)}
+							</span>
+						</div>
+					</Box>
+				))}
 			</Box>
 		</Stack>
 	);
