@@ -127,7 +127,7 @@
                 padding: 20px 14px 20px 30px;
                 display: flex;
                 flex-direction: row;
-                align-items: center; // 👈 space-between o‘rniga
+                align-items: center; 
                 border: 1px solid #EEE;
                 gap: 16px;
 
@@ -135,7 +135,7 @@
                   background: #F6D79A;
                 }
 
-                // EVENT pill yoki number
+             
                 div {
                   padding: 6px 9px;
                   border-radius: 12px;
@@ -155,12 +155,11 @@
                   font-weight: 400;
                 }
 
-                // 🔸 Middle block (title + content)
                 .notice-middle {
                   display: flex;
-                  flex-direction: row; // 🔥 yonma-yon
-                  align-items: center; // vertikal markazlash
-                  justify-content: flex-start; // gorizont markazlash
+                  flex-direction: row; 
+                  align-items: center; 
+                  justify-content: flex-start; 
                   text-align: center;
                   border: none;
 
@@ -170,7 +169,7 @@
                     font-family: $font;
                     font-size: 16px;
                     font-weight: 400;
-                    white-space: nowrap; // 🔥 bitta qatorda tursin
+                    white-space: nowrap;
                   }
 
                   .notice-content-text {
@@ -179,12 +178,12 @@
                     font-family: $font;
                     font-size: 14px;
                     font-weight: 400;
-                    white-space: nowrap; // 🔥 bu ham bitta qatorda tursin
+                    white-space: nowrap;
                   }
                 }
 
 
-                // Sana — o‘ng tomonda
+
                 .notice-date {
                   margin-left: auto;
                   color: #BDBDBD;

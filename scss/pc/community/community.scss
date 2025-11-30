@@ -1,13 +1,16 @@
 #pc-wrap {
 	#community-list-page {
 		position: relative;
+
 		.container {
 			padding-top: 100px;
 			flex-direction: column;
 			gap: 64px;
+
 			.main-box {
 				flex-direction: row;
 				gap: 31px;
+
 				.left-config {
 					width: 266px;
 					height: fit-content;
@@ -19,16 +22,19 @@
 					border: 1px solid rgba(196, 196, 196, 0.79);
 					background: #fff;
 					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
 					.image-info {
 						width: 100%;
 						flex-direction: row;
 						gap: 11px;
+
 						img {
 							width: 80px;
 							height: 80px;
 							border-radius: 50%;
 							object-fit: cover;
 						}
+
 						.community-name {
 							.name {
 								margin-top: 15px;
@@ -41,6 +47,7 @@
 							}
 						}
 					}
+
 					.tab-button {
 						width: 216.612px;
 						height: 36px;
@@ -58,6 +65,7 @@
 						line-height: 150%;
 						letter-spacing: -0.266px;
 					}
+
 					.tab-button.active {
 						width: 216.612px;
 						height: 36px;
@@ -76,12 +84,15 @@
 						letter-spacing: -0.266px;
 					}
 				}
+
 				.right-config {
 					width: 100%;
 					height: auto;
+
 					.panel-config {
 						width: 100%;
 						height: auto;
+
 						.title-box {
 							width: 100%;
 							height: auto;
@@ -89,9 +100,11 @@
 							justify-content: space-between;
 							align-items: center;
 							margin-bottom: 45px;
+
 							.left {
 								width: 60%;
 								height: auto;
+
 								.title {
 									color: #000;
 									font-family: $font;
@@ -101,6 +114,7 @@
 									line-height: normal;
 									letter-spacing: 0.24px;
 								}
+
 								.sub-title {
 									color: #757575;
 									font-family: $font;
@@ -111,6 +125,7 @@
 									letter-spacing: 0.325px;
 								}
 							}
+
 							.right {
 								width: 91px;
 								height: 32px;
@@ -125,6 +140,7 @@
 								letter-spacing: 0.39px;
 							}
 						}
+
 						.list-box {
 							width: 100%;
 							height: auto;
@@ -135,6 +151,7 @@
 					}
 				}
 			}
+
 			.similar-articles-config {
 				width: 100%;
 				height: auto;
@@ -142,6 +159,7 @@
 				padding: 30px 9px 28px 9px;
 				border-radius: 10px;
 				border: 1px solid #c4c4c4;
+
 				.similar-articles-title {
 					padding-left: 56px;
 					color: #000;
@@ -151,6 +169,7 @@
 					font-weight: 600;
 					line-height: normal;
 				}
+
 				.articles-box-row {
 					width: 100%;
 					height: auto;
@@ -158,6 +177,7 @@
 					gap: 5px;
 				}
 			}
+
 			.pagination-config {
 				width: 100%;
 				align-items: center;
@@ -165,10 +185,12 @@
 				margin-bottom: 50px;
 				gap: 20px;
 				padding-left: 270px;
+
 				.pagination-box {
 					align-items: center;
 					justify-content: center;
 				}
+
 				.total-result {
 					p {
 						color: #181a20;

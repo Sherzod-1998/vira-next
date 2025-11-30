@@ -67,7 +67,6 @@
 								}
 							}
 
-							/* "Find Your Home" sarlavhasi */
 							.title-main {
 								width: 100%;
 								height: 25px;
@@ -80,7 +79,6 @@
 								text-transform: uppercase;
 							}
 
-							/* Bo'lim nomlari: Location, Product Type, Material, Price Range ... */
 							.title {
 								width: auto;
 								height: auto;
@@ -106,7 +104,6 @@
 									cursor: pointer;
 								}
 
-								/* Search qutisi */
 								.search-input {
 									width: 100%;
 									height: 53px;
@@ -115,7 +112,7 @@
 									background: #ffffff;
 									outline: none;
 									padding-left: 43px;
-									padding-right: 40px; // refresh icon joyi
+									padding-right: 40px;
 									color: #000000;
 									font-family: $font;
 									font-size: 14px;
@@ -145,7 +142,6 @@
 								}
 							}
 
-							/* Agar select bo'lsa */
 							.city-select {
 								width: 100%;
 								height: 49px;
@@ -377,7 +373,6 @@
 									align-items: center;
 									justify-content: space-between;
 									margin-top: auto;
-									/* narx qatori pastga yopishadi */
 									position: relative;
 
 									.price {
@@ -407,7 +402,6 @@
 
 										.meta-icon {
 											color: #31302c;
-											/* qora */
 											transition: color 0.2s ease;
 										}
 
@@ -441,7 +435,6 @@
 											.meta-text,
 											.meta-count {
 												color: #e74c3c;
-												/* qizil */
 											}
 										}
 									}

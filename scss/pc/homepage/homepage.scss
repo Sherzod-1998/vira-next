@@ -240,7 +240,7 @@
 
 							.swiper-slide {
 								display: flex;
-								/* bu yerda margin qo‘ymang — spaceBetween yetadi */
+
 							}
 						}
 
@@ -281,9 +281,9 @@
 				justify-content: space-between;
 				height: 100%;
 				padding-top: 30px;
-				/* tepada sal joy */
+
 				padding-bottom: 30px;
-				/* pastda sal joy */
+
 
 				.gorgeous_collection_inner {
 					display: flex;
@@ -363,13 +363,13 @@
 							position: relative;
 							display: grid;
 							grid-template-columns: repeat(5, 1fr);
-							/* doim 5 ta */
+
 							gap: 10px;
 							justify-items: center;
 							width: 100%;
 							z-index: 1;
 
-							/* markaziy chiziq */
+
 							&::before {
 								content: '';
 								position: absolute;
@@ -384,7 +384,7 @@
 								pointer-events: none;
 							}
 
-							/* pagination anim holatlari */
+
 							&.is-animating {
 								.circle-img-wrapper {
 									animation-duration: 400ms;
@@ -402,25 +402,21 @@
 								animation-name: slideInPrev;
 							}
 
-							/* har bir doira */
+
 							.circle-img-wrapper {
 								position: relative;
 								display: flex;
 								flex-direction: column;
 								align-items: center;
 								overflow: visible;
-								/* hoverda tashqariga chiqsin */
 
-								/* hozirchi o‘lcham – doira aniq bo‘lishi uchun kvadrat + 50% radius */
 								.circle-figure {
 									width: 177px;
 									height: 177px;
 									aspect-ratio: 1 / 1;
-									/* har ehtimolga qarshi */
 									border-radius: 50%;
 									position: relative;
 									overflow: hidden;
-									/* rasm chetidan chiqmasin */
 									cursor: pointer;
 									transition: transform 0.3s ease, box-shadow 0.3s ease;
 									transform-origin: center center;
@@ -441,11 +437,9 @@
 									will-change: transform;
 								}
 
-								/* Hover: BUTUN DOIRA kattaradi (frame), rasm ozgina zoom */
 								&:hover {
 									.circle-figure {
 										transform: scale(1.55);
-										/* ~276 / 177 */
 										box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 									}
 
@@ -466,7 +460,6 @@
 									position: relative;
 									z-index: 2;
 									pointer-events: none;
-									/* label ustida kursor bo‘lsa ham holat o‘zgarmasin */
 
 									.label-count {
 										font-size: 14px;
@@ -476,7 +469,6 @@
 									}
 								}
 
-								/* Hover bo‘lganda label markazga chiqishi (pointer events yo‘q) */
 								.circle-figure:hover+.circle-img-label {
 									position: absolute;
 									top: 50%;
@@ -526,7 +518,6 @@
 				}
 			}
 
-			/* Responsiv */
 			@media (max-width: 1400px) {
 				.gorgeous_collections {
 					width: 100%;
@@ -687,7 +678,6 @@
 					align-items: center;
 					justify-content: space-between;
 					margin-top: auto;
-					/* narx qatori pastga yopishadi */
 					position: relative;
 
 					.price {
@@ -717,7 +707,6 @@
 
 						.meta-icon {
 							color: #31302c;
-							/* qora */
 							transition: color 0.2s ease;
 						}
 
@@ -751,7 +740,7 @@
 							.meta-text,
 							.meta-count {
 								color: #e74c3c;
-								/* qizil */
+
 							}
 						}
 					}
