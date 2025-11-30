@@ -11,236 +11,239 @@ import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export const getStaticProps = async ({ locale }: any) => ({
-	props: {
-		...(await serverSideTranslations(locale, ['common'])),
-	},
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
 });
 
 const Join: NextPage = () => {
-	const router = useRouter();
-	const device = useDeviceDetect();
-	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
-	const [loginView, setLoginView] = useState<boolean>(true);
+    const router = useRouter();
+    const device = useDeviceDetect();
 
-	/** HANDLERS **/
-	const viewChangeHandler = (state: boolean) => {
-		setLoginView(state);
-	};
+    const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
+    const [loginView, setLoginView] = useState<boolean>(true);
 
-	const checkUserTypeHandler = (e: any) => {
-		const checked = e.target.checked;
-		if (checked) {
-			const value = e.target.name;
-			handleInput('type', value);
-		} else {
-			handleInput('type', 'USER');
-		}
-	};
+    /** HANDLERS **/
+    const viewChangeHandler = (state: boolean) => setLoginView(state);
 
-	const handleInput = useCallback((name: any, value: any) => {
-		setInput((prev) => {
-			return { ...prev, [name]: value };
-		});
-	}, []);
+    const checkUserTypeHandler = (e: any) => {
+        const checked = e.target.checked;
+        if (checked) handleInput('type', e.target.name);
+        else handleInput('type', 'USER');
+    };
 
-	const doLogin = useCallback(async () => {
-		console.warn(input);
-		try {
-			await logIn(input.nick, input.password);
-			await router.push(`${router.query.referrer ?? '/'}`);
-		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message);
-		}
-	}, [input, router]);
+    const handleInput = useCallback((name: any, value: any) => {
+        setInput((prev) => ({ ...prev, [name]: value }));
+    }, []);
 
-	const doSignUp = useCallback(async () => {
-		console.warn(input);
-		try {
-			await signUp(input.nick, input.password, input.phone, input.type);
-			await router.push(`${router.query.referrer ?? '/'}`);
-		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message);
-		}
-	}, [input, router]);
+    const doLogin = useCallback(async () => {
+        try {
+            await logIn(input.nick, input.password);
+            router.push(`${router.query.referrer ?? '/'}`);
+        } catch (err: any) {
+            sweetMixinErrorAlert(err.message);
+        }
+    }, [input, router]);
 
-	if (device === 'mobile') {
-		return <div> LOGIN MOBILE</div>;
-	} else {
-		return (
-			<Stack className={'join-page'}>
-				<Stack className={'container'}>
-					<Stack className={'main'}>
-						<Stack className={'left'}>
-							{/* TOP COLORED RECTANGLE */}
-							<Box className={'hero-block'} />
+    const doSignUp = useCallback(async () => {
+        try {
+            await signUp(input.nick, input.password, input.phone, input.type);
+            router.push(`${router.query.referrer ?? '/'}`);
+        } catch (err: any) {
+            sweetMixinErrorAlert(err.message);
+        }
+    }, [input, router]);
 
-							{/* TITLE */}
-							<Box className={'info'}>
-								<span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
-								<p>
-									{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED WITH YOUR 30DAYS FREE TRIAL"}
-								</p>
-							</Box>
+    // --------------------------------------------------------
+    //            MOBILE RETURN (TO‘G‘RI YOPILGAN)
+    // --------------------------------------------------------
 
-							{/* SOCIAL GOOGLE */}
-							<Box className={'social-btn google'}>
-								<div className="icon">
-									<GoogleIcon />
-								</div>
-								<span>Login With Google</span>
-							</Box>
+    if (device === 'mobile') {
+        return (
+            <Stack className="join-page-mo">
+                <Stack className="main">
+                    <Box className="hero-block" />
 
-							{/* OR DIVIDER */}
-							<Box className={'divider-or'}>
-								<span>Or</span>
-							</Box>
+                    <Box className="info">
+                        <span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
+                        <p>{loginView ? 'Login to continue' : 'Start your free trial'}</p>
+                    </Box>
 
-							{/* INPUTS */}
-							<Box className={'input-wrap'}>
-								<div className={'input-box'}>
-									<span>{loginView ? 'Email / Nickname' : 'Email'}</span>
-									<input
-										type="text"
-										placeholder={loginView ? 'Enter your email' : 'Enter email / nickname'}
-										onChange={(e) => handleInput('nick', e.target.value)}
-										required={true}
-										onKeyDown={(event) => {
-											if (event.key === 'Enter' && loginView) doLogin();
-											if (event.key === 'Enter' && !loginView) doSignUp();
-										}}
-									/>
-								</div>
+                    <Box className="social-btn google">
+                        <div className="icon"><GoogleIcon /></div>
+                        <span>Login With Google</span>
+                    </Box>
 
-								<div className={'input-box'}>
-									<span>Password</span>
-									<input
-										type="password"
-										placeholder={'Password'}
-										onChange={(e) => handleInput('password', e.target.value)}
-										required={true}
-										onKeyDown={(event) => {
-											if (event.key === 'Enter' && loginView) doLogin();
-											if (event.key === 'Enter' && !loginView) doSignUp();
-										}}
-									/>
-								</div>
+                    <Box className="divider-or"><span>Or</span></Box>
 
-								{!loginView && (
-									<div className={'input-box'}>
-										<span>Phone</span>
-										<input
-											type="text"
-											placeholder={'Enter Phone'}
-											onChange={(e) => handleInput('phone', e.target.value)}
-											required={true}
-											onKeyDown={(event) => {
-												if (event.key === 'Enter') doSignUp();
-											}}
-										/>
-									</div>
-								)}
-							</Box>
+                    <Box className="input-wrap">
+                        <div className="input-box">
+                            <span>Email / Nickname</span>
+                            <input onChange={(e) => handleInput('nick', e.target.value)} />
+                        </div>
 
-							{/* REGISTER / REMEMBER ROW */}
-							<Box className={'register'}>
-								{!loginView && (
-									<div className={'type-option'}>
-										<span className={'text'}>I want to be registered as:</span>
-										<div>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'USER'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type === 'USER'}
-														/>
-													}
-													label="User"
-												/>
-											</FormGroup>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'SELLER'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type === 'SELLER'}
-														/>
-													}
-													label="Seller"
-												/>
-											</FormGroup>
-										</div>
-									</div>
-								)}
+                        <div className="input-box">
+                            <span>Password</span>
+                            <input type="password" onChange={(e) => handleInput('password', e.target.value)} />
+                        </div>
 
-								{loginView && (
-									<div className={'remember-info'}>
-										<FormGroup>
-											<FormControlLabel control={<Checkbox size="small" />} label="Remember Me" />
-										</FormGroup>
-										<a>Forgot Password?</a>
-									</div>
-								)}
+                        {!loginView && (
+                            <div className="input-box">
+                                <span>Phone</span>
+                                <input onChange={(e) => handleInput('phone', e.target.value)} />
+                            </div>
+                        )}
+                    </Box>
 
-								{loginView ? (
-									<Button
-										variant="contained"
-										className="primary-btn"
-										disabled={input.nick === '' || input.password === ''}
-										onClick={doLogin}
-									>
-										LOGIN
-									</Button>
-								) : (
-									<Button
-										variant="contained"
-										className="primary-btn"
-										disabled={input.nick === '' || input.password === '' || input.phone === '' || input.type === ''}
-										onClick={doSignUp}
-									>
-										SIGNUP
-									</Button>
-								)}
-							</Box>
+                    <Box className="register">
+                        {!loginView && (
+                            <div className="type-option">
+                                <span className="text">Register as:</span>
+                                <div>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                size="small"
+                                                name="USER"
+                                                checked={input.type === 'USER'}
+                                                onChange={checkUserTypeHandler}
+                                            />
+                                        }
+                                        label="User"
+                                    />
 
-							{/* OR + FACEBOOK BUTTON */}
-							<Box className="divider-or second">
-								<span>Or</span>
-							</Box>
-							<Box className={'social-btn facebook'}>
-								<div className="icon">
-									<FacebookIcon />
-								</div>
-								<span>Login With Facebook</span>
-							</Box>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                size="small"
+                                                name="SELLER"
+                                                checked={input.type === 'SELLER'}
+                                                onChange={checkUserTypeHandler}
+                                            />
+                                        }
+                                        label="Seller"
+                                    />
+                                </div>
+                            </div>
+                        )}
 
-							{/* BOTTOM TEXT */}
-							<Box className={'ask-info'}>
-								{loginView ? (
-									<p>
-										Don&apos;t Have An Account?
-										<b onClick={() => viewChangeHandler(false)}> Create An Account</b>
-									</p>
-								) : (
-									<p>
-										Have account?
-										<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
-									</p>
-								)}
-							</Box>
-						</Stack>
+                        {loginView ? (
+                            <Button
+                                variant="contained"
+                                className="primary-btn"
+                                disabled={!input.nick || !input.password}
+                                onClick={doLogin}
+                            >
+                                LOGIN
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                className="primary-btn"
+                                disabled={!input.nick || !input.password || !input.phone}
+                                onClick={doSignUp}
+                            >
+                                SIGNUP
+                            </Button>
+                        )}
+                    </Box>
 
-						{/* RIGHT SIDE END – dizaynda yo‘q, shuning uchun yashirdik */}
-						<Stack className={'right'} />
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+                    <Box className="divider-or second"><span>Or</span></Box>
+
+                    <Box className="social-btn facebook">
+                        <div className="icon"><FacebookIcon /></div>
+                        <span>Login With Facebook</span>
+                    </Box>
+
+                    <Box className="ask-info">
+                        {loginView ? (
+                            <p>Don’t Have An Account?
+                                <b onClick={() => viewChangeHandler(false)}> Create Account</b>
+                            </p>
+                        ) : (
+                            <p>Already have account?
+                                <b onClick={() => viewChangeHandler(true)}> LOGIN</b>
+                            </p>
+                        )}
+                    </Box>
+                </Stack>
+            </Stack>
+        );
+    }
+
+    // --------------------------------------------------------
+    //                 DESKTOP LAYOUT (TOZA)
+    // --------------------------------------------------------
+
+    return (
+        <Stack className="join-page">
+            <Stack className="container">
+                <Stack className="main">
+                    <Stack className="left">
+                        <Box className="hero-block" />
+
+                        <Box className="info">
+                            <span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
+                            <p>{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED"}</p>
+                        </Box>
+
+                        <Box className="social-btn google">
+                            <div className="icon"><GoogleIcon /></div>
+                            <span>Login With Google</span>
+                        </Box>
+
+                        <Box className="divider-or"><span>Or</span></Box>
+
+                        <Box className="input-wrap">
+                            <div className="input-box">
+                                <span>Email / Nickname</span>
+                                <input onChange={(e) => handleInput('nick', e.target.value)} />
+                            </div>
+
+                            <div className="input-box">
+                                <span>Password</span>
+                                <input type="password" onChange={(e) => handleInput('password', e.target.value)} />
+                            </div>
+
+                            {!loginView && (
+                                <div className="input-box">
+                                    <span>Phone</span>
+                                    <input onChange={(e) => handleInput('phone', e.target.value)} />
+                                </div>
+                            )}
+                        </Box>
+
+                        <Box className="register">
+                            {!loginView && (
+                                <div className="type-option">
+                                    <span className="text">Register as:</span>
+                                    <div>
+                                        <FormControlLabel
+                                            control={<Checkbox size="small" name="USER" checked={input.type === 'USER'} onChange={checkUserTypeHandler} />}
+                                            label="User"
+                                        />
+                                        <FormControlLabel
+                                            control={<Checkbox size="small" name="SELLER" checked={input.type === 'SELLER'} onChange={checkUserTypeHandler} />}
+                                            label="Seller"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <Button
+                                variant="contained"
+                                className="primary-btn"
+                                disabled={!input.nick || !input.password}
+                                onClick={loginView ? doLogin : doSignUp}
+                            >
+                                {loginView ? 'LOGIN' : 'SIGNUP'}
+                            </Button>
+                        </Box>
+                    </Stack>
+                </Stack>
+            </Stack>
+        </Stack>
+    );
 };
 
 export default withLayoutBasic(Join);
