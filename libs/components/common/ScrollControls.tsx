@@ -109,7 +109,7 @@ export function ScrollControls({
 		el.appendChild(fill);
 		target.appendChild(el);
 
-		// Init scroll one pixel in to allow upward/leftward scroll
+
 		el[horizontal ? 'scrollLeft' : 'scrollTop'] = 1;
 
 		requestAnimationFrame(() => events.connect?.(el));
@@ -123,11 +123,11 @@ export function ScrollControls({
 		const onScrollEnd = () => (el.style.overflowY = 'hidden');
 		el.addEventListener('scroll', onScrollStart);
 
-		// Add a delay to determine when scrolling ends
+		
 		let scrollEndTimeout: any = null;
 		el.addEventListener('scroll', () => {
 			clearTimeout(scrollEndTimeout);
-			scrollEndTimeout = setTimeout(onScrollEnd, 1000); // Adjust the delay as needed
+			scrollEndTimeout = setTimeout(onScrollEnd, 1000); 
 		});
 
 		return () => {

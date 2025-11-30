@@ -26,22 +26,19 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
   const device = useDeviceDetect();
   const router = useRouter();
 
-  // enum massivlar
+  // Static data
   const [productLocation] = useState<string[]>(Object.values(ProductLocation));
   const [productType] = useState<string[]>(Object.values(ProductType));
   const [productMaterial] = useState<string[]>(Object.values(ProductMaterial));
 
   // UI-local state
   const [searchText, setSearchText] = useState<string>('');
-
-  // har bir collapsible bo'lim uchun alohida ochilish state
   const [showLocation, setShowLocation] = useState<boolean>(false);
   const [showType, setShowType] = useState<boolean>(false);
   const [showMaterial, setShowMaterial] = useState<boolean>(false);
 
   /** EFFECTS **/
   useEffect(() => {
-    // Agar locationList bo'shab qolsa -> propni o'chiramiz va URLni yangilaymiz
     if (searchFilter?.search?.locationList?.length === 0) {
       delete searchFilter.search.locationList;
       setShowLocation(false);
@@ -53,7 +50,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
       );
     }
 
-    // Agar typeList bo'shab qolsa
+
     if (searchFilter?.search?.typeList?.length === 0) {
       delete searchFilter.search.typeList;
       setShowType(false);
@@ -65,7 +62,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
       );
     }
 
-    // Agar materialList bo'shab qolsa
+
     if (searchFilter?.search?.materialList?.length === 0) {
       delete searchFilter.search.materialList;
       setShowMaterial(false);
@@ -76,8 +73,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
         { scroll: false },
       );
     }
-
-    // Agar options bo'shab qolsa
     if (searchFilter?.search?.options?.length === 0) {
       delete searchFilter.search.options;
 
@@ -88,7 +83,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
       );
     }
 
-    // Tanlangan bo'lsa - bo'lim ochiq tursin
     if (searchFilter?.search?.locationList?.length) setShowLocation(true);
     if (searchFilter?.search?.typeList?.length) setShowType(true);
     if (searchFilter?.search?.materialList?.length) setShowMaterial(true);
@@ -203,7 +197,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       try {
         const isChecked = e.target.checked;
-        const value = e.target.value; // "GOLD", "DIAMOND", ...
+        const value = e.target.value;
 
         if (isChecked) {
           await router.push(
@@ -249,7 +243,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
     [router, searchFilter],
   );
 
-  // Narx oralig'i
   const productPriceHandler = useCallback(
     async (value: number, type: 'start' | 'end') => {
       if (type === 'start') {

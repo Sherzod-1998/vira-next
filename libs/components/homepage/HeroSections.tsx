@@ -58,7 +58,6 @@ const HeroSections = () => {
 		return () => cancelAnimationFrame(raf);
 	}, []);
 
-	// MORE DETAILS → product sahifasini NECKLACE+RING bilan ochish
 	const handleMoreDetails = () => {
 		const input = {
 			page: 1,
@@ -73,7 +72,6 @@ const HeroSections = () => {
 		router.push(`/product?input=${encodeQuotesOnly(input)}`);
 	};
 
-	// WATCHES belgisi → faqat WATCH filtri bilan ochish
 	const handleSeeWatches = () => {
 		const input = {
 			page: 1,
@@ -88,7 +86,6 @@ const HeroSections = () => {
 		router.push(`/product?input=${encodeQuotesOnly(input)}`);
 	};
 
-	// Kommentlar
 	const { data, loading, error } = useQuery(GET_COMMENTS_SUMMARY, {
 		fetchPolicy: 'cache-and-network',
 	});
@@ -97,14 +94,11 @@ const HeroSections = () => {
 	const total = summary?.total ?? 0;
 	const recentCommenters = summary?.recentCommenters ?? [];
 
-	/* 🔹 LOADING / ERROR ni layoutni buzmasdan ko‘rsatish uchun */
-	const commentsTitle =
-		error ? 'Reviews temporary unavailable' : `${total.toLocaleString()} Reviews`;
+	const commentsTitle = error ? 'Reviews temporary unavailable' : `${total.toLocaleString()} Reviews`;
 	const commentsText = loading
 		? 'Loading community feedback…'
 		: 'Read the voices of our community. Thousands of comments sharing their experience and love for our collections.';
 
-	/* 🔹 1) MOBILE LAYOUT – alohida markup + alohida SCSS */
 	if (device === 'mobile') {
 		return (
 			<section className="hero-mobile" aria-label="Hero – VIRA Jewelry Collections">
@@ -112,19 +106,13 @@ const HeroSections = () => {
 					{/* Top text */}
 					<Box className="hero-mobile__top">
 						<h1 className="hero-mobile__title">
-							VIRA COUPLE{' '}
-							<span className="hero-mobile__gradA">RINGS</span> &{' '}
+							VIRA COUPLE <span className="hero-mobile__gradA">RINGS</span> &{' '}
 							<span className="hero-mobile__gradB">DIAMONDS</span>
 						</h1>
 						<p className="hero-mobile__copy">
-							Explore our latest couple rings & diamond collections,
-							designed to shine on every occasion.
+							Explore our latest couple rings & diamond collections, designed to shine on every occasion.
 						</p>
-						<Button
-							variant="contained"
-							className="hero-mobile__cta"
-							onClick={handleMoreDetails}
-						>
+						<Button variant="contained" className="hero-mobile__cta" onClick={handleMoreDetails}>
 							SHOP NOW
 						</Button>
 					</Box>
@@ -149,11 +137,7 @@ const HeroSections = () => {
 						<p className="card__dark-text">
 							Embrace the unseen magic of uniqueness. Where elegance finds extraordinary.
 						</p>
-						<Button
-							variant="contained"
-							className="card__dark-btn"
-							onClick={handleMoreDetails}
-						>
+						<Button variant="contained" className="card__dark-btn" onClick={handleMoreDetails}>
 							MORE DETAILS
 						</Button>
 					</Box>
@@ -169,8 +153,7 @@ const HeroSections = () => {
 										src={src || '/img/profile/defaultUser.svg'}
 										alt="user avatar"
 										onError={(e) => {
-											(e.currentTarget as HTMLImageElement).src =
-												'/img/profile/defaultUser.svg';
+											(e.currentTarget as HTMLImageElement).src = '/img/profile/defaultUser.svg';
 										}}
 									/>
 								);
@@ -192,11 +175,7 @@ const HeroSections = () => {
 					<Box className="hero-mobile__card card card--pale" onClick={handleSeeWatches}>
 						<div className="pale__meta">
 							<h4>WATCHES</h4>
-							<button
-								type="button"
-								className="tiny-badge"
-								aria-label="See watches"
-							>
+							<button type="button" className="tiny-badge" aria-label="See watches">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="12"
@@ -218,7 +197,6 @@ const HeroSections = () => {
 		);
 	}
 
-	/* 🔹 2) DESKTOP LAYOUT – sening eski varianting (ozgina loading/error fix bilan) */
 	return (
 		<section className="hero" aria-label="Hero – VIRA Jewelry Collections">
 			<Container maxWidth={false} className="hero__container">
@@ -226,8 +204,8 @@ const HeroSections = () => {
 					{/* Title */}
 					<Grid item xs={12} md={7}>
 						<h1 className="hero__title">
-							VIRA COUPLE <span className="hero__gradA">RINGS</span> &{' '}
-							<span className="hero__gradB">DIAMONDS</span> ARE THE
+							VIRA COUPLE <span className="hero__gradA">RINGS</span> & <span className="hero__gradB">DIAMONDS</span> ARE
+							THE
 							<br /> NEW COLLECTIONS
 						</h1>
 					</Grid>
@@ -238,11 +216,7 @@ const HeroSections = () => {
 							Explore our latest couple rings & diamond collections,
 							<br /> designed to shine on every occasion.
 						</Typography>
-						<Button
-							variant="outlined"
-							className="hero__cta"
-							onClick={handleMoreDetails}
-						>
+						<Button variant="outlined" className="hero__cta" onClick={handleMoreDetails}>
 							MORE DETAILS
 						</Button>
 					</Grid>
@@ -262,8 +236,7 @@ const HeroSections = () => {
 											src={src || '/img/profile/defaultUser.svg'}
 											alt="user avatar"
 											onError={(e) => {
-												(e.currentTarget as HTMLImageElement).src =
-													'/img/profile/defaultUser.svg';
+												(e.currentTarget as HTMLImageElement).src = '/img/profile/defaultUser.svg';
 											}}
 										/>
 									);
@@ -303,11 +276,7 @@ const HeroSections = () => {
 							<p className="card__dark-text">
 								Embrace the unseen magic of uniqueness. Where elegance finds extraordinary.
 							</p>
-							<Button
-								variant="contained"
-								className="card__dark-btn"
-								onClick={handleMoreDetails}
-							>
+							<Button variant="contained" className="card__dark-btn" onClick={handleMoreDetails}>
 								MORE DETAILS
 							</Button>
 						</Box>
@@ -318,12 +287,7 @@ const HeroSections = () => {
 						<Box className="card card--pale">
 							<div className="pale__meta">
 								<h4>WATCHES</h4>
-								<button
-									type="button"
-									className="tiny-badge"
-									aria-label="See more"
-									onClick={handleSeeWatches}
-								>
+								<button type="button" className="tiny-badge" aria-label="See more" onClick={handleSeeWatches}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										width="12"

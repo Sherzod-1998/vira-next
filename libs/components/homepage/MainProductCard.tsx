@@ -18,10 +18,9 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 
 	const data = product;
 
-	// backenddan kelgan "men like qilganmanmi?"
+
 	const initialLiked = Array.isArray(data?.meLiked) && data.meLiked.length > 0;
 
-	// Local UI state (optimistic)
 	const [liked, setLiked] = useState<boolean>(initialLiked);
 	const [likeCount, setLikeCount] = useState<number>(data?.productLikes ?? 0);
 
@@ -81,7 +80,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 					<Typography className="review-count">{data.productViews ?? 0} reviews</Typography>
 				</Stack>
 
-				{/* Narx qatori */}
+				{/* Price row */}
 				<Stack className="price-row" direction="row" alignItems="center" justifyContent="space-between">
 					<Box>
 						<span className="price">${data.productPrice}</span>

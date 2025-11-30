@@ -4,8 +4,6 @@ import withLayoutMain from '../libs/components/layout/LayoutHome';
 import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import GorgeousCollection from '../libs/components/homepage/GorgeousCollection';
-import TrendProducts from '../libs/components/homepage/TrendProducts';
-import TopProducts from '../libs/components/homepage/TopProducts';
 import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import HeroSections from '../libs/components/homepage/HeroSections';

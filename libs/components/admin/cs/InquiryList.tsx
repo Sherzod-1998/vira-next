@@ -51,7 +51,6 @@ export const InquiryList: React.FC<InquiryListProps> = ({ status }) => {
 	const total: number = data?.getAdminCsInquiries?.total ?? 0;
 	const totalPages = Math.max(1, Math.ceil(total / limit));
 
-	// status tab o'zgarganda 1-betagacha reset + refetch
 	useEffect(() => {
 		setPage(1);
 		refetch({

@@ -1,4 +1,4 @@
-// components/notification/NotificationList.tsx
+
 import React, { useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -65,7 +65,6 @@ export const NotificationList: React.FC<Props> = ({ onClose }) => {
 
 	const handleClickItem = async (item: Notification) => {
 		try {
-			// agar unread bo'lsa → read qilib qo'yamiz
 			if (item.notificationStatus === 'WAIT') {
 				await markNotificationRead({
 					variables: { notificationId: item._id },
@@ -146,13 +145,13 @@ export const NotificationList: React.FC<Props> = ({ onClose }) => {
 				) : error ? (
 					<Box sx={{ p: 2 }}>
 						<Typography color="error" variant="body2">
-							Xatolik yuz berdi, iltimos qayta urinib ko‘ring.
+							Error loading notifications.
 						</Typography>
 					</Box>
 				) : notifications.length === 0 ? (
 					<Box sx={{ p: 2 }}>
 						<Typography variant="body2" color="text.secondary">
-							Hozircha notification yo‘q.
+							No notifications found.
 						</Typography>
 					</Box>
 				) : (
@@ -177,7 +176,7 @@ export const NotificationList: React.FC<Props> = ({ onClose }) => {
 											bgcolor: isUnread ? 'rgba(255,255,255,0.04)' : 'transparent',
 										}}
 									>
-										{/* Chapdagi ko‘k nuqta (unread) */}
+										
 										<Box sx={{ pt: 1, pr: 1 }}>
 											{isUnread && (
 												<Box
@@ -216,7 +215,7 @@ export const NotificationList: React.FC<Props> = ({ onClose }) => {
 				)}
 			</Box>
 
-			{/* Pastki qism – Load more */}
+			
 			{hasMore && (
 				<Box
 					sx={{

@@ -11,7 +11,6 @@
     gap: 12px;
     align-items: center;
 
-    /* chap qism: avatar + badge */
     .m-left {
       position: relative;
       display: flex;
@@ -36,7 +35,6 @@
       }
     }
 
-    /* o‘ng qism: ism + meta */
     .m-right {
       flex: 1;
       display: flex;
@@ -120,7 +118,6 @@
             gap: 20px;
         }
 
-        /* 🔹 Filter (search + sort) */
         .m-filter {
             width: 100%;
 
@@ -175,7 +172,6 @@
             }
         }
 
-        /* 🔹 Seller cards list */
         .m-card-wrap {
             width: 100%;
             display: flex;

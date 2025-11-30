@@ -29,7 +29,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
       &.transparent {
-        background-color: rgba(33, 33, 33, 0.96); // mobile’da ham doim qoraroq
+        background-color: rgba(33, 33, 33, 0.96);
       }
 
       .container {
@@ -40,7 +40,7 @@
         align-items: stretch;
         gap: 8px;
 
-        /* 🔹 1-qator: logo + user / lang */
+
 
 
         .user-box {
@@ -48,7 +48,7 @@
           display: flex;
           align-items: center;
           gap: 8px;
-          width: auto; // desktopdagi 270px kerak emas
+          width: auto; 
 
           .join-box {
             height: 38px;
@@ -128,7 +128,7 @@
           }
         }
 
-        /* 🔹 2-qator: router links (scrollable bar) */
+
         .router-box {
           width: 100%;
           display: flex;
@@ -137,12 +137,11 @@
           gap: 16px;
           margin-top: 4px;
 
-          /* Horizontal scroll – agar linklar ko‘p bo‘lsa */
+
           overflow-x: auto;
           overflow-y: hidden;
           padding-bottom: 4px;
 
-          /* scrollbar’ni biroz chiroyliroq yoki yashirin qilish */
           &::-webkit-scrollbar {
             height: 3px;
           }
@@ -165,7 +164,7 @@
             }
 
             .community_menu {
-              display: none; // mobile’da community drop-down ishlatmasak
+              display: none;
             }
           }
         }
@@ -178,7 +177,7 @@
     width: 100%;
     height: auto;
     min-height: 520px;
-    padding: 100px 16px 24px; // navbardan keyin pastroq
+    padding: 100px 16px 24px;
     background-color: #2b2017;
     background-image: url('/img/banner/header1.webp');
     background-repeat: no-repeat;
@@ -188,14 +187,12 @@
     display: flex;
     flex-direction: column;
 
-    /* Kontent blok */
+
     .header-content {
 
       margin-top: 30px;
       width: 100%;
       margin: 0;
-
-      /* tepada masofa navbarga bog‘liq bo‘ladi */
       .header-content__inner {
         display: flex;
         flex-direction: row;
@@ -233,7 +230,7 @@
 
       .header-content__title {
 
-        /* h1 larni ichida */
+
         h1.header-content__title-text {
           font-family: Unbounded, system-ui, -apple-system, sans-serif;
           font-size: 24px;
@@ -285,8 +282,6 @@
       }
     }
 
-    /* Agar header ichida container + search-box ishlatilsa (desktopdagi qismi)
-	   mobil uchun soddalashtiramiz */
     .container {
       margin-top: 24px;
       display: flex;
@@ -368,8 +363,6 @@
           }
         }
 
-        /* filter-location/type/rooms mobil layoutda odatda modal qilib qilinadi,
-			   hozircha standardni soddalashtirib, full-width panel ko‘rinishida qoldiramiz */
         .filter-location,
         .filter-type,
         .filter-rooms {
@@ -381,7 +374,7 @@
           border-radius: 10px;
           box-shadow: none;
           background: #ffffff;
-          visibility: visible; // agar react bilan boshqarayotgan bo‘lsangiz SCSSda emas, class bilan o‘ynaysiz
+          visibility: visible;
         }
       }
     }
@@ -434,7 +427,6 @@
           border-radius: 999px;
         }
 
-        /* Faqat mobil kartalar */
         .circle-img-wrapper.mobile {
           display: flex;
           flex-direction: column;
@@ -455,7 +447,7 @@
               border-radius: 50%;
               object-fit: cover;
               transform: scale(1);
-              /* zoom yo‘q */
+
             }
           }
 
@@ -475,7 +467,7 @@
             }
           }
 
-          /* Hoverda sakramasligi uchun – mobil */
+
           &:hover {
             .circle-figure {
               transform: none;
@@ -992,7 +984,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    background: #ffffff; // xohlasang #f6f6f6 ham qilsa bo'ladi
+    background: #ffffff;
 
     .container {
       width: 100%;
@@ -1035,8 +1027,7 @@
       }
     }
 
-    /* TopSellerCard ichidagi default desktop o'lchamlar juda katta bo'lsa,
-     mobilga mos kichraytirib qo'yish mumkin: */
+
     .top-seller-card {
       width: 180px;
       height: auto;
@@ -1260,14 +1251,14 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
 
-      /* Tablet: 2 ustun */
+
       @media (max-width: 1024px) {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      /* Mobile: horizontal swipe */
+
       @media (max-width: 600px) {
-        display: flex; // grid o‘rniga flex
+        display: flex; 
         flex-wrap: nowrap;
         overflow-x: auto;
         overflow-y: hidden;
@@ -1278,7 +1269,7 @@
         -webkit-overflow-scrolling: touch;
 
         &::-webkit-scrollbar {
-          display: none; // scrollbarni yashirish
+          display: none; 
         }
       }
     }
@@ -1325,9 +1316,9 @@
         line-height: 1.6;
       }
 
-      /* Mobile uchun: kartani biroz torroq va swipe-friendly qilamiz */
+
       @media (max-width: 600px) {
-        min-width: 240px; // har bir card slayder item
+        min-width: 240px;
         scroll-snap-align: start;
         padding: 20px 16px;
       }
@@ -1434,7 +1425,6 @@
         }
       }
 
-      /* == 2 USTUN (Our Address + Get To Know Us) == */
       .m-two-col {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1483,7 +1473,6 @@
         }
       }
 
-      /* Qolgan bloklar */
       .m-block {
         .m-title {
           font-family: Unbounded;

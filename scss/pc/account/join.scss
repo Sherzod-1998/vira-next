@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #ffffff; // umumiy fon, figmadagi beige ga o‘xshash
+    background: #ffffff;
 
     .container {
       
@@ -100,9 +100,7 @@
             }
           }
 
-          .google {
-            // Google uchun maxsus style kerak bo‘lsa shu yerga
-          }
+
 
           .facebook {
             margin-top: 6px;
@@ -256,6 +254,7 @@
           .ask-info {
             margin-top: 22px;
             text-align: center;
+            
 
             p {
               font-family: $font;

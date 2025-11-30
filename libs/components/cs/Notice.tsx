@@ -9,14 +9,11 @@ const formatDate = (dateStr: string) => {
 	const yy = d.getFullYear().toString().slice(-2);
 	const mm = String(d.getMonth() + 1).padStart(2, '0');
 	const dd = String(d.getDate()).padStart(2, '0');
-	// 01.03.2024 formatiga yaqinlashamiz: dd.mm.yyyy
 	return `${dd}.${mm}.20${yy}`;
 };
 
 const Notice = () => {
 	const device = useDeviceDetect();
-
-	// 1-bet, 20 ta notice
 	const { data, loading, error } = useQuery(GET_NOTICES, {
 		variables: {
 			input: {
@@ -40,10 +37,7 @@ const Notice = () => {
 					{list.map((notice: any, idx: number) => {
 						const isEvent = notice.noticeCategory === 'EVENT';
 						return (
-							<Stack
-								key={notice._id}
-								className={`m-notice-card ${isEvent ? 'event' : ''}`}
-							>
+							<Stack key={notice._id} className={`m-notice-card ${isEvent ? 'event' : ''}`}>
 								<Stack className="m-row-top">
 									{isEvent && <span className="m-badge">Event</span>}
 									<span className="m-date">{formatDate(notice.createdAt)}</span>
@@ -88,15 +82,12 @@ const Notice = () => {
 										key={notice._id}
 										sx={{ width: '100%' }}
 									>
-										{/* Chap tomon: raqam yoki "event" pill */}
 										{isEvent ? <div>event</div> : <span className={'notice-number'}>{idx + 1}</span>}
 
-										{/* O‘rta: title + content markazda */}
 										<Box className="notice-middle">
 											<span className={'notice-content-text'}>{notice.noticeContent}</span>
 										</Box>
 
-										{/* O‘ng: sana */}
 										<span className={'notice-date'}>{formatDate(notice.createdAt)}</span>
 									</Stack>
 								);

@@ -63,6 +63,7 @@
 
   /* CONTENT / LIST */
   .m-content {
+
     .m-loading,
     .m-no-data {
       display: flex;
@@ -139,13 +140,14 @@
   &::-webkit-scrollbar {
     width: 4px;
   }
+
   &::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 999px;
   }
 
   /* Header (Filter + Reset) */
-  > .MuiStack-root:first-of-type {
+  >.MuiStack-root:first-of-type {
     padding-bottom: 4px;
     border-bottom: 1px solid #eee;
   }

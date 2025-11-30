@@ -39,7 +39,10 @@ const Footer = () => {
 							aria-label="Email address"
 							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
 						/>
-						<button className="m-subscribe-button" style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
+						<button
+							className="m-subscribe-button"
+							style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+						>
 							<span>send</span>
 						</button>
 					</div>
@@ -48,10 +51,11 @@ const Footer = () => {
 				{/* MAIN */}
 				<Stack className="m-main" spacing={3}>
 					{/* Brand */}
-					<Box className="m-brand">
+  					<Box className="m-brand">
 						<span className="m-logo">vira</span>
 						<p className="m-desc">
-							Building modern solutions that connect creativity, technology, and people in one seamless experience.
+							Building modern solutions that connect creativity, technology, and people in one seamless
+							experience.
 						</p>
 
 						<div className="m-store-badges">
@@ -60,7 +64,7 @@ const Footer = () => {
 						</div>
 					</Box>
 
-					{/* 2 USTUNLIK QISM */}
+					{/* LINKS */}
 					<Box className="m-two-col">
 						{/* Our Address */}
 						<Box className="m-block">
@@ -150,10 +154,6 @@ const Footer = () => {
 							</li>
 						</ul>
 					</Box>
-
-					{/* Categories */}
-
-					{/* Resources */}
 				</Stack>
 
 				{/* BOTTOM */}
@@ -172,7 +172,7 @@ const Footer = () => {
 		);
 	}
 
-	/** 🖥 DESKTOP FOOTER (o‘z holicha qoladi) **/
+	/** 🖥 DESKTOP FOOTER **/
 	return (
 		<Stack className={'footer-container'}>
 			<Stack direction="row" alignItems="center" justifyContent="space-between" className="subscribe">
@@ -200,6 +200,7 @@ const Footer = () => {
 						<img src="/img/logo/appstore.png" alt="" />
 					</Stack>
 				</Stack>
+
 				<Stack className="footer-address" spacing={2}>
 					<h2 className="title">Our address</h2>
 
@@ -210,12 +211,12 @@ const Footer = () => {
 
 					<Stack direction="row" alignItems="center" spacing={1} className="info">
 						<FaPhoneAlt className="icon" />
-						<a href="tel:+1800396756">+82 10 9910 5777</a>
+						<a href="tel:+821099105777">+82 10 9910 5777</a>
 					</Stack>
 
 					<Stack direction="row" alignItems="center" spacing={1} className="info">
 						<FaEnvelope className="icon" />
-						<a href="mailto:support@anikalan.com">support@vira.com</a>
+						<a href="mailto:support@vira.com">support@vira.com</a>
 					</Stack>
 
 					<Stack direction="row" spacing={2} className="socials">
@@ -236,6 +237,7 @@ const Footer = () => {
 						</a>
 					</Stack>
 				</Stack>
+
 				<Stack className="footer-links">
 					<h2 className="title">Get To Know Us</h2>
 					<ul>
@@ -262,6 +264,7 @@ const Footer = () => {
 						</li>
 					</ul>
 				</Stack>
+
 				<Stack className="footer-legal">
 					<h2 className="title">Legal</h2>
 					<ul>
@@ -285,13 +288,14 @@ const Footer = () => {
 						</li>
 					</ul>
 				</Stack>
+
 				<Stack className={'fifth'}></Stack>
 			</Stack>
 
 			<div className="footer-bottom">
 				<hr className="divider" />
 				<div className="content">
-					<p className="copy">©VIRA all rights Reserved</p>
+					<p className="copy">© VIRA {moment().year()} - All rights Reserved</p>
 					<div className="links">
 						<a href="#">Terms & Condition</a>
 						<span>|</span>

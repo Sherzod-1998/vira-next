@@ -100,7 +100,6 @@ const Chat = () => {
 						break;
 					}
 					case 'message': {
-						// backend: { event:'message', text, memberData }
 						const payload: MessagePayload = data.data && data.data.text ? data.data : data;
 
 						console.log('[Chat] new message payload:', payload);
@@ -122,8 +121,7 @@ const Chat = () => {
 			socket.removeEventListener('message', handleMessage);
 		};
 	}, [socket]);
-
-	/** Chat tugmasini biroz kechiktirib ko‘rsatish */
+	/** SCROLL TO BOTTOM ON NEW MESSAGE */
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			setOpenButton(true);
@@ -131,7 +129,6 @@ const Chat = () => {
 		return () => clearTimeout(timeoutId);
 	}, []);
 
-	/** Route o‘zgarganda chat tugmasini qayta yopish */
 	useEffect(() => {
 		setOpenButton(false);
 	}, [router.pathname]);

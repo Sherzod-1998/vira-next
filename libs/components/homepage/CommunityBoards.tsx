@@ -15,6 +15,7 @@ const CommunityBoards = () => {
     loading: getLatestLoading,
     data: getLatestData,
     error: getLatestError,
+    refetch: refetchLatest,
   } = useQuery(GET_BOARD_ARTICLES, {
     fetchPolicy: 'network-only',
     variables: {
@@ -31,26 +32,25 @@ const CommunityBoards = () => {
 
   const latestArticles: BoardArticle[] = (getLatestData as T)?.getBoardArticles?.list ?? [];
 
-  /* 🔹 MOBILE LAYOUT */
+  /** 🔹 MOBILE LAYOUT: horizontal swipe cards */
   if (device === 'mobile') {
     return (
-      <Stack className="community-board community-board--mobile">
+      <Stack className="community-board mobile">
         <Stack className="container">
-          <Stack className="mobile-header" direction="row" alignItems="center" justifyContent="space-between">
-            <Typography className="mobile-title">Community Highlights</Typography>
-
-            <Link href="/community">
-              <Typography className="mobile-view-all">View all</Typography>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            className="mobile-header"
+          >
+            <Typography className="mobile-title">Community board</Typography>
+            <Link href="/community/list" className="mobile-more">
+              View all
             </Link>
           </Stack>
 
-          {getLatestLoading && <div className="grid-placeholder">Loading...</div>}
-          {getLatestError && (
-            <div className="grid-error">Maqolalarni yuklashda xatolik yuz berdi.</div>
-          )}
-
-          {!getLatestLoading && !getLatestError && (
-            <div className="latest-slider">
+          <div className="mobile-scroll-wrapper">
+            <div className="mobile-scroll-inner">
               {latestArticles.map((article, index) => (
                 <CommunityCard
                   key={article?._id}
@@ -60,13 +60,15 @@ const CommunityBoards = () => {
                 />
               ))}
             </div>
-          )}
+          </div>
+
+          {getLatestLoading && <div className="grid-placeholder">Loading...</div>}
         </Stack>
       </Stack>
     );
   }
 
-  /* 🔹 DESKTOP LAYOUT */
+  /** 🔹 DESKTOP LAYOUT */
   return (
     <Stack className="community-board">
       <Stack className="container">
@@ -76,8 +78,7 @@ const CommunityBoards = () => {
 
         <Stack className="community-main">
           <Stack className="community-right">
-            <Stack className="content-top"></Stack>
-
+            <Stack className="content-top" />
             <div className="latest-grid">
               {latestArticles.map((article, index) => (
                 <CommunityCard
@@ -90,9 +91,7 @@ const CommunityBoards = () => {
             </div>
 
             {getLatestLoading && <div className="grid-placeholder">Loading...</div>}
-            {getLatestError && (
-              <div className="grid-error">Maqolalarni yuklashda xatolik yuz berdi.</div>
-            )}
+            
           </Stack>
         </Stack>
       </Stack>

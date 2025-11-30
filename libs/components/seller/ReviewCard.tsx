@@ -56,8 +56,6 @@ const ReviewCard = (props: ReviewCardProps) => {
 			</Box>
 		);
 	}
-
-	/** 🔹 DESKTOP LAYOUT (oʻsha eski ko‘rinish) */
 	return (
 		<Box component={'div'} className={'review-card'}>
 			<div className={'info'}>

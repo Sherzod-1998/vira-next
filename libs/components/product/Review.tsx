@@ -57,7 +57,6 @@ const Review = ({ comment }: ReviewProps) => {
 		);
 	}
 
-	/** 🔹 DESKTOP LAYOUT (avvalgi ko‘rinish) */
 	return (
 		<Stack className={'review-config'}>
 			<Stack className={'review-mb-info'}>

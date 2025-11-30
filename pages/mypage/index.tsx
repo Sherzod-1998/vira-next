@@ -152,4 +152,6 @@ const MyPage: NextPage = () => {
 	}
 };
 
+
+
 export default withLayoutBasic(MyPage);

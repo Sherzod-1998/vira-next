@@ -182,12 +182,6 @@ const GorgeousCollection = () => {
 						</div>
 					</div>
 				</Stack>
-
-				{getCountsError && (
-					<Typography color="error" sx={{ mt: 1, px: 2 }}>
-						Counts loading error: {getCountsError.message}
-					</Typography>
-				)}
 			</div>
 		</Stack>
 	);

@@ -56,7 +56,6 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		// Agar URL da category bo‘lmasa, default = FREE
 		if (!query?.articleCategory)
 			router.push(
 				{
@@ -138,30 +137,22 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								<Tab
 									value="FREE"
 									label="Free"
-									className={`m-tab-button ${
-										searchCommunity.search.articleCategory === 'FREE' ? 'active' : ''
-									}`}
+									className={`m-tab-button ${searchCommunity.search.articleCategory === 'FREE' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="RECOMMEND"
 									label="Recommend"
-									className={`m-tab-button ${
-										searchCommunity.search.articleCategory === 'RECOMMEND' ? 'active' : ''
-									}`}
+									className={`m-tab-button ${searchCommunity.search.articleCategory === 'RECOMMEND' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="NEWS"
 									label="News"
-									className={`m-tab-button ${
-										searchCommunity.search.articleCategory === 'NEWS' ? 'active' : ''
-									}`}
+									className={`m-tab-button ${searchCommunity.search.articleCategory === 'NEWS' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="HUMOR"
 									label="Humor"
-									className={`m-tab-button ${
-										searchCommunity.search.articleCategory === 'HUMOR' ? 'active' : ''
-									}`}
+									className={`m-tab-button ${searchCommunity.search.articleCategory === 'HUMOR' ? 'active' : ''}`}
 								/>
 							</TabList>
 						</Stack>
@@ -294,9 +285,6 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 		);
 	}
 
-	/** ===========================
-	 *  🔹 DESKTOP LAYOUT (eski ko‘rinish)
-	 *  =========================== */
 	return (
 		<div id="community-list-page">
 			<div className="container">
@@ -320,30 +308,22 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								<Tab
 									value={'FREE'}
 									label={'Free Board'}
-									className={`tab-button ${
-										searchCommunity.search.articleCategory == 'FREE' ? 'active' : ''
-									}`}
-                                />
+									className={`tab-button ${searchCommunity.search.articleCategory == 'FREE' ? 'active' : ''}`}
+								/>
 								<Tab
 									value={'RECOMMEND'}
 									label={'Recommendation'}
-									className={`tab-button ${
-										searchCommunity.search.articleCategory == 'RECOMMEND' ? 'active' : ''
-									}`}
+									className={`tab-button ${searchCommunity.search.articleCategory == 'RECOMMEND' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'NEWS'}
 									label={'News'}
-									className={`tab-button ${
-										searchCommunity.search.articleCategory == 'NEWS' ? 'active' : ''
-									}`}
+									className={`tab-button ${searchCommunity.search.articleCategory == 'NEWS' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'HUMOR'}
 									label={'Humor'}
-									className={`tab-button ${
-										searchCommunity.search.articleCategory == 'HUMOR' ? 'active' : ''
-									}`}
+									className={`tab-button ${searchCommunity.search.articleCategory == 'HUMOR' ? 'active' : ''}`}
 								/>
 							</TabList>
 						</Stack>
@@ -352,9 +332,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							<Stack className="panel-config">
 								<Stack className="title-box">
 									<Stack className="left">
-										<Typography className="title">
-											{searchCommunity.search.articleCategory} BOARD
-										</Typography>
+										<Typography className="title">{searchCommunity.search.articleCategory} BOARD</Typography>
 										<Typography className="sub-title">
 											Express your opinions freely here without content restrictions
 										</Typography>

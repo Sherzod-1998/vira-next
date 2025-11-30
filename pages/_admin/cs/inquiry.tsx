@@ -41,7 +41,7 @@ const AdminInquiryPage: NextPage = () => {
 					</ListItem>
 				</List>
 
-				{/* STATUS GA QARAB RO‘YXAT */}
+				{/* INQUIRY LIST */}
 				<InquiryList status={statusTab === 'ALL' ? undefined : statusTab} />
 			</Box>
 		</Box>

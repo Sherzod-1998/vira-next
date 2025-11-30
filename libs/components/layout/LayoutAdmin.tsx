@@ -141,8 +141,6 @@ const withAdminLayout = (Component: ComponentType) => {
 						className="aside"
 					>
 						<Toolbar sx={{ flexDirection: 'column', alignItems: 'flexStart' }}>
-							
-
 							<Stack
 								className="user"
 								direction={'row'}
