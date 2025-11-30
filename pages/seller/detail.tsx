@@ -22,6 +22,12 @@ import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation'
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import MainProductCard from '../../libs/components/homepage/MainProductCard';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Pagination as SwiperPagination } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+SwiperCore.use([SwiperPagination]);
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -134,7 +140,6 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 		}
 	};
 
-
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
 			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
@@ -191,7 +196,131 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	};
 
 	if (device === 'mobile') {
-		return <div>SELLER DETAIL PAGE MOBILE</div>;
+		return (
+			<Stack className="m-seller-detail-page">
+				<Stack className="m-container">
+					{/* SELLER HEADER */}
+					<Stack className="m-seller-header">
+						<img
+							src={seller?.memberImage ? `${REACT_APP_API_URL}/${seller?.memberImage}` : '/img/profile/defaultUser.svg'}
+							alt=""
+							className="m-avatar"
+							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
+						/>
+						<Box component="div" className="m-info" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
+							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+							<span className="m-phone">{seller?.memberPhone}</span>
+							<span className="m-meta">
+								{seller?.memberProducts ?? 0} products · {commentTotal} review
+								{commentTotal > 1 ? 's' : ''}
+							</span>
+						</Box>
+					</Stack>
+
+					{/* PRODUCTS SECTION */}
+					<Stack className="m-section m-products-section">
+						<Typography className="m-section-title">Products</Typography>
+
+						{productTotal ? (
+							<>
+								<Swiper
+									className="m-products-swiper"
+									slidesPerView={'auto'}
+									spaceBetween={16}
+									pagination={{ clickable: true, el: '.m-products-swiper-pagination' }}
+								>
+									{sellerProducts.map((product: Product) => (
+										<SwiperSlide className="m-product-slide" key={product?._id}>
+											<MainProductCard product={product} onLike={onLike} />
+										</SwiperSlide>
+									))}
+								</Swiper>
+
+								<div className="m-products-swiper-pagination" />
+
+								<Stack className="m-pagination">
+									<span className="m-pagination-text">
+										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
+									</span>
+								</Stack>
+							</>
+						) : (
+							<div className="m-no-data">
+								<img src="/img/icons/icoAlert.svg" alt="" />
+								<p>No products found!</p>
+							</div>
+						)}
+					</Stack>
+
+					{/* REVIEWS SECTION */}
+					<Stack className="m-section m-review-section">
+						<Typography className="m-section-title">Reviews</Typography>
+						<Typography className="m-section-subtitle">We are glad to see you again</Typography>
+
+						{commentTotal !== 0 && (
+							<Stack className="m-review-list">
+								<Box component="div" className="m-review-title-box">
+									<StarIcon className="m-star" />
+									<span>
+										{commentTotal} review{commentTotal > 1 ? 's' : ''}
+									</span>
+								</Box>
+
+								{sellerComments?.map((comment: Comment) => (
+									<ReviewCard comment={comment} key={comment?._id} />
+								))}
+
+								<Box component="div" className="m-pagination">
+									<Pagination
+										page={commentInquiry.page}
+										count={Math.ceil(commentTotal / commentInquiry.limit) || 1}
+										onChange={commentPaginationChangeHandler}
+										size="small"
+										shape="circular"
+										color="primary"
+									/>
+								</Box>
+							</Stack>
+						)}
+
+						{/* LEAVE REVIEW */}
+						<Stack className="m-leave-review">
+							<Typography className="m-leave-title">Leave A Review</Typography>
+							<Typography className="m-leave-label">Review</Typography>
+							<textarea
+								onChange={({ target: { value } }: any) => {
+									setInsertCommentData({ ...insertCommentData, commentContent: value });
+								}}
+								value={insertCommentData.commentContent}
+								placeholder="Write your review..."
+							></textarea>
+							<Box className="m-submit-wrap" component="div">
+								<Button
+									className="m-submit-btn"
+									disabled={insertCommentData.commentContent === '' || user?._id === ''}
+									onClick={createCommentHandler}
+								>
+									<Typography className="title">Submit Review</Typography>
+									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+										<g clipPath="url(#clip0_6975_3642)">
+											<path
+												d="M16.1571 0.5H6.37936C6.1337 0.5 5.93491 0.698792 5.93491 0.944458C5.93491 1.19012 6.1337 1.38892 6.37936 1.38892H15.0842L0.731781 15.7413C0.558156 15.915 0.558156 16.1962 0.731781 16.3698C0.818573 16.4566 0.932323 16.5 1.04603 16.5C1.15974 16.5 1.27345 16.4566 1.36028 16.3698L15.7127 2.01737V10.7222C15.7127 10.9679 15.9115 11.1667 16.1572 11.1667C16.4028 11.1667 16.6016 10.9679 16.6016 10.7222V0.944458C16.6016 0.698792 16.4028 0.5 16.1571 0.5Z"
+												fill="#181A20"
+											/>
+										</g>
+										<defs>
+											<clipPath id="clip0_6975_3642">
+												<rect width="16" height="16" fill="white" transform="translate(0.601562 0.5)" />
+											</clipPath>
+										</defs>
+									</svg>
+								</Button>
+							</Box>
+						</Stack>
+					</Stack>
+				</Stack>
+			</Stack>
+		);
 	} else {
 		return (
 			<Stack className={'seller-detail-page'}>
@@ -281,15 +410,15 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 										shape="circular"
 										color="primary"
 										sx={{
-												'& .MuiPaginationItem-root': {
-													color: 'rgba(0, 0, 0, 1)', // normal color
-													borderColor: 'rgba(0, 0, 0, 1)',
-												},
-												'& .Mui-selected': {
-													backgroundColor: 'rgba(146, 106, 84, 1) !important',
-													color: '#000000ff !important',
-												},
-											}}
+											'& .MuiPaginationItem-root': {
+												color: 'rgba(0, 0, 0, 1)', // normal color
+												borderColor: 'rgba(0, 0, 0, 1)',
+											},
+											'& .Mui-selected': {
+												backgroundColor: 'rgba(146, 106, 84, 1) !important',
+												color: '#000000ff !important',
+											},
+										}}
 									/>
 								</Box>
 							</Stack>

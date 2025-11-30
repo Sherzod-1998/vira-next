@@ -1,109 +1,109 @@
 #mobile-wrap {
 
-    .m-seller-card {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: 12px;
-        background: #ffffff;
-        border: 1px solid #e4e4e4;
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        align-items: center;
+   .m-seller-card {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e4e4e4;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
 
-        /* chap qism: avatar + badge */
-        .m-left {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
+    /* chap qism: avatar + badge */
+    .m-left {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
 
-            .m-avatar {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                background-color: #f3f3f3;
-            }
+      .m-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #f3f3f3;
+      }
 
-            .m-badge {
-                padding: 2px 8px;
-                border-radius: 999px;
-                background: rgba(146, 106, 84, 1);
-                color: #ffffff;
-                font-size: 10px;
-                font-weight: 600;
-            }
-        }
-
-        /* o‘ng qism: ism + meta */
-        .m-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 4px;
-
-            .m-info {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-
-                strong {
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: #181a20;
-                }
-
-                .m-role {
-                    font-size: 12px;
-                    color: #888888;
-                }
-            }
-
-            .m-meta {
-                margin-top: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 8px;
-
-                .m-meta-item {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 4px;
-                    font-size: 12px;
-                    color: #555555;
-
-                    .m-icon {
-                        font-size: 18px;
-                    }
-                }
-
-                .m-like-btn {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 4px;
-                    border-radius: 999px;
-                    border: 1px solid #e0e0e0;
-                    padding: 4px 10px;
-                    background: #fafafa;
-                    font-size: 12px;
-                    color: #555555;
-                    cursor: pointer;
-
-                    .m-like-icon {
-                        font-size: 18px;
-                        color: #9a9fa5;
-
-                        &.active {
-                            color: rgba(146, 106, 84, 1);
-                        }
-                    }
-                }
-            }
-        }
+      .m-badge {
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(146, 106, 84, 1);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 600;
+      }
     }
+
+    /* o‘ng qism: ism + meta */
+    .m-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+
+      .m-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        strong {
+          font-size: 15px;
+          font-weight: 600;
+          color: #181a20;
+        }
+
+        .m-role {
+          font-size: 12px;
+          color: #888888;
+        }
+      }
+
+      .m-meta {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+
+        .m-meta-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 12px;
+          color: #555555;
+
+          .m-icon {
+            font-size: 18px;
+          }
+        }
+
+        .m-like-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          border-radius: 999px;
+          border: 1px solid #e0e0e0;
+          padding: 4px 10px;
+          background: #fafafa;
+          font-size: 12px;
+          color: #555555;
+          cursor: pointer;
+
+          .m-like-icon {
+            font-size: 18px;
+            color: #9a9fa5;
+
+            &.active {
+              color: rgba(146, 106, 84, 1);
+            }
+          }
+        }
+      }
+    }
+  }
 
     #m-seller-list-page {
         margin-top: 100px;
