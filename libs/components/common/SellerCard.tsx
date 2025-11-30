@@ -28,15 +28,11 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
   const [isLiked, setIsLiked] = useState<boolean>(getLikedFromServer(seller));
   const [likeCount, setLikeCount] = useState<number>(seller?.memberLikes || 0);
 
-  // 🔄 Agar props yangilansa (refetch / sahifa qayta yuklansa) — sync
+  // 🔄 props o‘zgarsa – local state sync
   useEffect(() => {
     setIsLiked(getLikedFromServer(seller));
     setLikeCount(seller?.memberLikes || 0);
   }, [seller?._id, seller?.meLiked, seller?.memberLikes]);
-
-  if (device === 'mobile') {
-    return <div>SELLER CARD</div>;
-  }
 
   const handleLikeClick = async () => {
     if (!user?._id) {
@@ -47,21 +43,82 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
     const prevLiked = isLiked;
     const prevCount = likeCount;
 
-    // Optimistic UI
     const nextLiked = !prevLiked;
     setIsLiked(nextLiked);
     setLikeCount((c) => (nextLiked ? c + 1 : Math.max(c - 1, 0)));
 
     try {
       await likeMemberHandler(user, seller?._id);
-      // Apollo cache orqali backend natijasi bilan sync bo'ladi.
     } catch (e) {
-      // Xato bo'lsa orqaga qaytaramiz
       setIsLiked(prevLiked);
       setLikeCount(prevCount);
     }
   };
 
+  /* 🔹 MOBILE CARD */
+  if (device === 'mobile') {
+    return (
+      <Stack className="m-seller-card">
+        <Link
+          href={{
+            pathname: '/seller/detail',
+            query: { sellerId: seller?._id },
+          }}
+        >
+          <Box className="m-left">
+            <div
+              className="m-avatar"
+              style={{
+                backgroundImage: `url(${imagePath})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
+            <span className="m-badge">
+              {seller?.memberProducts} products
+            </span>
+          </Box>
+        </Link>
+
+        <Box className="m-right">
+          <div className="m-info">
+            <Link
+              href={{
+                pathname: '/seller/detail',
+                query: { sellerId: seller?._id },
+              }}
+            >
+              <strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+            </Link>
+            <span className="m-role">seller</span>
+          </div>
+
+          <div className="m-meta">
+            <div className="m-meta-item">
+              <RemoveRedEyeIcon className="m-icon" />
+              <span>{seller?.memberViews}</span>
+            </div>
+
+            <button
+              type="button"
+              className="m-like-btn"
+              onClick={handleLikeClick}
+            >
+              {isLiked ? (
+                <FavoriteIcon className="m-like-icon active" />
+              ) : (
+                <FavoriteBorderIcon className="m-like-icon" />
+              )}
+              <span>{likeCount}</span>
+            </button>
+          </div>
+        </Box>
+      </Stack>
+    );
+  }
+
+  /* 🔹 DESKTOP CARD */
   return (
     <Stack className="seller-general-card">
       <Link
