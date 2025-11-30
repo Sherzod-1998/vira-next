@@ -23,6 +23,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
+
 	const imagePath: string = boardArticle?.articleImage
 		? `${REACT_APP_API_URL}/${boardArticle?.articleImage}`
 		: '/img/community/communityImg.png';
@@ -44,57 +45,117 @@ const CommunityCard = (props: CommunityCardProps) => {
 		else router.push(`/member?memberId=${id}`);
 	};
 
+	/** =======================
+	 * 🔹 MOBILE LAYOUT
+	 * ======================= */
 	if (device === 'mobile') {
-		return <div>COMMUNITY CARD MOBILE</div>;
-	} else {
 		return (
 			<Stack
-				sx={{ width: size === 'small' ? '285px' : '317px' }}
-				className="community-general-card-config"
+				className="m-community-card"
 				onClick={(e) => chooseArticleHandler(e, boardArticle)}
 			>
-				<Stack className="image-box">
-					<img src={imagePath} alt="" className="card-img" />
-				</Stack>
-				<Stack className="desc-box" sx={{ marginTop: '-20px' }}>
-					<Stack>
-						<Typography
-							className="desc"
-							onClick={(e) => {
-								e.stopPropagation();
-								goMemberPage(boardArticle?.memberData?._id as string);
-							}}
-						>
-							{boardArticle?.memberData?.memberNick}
+				<Stack className="m-image-wrapper">
+					<img src={imagePath} alt="" className="m-card-img" />
+					<Stack className="m-date-badge">
+						<Typography className="m-month">
+							<Moment format={'MMM'}>{boardArticle?.createdAt}</Moment>
 						</Typography>
-						<Typography className="title">{boardArticle?.articleTitle}</Typography>
-					</Stack>
-					<Stack className={'buttons'}>
-						<IconButton color={'default'}>
-							<RemoveRedEyeIcon />
-						</IconButton>
-						<Typography className="view-cnt">{boardArticle?.articleViews}</Typography>
-						<IconButton color={'default'} onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}>
-							{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
-								<FavoriteIcon color={'primary'} />
-							) : (
-								<FavoriteBorderIcon />
-							)}
-						</IconButton>
-						<Typography className="view-cnt">{boardArticle?.articleLikes}</Typography>
+						<Typography className="m-day">
+							<Moment format={'DD'}>{boardArticle?.createdAt}</Moment>
+						</Typography>
 					</Stack>
 				</Stack>
-				<Stack className="date-box">
-					<Moment className="month" format={'MMMM'}>
-						{boardArticle?.createdAt}
-					</Moment>
-					<Typography className="day">
-						<Moment format={'DD'}>{boardArticle?.createdAt}</Moment>
+
+				<Stack className="m-content">
+					<Typography
+						className="m-author"
+						onClick={(e) => {
+							e.stopPropagation();
+							goMemberPage(boardArticle?.memberData?._id as string);
+						}}
+					>
+						{boardArticle?.memberData?.memberNick}
 					</Typography>
+
+					<Typography className="m-title" noWrap>
+						{boardArticle?.articleTitle}
+					</Typography>
+
+					<Stack className="m-meta-row">
+						<Stack className="m-meta-left" direction="row" alignItems="center" spacing={0.5}>
+							<RemoveRedEyeIcon className="m-meta-icon" />
+							<Typography className="m-meta-text">{boardArticle?.articleViews}</Typography>
+						</Stack>
+
+						<Stack className="m-meta-right" direction="row" alignItems="center" spacing={0.5}>
+							<IconButton
+								size="small"
+								onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}
+							>
+								{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
+									<FavoriteIcon className="m-like-icon active" />
+								) : (
+									<FavoriteBorderIcon className="m-like-icon" />
+								)}
+							</IconButton>
+							<Typography className="m-meta-text">{boardArticle?.articleLikes}</Typography>
+						</Stack>
+					</Stack>
 				</Stack>
 			</Stack>
 		);
 	}
+
+	/** =======================
+	 * 🔹 DESKTOP LAYOUT
+	 * ======================= */
+	return (
+		<Stack
+			sx={{ width: size === 'small' ? '285px' : '317px' }}
+			className="community-general-card-config"
+			onClick={(e) => chooseArticleHandler(e, boardArticle)}
+		>
+			<Stack className="image-box">
+				<img src={imagePath} alt="" className="card-img" />
+			</Stack>
+			<Stack className="desc-box" sx={{ marginTop: '-20px' }}>
+				<Stack>
+					<Typography
+						className="desc"
+						onClick={(e) => {
+							e.stopPropagation();
+							goMemberPage(boardArticle?.memberData?._id as string);
+						}}
+					>
+						{boardArticle?.memberData?.memberNick}
+					</Typography>
+					<Typography className="title">{boardArticle?.articleTitle}</Typography>
+				</Stack>
+				<Stack className={'buttons'}>
+					<IconButton color={'default'}>
+						<RemoveRedEyeIcon />
+					</IconButton>
+					<Typography className="view-cnt">{boardArticle?.articleViews}</Typography>
+					<IconButton color={'default'} onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}>
+						{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
+							<FavoriteIcon color={'primary'} />
+						) : (
+							<FavoriteBorderIcon />
+						)}
+					</IconButton>
+					<Typography className="view-cnt">{boardArticle?.articleLikes}</Typography>
+				</Stack>
+			</Stack>
+			<Stack className="date-box">
+				<Moment className="month" format={'MMMM'}>
+					{boardArticle?.createdAt}
+				</Moment>
+				<Typography className="day">
+					<Moment format={'DD'}>{boardArticle?.createdAt}</Moment>
+				</Typography>
+			</Stack>
+		</Stack>
+	);
 };
 
 export default CommunityCard;
