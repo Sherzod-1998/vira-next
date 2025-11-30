@@ -237,15 +237,209 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
+		return (
+			<div id="m-community-detail-page">
+				<div className="m-container">
+					{/* HEADER: CATEGORY + WRITE BUTTON */}
+					<Stack className="m-header">
+						<Typography className="m-section-title">{articleCategory} BOARD</Typography>
+						<Button
+							className="m-write-btn"
+							onClick={() =>
+								router.push({
+									pathname: '/mypage',
+									query: { category: 'writeArticle' },
+								})
+							}
+						>
+							Write
+						</Button>
+					</Stack>
+
+					{/* ARTICLE CARD */}
+					<Stack className="m-article-card">
+						{/* Author row */}
+						<Stack className="m-author-row">
+							<Stack className="m-author-left" onClick={() => goMemberPage(boardArticle?.memberData?._id as string)}>
+								<img src={memberImage} alt="" className="m-author-img" />
+								<Stack className="m-author-info">
+									<Typography className="m-author-name">{boardArticle?.memberData?.memberNick}</Typography>
+									<Typography className="m-created-at">
+										<Moment format="DD.MM.YY HH:mm">{boardArticle?.createdAt}</Moment>
+									</Typography>
+								</Stack>
+							</Stack>
+
+							{/* Stats (views / comments / likes) */}
+							<Stack className="m-author-right">
+								<Stack className="m-icon-info">
+									<VisibilityIcon className="m-icon" />
+									<Typography className="m-icon-text">{boardArticle?.articleViews}</Typography>
+								</Stack>
+								<Stack className="m-icon-info">
+									{total > 0 ? <ChatIcon className="m-icon" /> : <ChatBubbleOutlineRoundedIcon className="m-icon" />}
+									<Typography className="m-icon-text">{total}</Typography>
+								</Stack>
+								<Stack className="m-icon-info">
+									{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
+										<ThumbUpAltIcon
+											className="m-icon like"
+											onClick={() => likeBoArticleHandler(user, boardArticle?._id)}
+										/>
+									) : (
+										<ThumbUpOffAltIcon
+											className="m-icon"
+											onClick={() => likeBoArticleHandler(user, boardArticle?._id)}
+										/>
+									)}
+									<Typography className="m-icon-text">{boardArticle?.articleLikes}</Typography>
+								</Stack>
+							</Stack>
+						</Stack>
+
+						{/* Title */}
+						<Typography className="m-article-title">{boardArticle?.articleTitle}</Typography>
+
+						{/* Content */}
+						<Stack className="m-content-box">
+							<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
+						</Stack>
+
+						{/* Like button (big) */}
+						<Stack className="m-like-row">
+							<Button
+								className="m-like-btn"
+								onClick={() => likeBoArticleHandler(user, boardArticle?._id)}
+								disabled={likeLoading}
+							>
+								{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
+									<ThumbUpAltIcon className="m-like-icon" />
+								) : (
+									<ThumbUpOffAltIcon className="m-like-icon" />
+								)}
+								<Typography className="m-like-text">
+									{boardArticle?.articleLikes} Like
+									{(boardArticle?.articleLikes || 0) > 1 ? 's' : ''}
+								</Typography>
+							</Button>
+						</Stack>
+					</Stack>
+
+					{/* COMMENTS INPUT */}
+					<Stack className="m-comments-card">
+						<Typography className="m-comments-title">Comments ({total})</Typography>
+						<Stack className="m-comment-input-box">
+							<input
+								type="text"
+								placeholder="Leave a comment"
+								value={comment}
+								onChange={(e) => {
+									if (e.target.value.length > 100) return;
+									setWordsCnt(e.target.value.length);
+									setComment(e.target.value);
+								}}
+							/>
+							<Stack className="m-comment-bottom-row">
+								<Typography className="m-counter">{wordsCnt}/100</Typography>
+								<Button className="m-comment-btn" onClick={creteCommentHandler}>
+									Comment
+								</Button>
+							</Stack>
+						</Stack>
+					</Stack>
+
+					{/* COMMENTS LIST */}
+					{total > 0 && (
+						<>
+							<Typography className="m-comments-list-title">Comments</Typography>
+
+							<Stack className="m-comments-list">
+								{comments?.map((commentData) => (
+									<Stack className="m-comment-item" key={commentData?._id}>
+										<Stack className="m-comment-header">
+											<Stack
+												className="m-comment-user"
+												onClick={() => goMemberPage(commentData?.memberData?._id as string)}
+											>
+												<img
+													src={getCommentMemberImage(commentData?.memberData?.memberImage)}
+													alt=""
+													className="m-comment-img"
+												/>
+												<Stack className="m-comment-user-info">
+													<Typography className="m-comment-name">{commentData?.memberData?.memberNick}</Typography>
+													<Typography className="m-comment-date">
+														<Moment format="DD.MM.YY HH:mm">{commentData?.createdAt}</Moment>
+													</Typography>
+												</Stack>
+											</Stack>
+
+											{commentData?.memberId === user?._id && (
+												<Stack className="m-comment-actions">
+													<IconButton
+														onClick={() => {
+															setUpdatedCommentId(commentData?._id);
+															updateButtonHandler(commentData?._id, CommentStatus.DELETE);
+														}}
+													>
+														<DeleteForeverIcon sx={{ color: '#757575', cursor: 'pointer' }} />
+													</IconButton>
+													<IconButton
+														onClick={() => {
+															setUpdatedComment(commentData?.commentContent);
+															setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
+															setUpdatedCommentId(commentData?._id);
+															setOpenBackdrop(true);
+														}}
+													>
+														<EditIcon sx={{ color: '#757575' }} />
+													</IconButton>
+												</Stack>
+											)}
+										</Stack>
+
+										<Stack className="m-comment-body">
+											<Typography className="m-comment-text">{commentData?.commentContent}</Typography>
+										</Stack>
+									</Stack>
+								))}
+							</Stack>
+
+							{/* PAGINATION */}
+							<Stack className="m-pagination-box">
+								<Pagination
+									count={Math.ceil(total / searchFilter.limit) || 1}
+									page={searchFilter.page}
+									shape="circular"
+									color="primary"
+									onChange={paginationHandler}
+									sx={{
+										'& .MuiPaginationItem-root': {
+											color: 'rgba(0, 0, 0, 1)',
+											borderColor: 'rgba(0, 0, 0, 1)',
+										},
+										'& .Mui-selected': {
+											backgroundColor: 'rgba(146, 106, 84, 1) !important',
+											color: '#000000ff !important',
+										},
+									}}
+								/>
+							</Stack>
+						</>
+					)}
+
+					{/* Mavjud Backdrop PC + mobile uchun bir xil qoladi */}
+				</div>
+			</div>
+		);
 	} else {
+		// eski PC qismi o'zgarishsiz else {
 		return (
 			<div id="community-detail-page">
 				<div className="container">
 					<Stack className="main-box">
 						<Stack className="left-config">
 							<Stack className={'image-info'}>
-								
 								<Stack className={'community-name'}>
 									<Typography className={'name'}>Community Board Article</Typography>
 								</Stack>
