@@ -19,7 +19,7 @@ const stripHtml = (html?: string) =>
 
 const truncate = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 
-const CommunityCard = ({ vertical, article, index }: CommunityCardProps) => {
+const CommunityCard = ({ vertical, article, index }: CommunityCardProps): React.ReactElement | null => {
 	const device = useDeviceDetect();
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.REACT_APP_API_URL || '';
@@ -133,6 +133,9 @@ const CommunityCard = ({ vertical, article, index }: CommunityCardProps) => {
 			</Link>
 		);
 	}
+
+	// Ensure the component always returns a valid React node (avoid `undefined`)
+	return null;
 
 };
 

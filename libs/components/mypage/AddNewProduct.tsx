@@ -421,10 +421,10 @@ AddProduct.defaultProps = {
 	initialValues: {
 		productTitle: '',
 		productPrice: 0,
-		productType: undefined,
-		productLocation: undefined,
+		productType: ProductType.BRACELET,
+		productLocation: ProductLocation.SEOUL,
 		productAddress: '',
-		productMaterial: undefined,
+		productMaterial: ProductMaterial.GOLD,
 		productDesc: '',
 		productImages: [],
 	},

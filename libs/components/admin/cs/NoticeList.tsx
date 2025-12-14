@@ -144,7 +144,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 			});
 		} catch (e) {
 			console.error(e);
-			alert('Notice yaratishda xatolik yuz berdi');
+			alert('An error occurred while creating the notice');
 		}
 	};
 
@@ -166,7 +166,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 			});
 		} catch (e) {
 			console.error(e);
-			alert('Notice o‘chirishda xatolik yuz berdi');
+			alert('An error occurred while deleting the notice');
 		}
 	};
 
@@ -210,7 +210,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ status }) => {
 			});
 		} catch (e) {
 			console.error(e);
-			alert('Notice yangilashda xatolik yuz berdi');
+			alert('An error occurred while updating the notice');
 		}
 	};
 
