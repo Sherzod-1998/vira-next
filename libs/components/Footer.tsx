@@ -2,6 +2,7 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import TwitterIcon from '@mui/icons-material/Twitter';
+
 import {
 	FaInstagram,
 	FaFacebookF,
@@ -12,8 +13,13 @@ import {
 	FaPhoneAlt,
 	FaEnvelope,
 } from 'react-icons/fa';
+
 import useDeviceDetect from '../hooks/useDeviceDetect';
-import { Stack, Box } from '@mui/material';
+
+// ✅ MUHIM: alohida import
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+
 import moment from 'moment';
 
 const Footer = () => {
@@ -22,9 +28,9 @@ const Footer = () => {
 	/** 📱 MOBILE FOOTER **/
 	if (device === 'mobile') {
 		return (
-			<Stack className="footer-container mobile-footer">
+			<Stack component="div" className="footer-container mobile-footer">
 				{/* SUBSCRIBE BLOCK */}
-				<Stack className="m-subscribe">
+				<Stack component="div" className="m-subscribe">
 					<div className="m-subscribe-text">
 						<span>Subscribe to VIRA</span>
 						<p>Get updates about new products & special offers.</p>
@@ -49,9 +55,9 @@ const Footer = () => {
 				</Stack>
 
 				{/* MAIN */}
-				<Stack className="m-main" spacing={3}>
+				<Stack component="div" className="m-main" spacing={3}>
 					{/* Brand */}
-  					<Box className="m-brand">
+					<Box component="div" className="m-brand">
 						<span className="m-logo">vira</span>
 						<p className="m-desc">
 							Building modern solutions that connect creativity, technology, and people in one seamless
@@ -65,9 +71,9 @@ const Footer = () => {
 					</Box>
 
 					{/* LINKS */}
-					<Box className="m-two-col">
+					<Box component="div" className="m-two-col">
 						{/* Our Address */}
-						<Box className="m-block">
+						<Box component="div" className="m-block">
 							<h3 className="m-title">Our address</h3>
 
 							<div className="m-info">
@@ -102,7 +108,7 @@ const Footer = () => {
 						</Box>
 
 						{/* Get To Know Us */}
-						<Box className="m-block">
+						<Box component="div" className="m-block">
 							<h3 className="m-title">Get To Know Us</h3>
 							<ul className="m-list">
 								<li>
@@ -131,7 +137,7 @@ const Footer = () => {
 					</Box>
 
 					{/* Legal */}
-					<Box className="m-block">
+					<Box component="div" className="m-block">
 						<h3 className="m-title">Legal</h3>
 						<ul className="m-list">
 							<li>
@@ -157,7 +163,7 @@ const Footer = () => {
 				</Stack>
 
 				{/* BOTTOM */}
-				<Stack className="m-bottom" spacing={1}>
+				<Stack component="div" className="m-bottom" spacing={1}>
 					<hr className="m-divider" />
 					<div className="m-bottom-content">
 						<p className="m-copy">© VIRA {moment().year()} - All rights reserved</p>
@@ -174,8 +180,14 @@ const Footer = () => {
 
 	/** 🖥 DESKTOP FOOTER **/
 	return (
-		<Stack className={'footer-container'}>
-			<Stack direction="row" alignItems="center" justifyContent="space-between" className="subscribe">
+		<Stack component="div" className="footer-container">
+			<Stack
+				component="div"
+				direction="row"
+				alignItems="center"
+				justifyContent="space-between"
+				className="subscribe"
+			>
 				<div className="left-content">
 					<span>Subscribe Our Newsletter & Delivery !</span>
 					<p>Get E-mail updates about our latest shop and special offers.</p>
@@ -188,38 +200,44 @@ const Footer = () => {
 				</div>
 			</Stack>
 
-			<Stack className={'main'} direction="row" justifyContent="space-between" alignItems="flex-start">
-				<Stack direction="column" className={'first'}>
+			<Stack
+				component="div"
+				className="main"
+				direction="row"
+				justifyContent="space-between"
+				alignItems="flex-start"
+			>
+				<Stack component="div" direction="column" className="first">
 					<span>vira</span>
 					<p>
 						Building modern solutions that connect creativity,
 						<br /> technology, and people in one seamless experience.
 					</p>
-					<Stack style={{ marginTop: 36 }} direction="row" justifyContent="space-between">
+					<Stack component="div" style={{ marginTop: 36 }} direction="row" justifyContent="space-between">
 						<img src="/img/logo/appstore.png" alt="" />
 						<img src="/img/logo/appstore.png" alt="" />
 					</Stack>
 				</Stack>
 
-				<Stack className="footer-address" spacing={2}>
+				<Stack component="div" className="footer-address" spacing={2}>
 					<h2 className="title">Our address</h2>
 
-					<Stack direction="row" alignItems="center" spacing={1} className="info">
+					<Stack component="div" direction="row" alignItems="center" spacing={1} className="info">
 						<FaMapMarkerAlt className="icon" />
 						<p>77 Myeongdong-gil, Jung-gu, Seoul 04536, South Korea.</p>
 					</Stack>
 
-					<Stack direction="row" alignItems="center" spacing={1} className="info">
+					<Stack component="div" direction="row" alignItems="center" spacing={1} className="info">
 						<FaPhoneAlt className="icon" />
 						<a href="tel:+821099105777">+82 10 9910 5777</a>
 					</Stack>
 
-					<Stack direction="row" alignItems="center" spacing={1} className="info">
+					<Stack component="div" direction="row" alignItems="center" spacing={1} className="info">
 						<FaEnvelope className="icon" />
 						<a href="mailto:support@vira.com">support@vira.com</a>
 					</Stack>
 
-					<Stack direction="row" spacing={2} className="socials">
+					<Stack component="div" direction="row" spacing={2} className="socials">
 						<a href="#">
 							<FaInstagram />
 						</a>
@@ -238,7 +256,7 @@ const Footer = () => {
 					</Stack>
 				</Stack>
 
-				<Stack className="footer-links">
+				<Stack component="div" className="footer-links">
 					<h2 className="title">Get To Know Us</h2>
 					<ul>
 						<li>
@@ -265,7 +283,7 @@ const Footer = () => {
 					</ul>
 				</Stack>
 
-				<Stack className="footer-legal">
+				<Stack component="div" className="footer-legal">
 					<h2 className="title">Legal</h2>
 					<ul>
 						<li>
@@ -289,7 +307,7 @@ const Footer = () => {
 					</ul>
 				</Stack>
 
-				<Stack className={'fifth'}></Stack>
+				<Stack component="div" className="fifth" />
 			</Stack>
 
 			<div className="footer-bottom">

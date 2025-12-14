@@ -14,7 +14,7 @@ import { CREATE_PRODUCT, UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_PRODUCT } from '../../../apollo/user/query';
 
 type AddProductProps = {
-	initialValues: ProductInput;
+	initialValues?: ProductInput;
 };
 
 const AddProduct: React.FC<AddProductProps> = ({ initialValues }) => {
@@ -26,7 +26,22 @@ const AddProduct: React.FC<AddProductProps> = ({ initialValues }) => {
 	const user = useReactiveVar(userVar);
 
 	/** Form state */
-	const [insertProductData, setInsertProductData] = useState<ProductInput>(initialValues);
+	const DEFAULT_PRODUCT_VALUES: ProductInput = {
+  productTitle: '',
+  productPrice: 0,
+  productType: ProductType.BRACELET,
+  productLocation: ProductLocation.SEOUL,
+  productAddress: '',
+  productMaterial: ProductMaterial.GOLD,
+  productDesc: '',
+  productImages: [],
+};
+
+const [insertProductData, setInsertProductData] = useState<ProductInput>(
+  initialValues ?? DEFAULT_PRODUCT_VALUES
+);
+
+
 
 	/** Enum ro‘yxatlari */
 	const [productTypeList] = useState<ProductType[]>(Object.values(ProductType));
