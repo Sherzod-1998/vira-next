@@ -1,5 +1,3 @@
-version: "3.3"
-
 services:
   vira-next:
     container_name: vira-next
