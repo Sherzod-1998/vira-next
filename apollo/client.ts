@@ -58,6 +58,8 @@ class LoggingWebSocket {
 
 function createIsomorphicLink() {
 	if (typeof window !== 'undefined') {
+		const jwtToken = getJwtToken();
+
 		const authLink = new ApolloLink((operation, forward) => {
 			operation.setContext(({ headers = {} }) => ({
 				headers: {
@@ -65,7 +67,6 @@ function createIsomorphicLink() {
 					...getHeaders(),
 				},
 			}));
-			console.warn('requesting.. ', operation);
 			return forward(operation);
 		});
 
@@ -75,22 +76,29 @@ function createIsomorphicLink() {
 		});
 
 		/* WEBSOCKET SUBSCRIPTION LINK */
-		const wsLink = new WebSocketLink({
-			uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
-			options: {
-				reconnect: false,
-				timeout: 30000,
-				connectionParams: () => {
-					return { headers: getHeaders() };
+		const wsLink =
+			jwtToken &&
+			new WebSocketLink({
+				uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
+				options: {
+					reconnect: false,
+					timeout: 30000,
+					connectionParams: () => {
+						return { headers: getHeaders() };
+					},
 				},
-			},
-			webSocketImpl: LoggingWebSocket,
-		});
+				webSocketImpl: LoggingWebSocket,
+			});
 
 		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
 			if (graphQLErrors) {
 				graphQLErrors.map(({ message, locations, path, extensions }) => {
 					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+					const lowerMessage = message?.toLowerCase?.() || '';
+					if (lowerMessage.includes('jwt expired')) {
+						localStorage.removeItem('accessToken');
+						return;
+					}
 					if (!message.includes('input')) sweetErrorAlert(message);
 				});
 			}
@@ -100,14 +108,16 @@ function createIsomorphicLink() {
 			}
 		});
 
-		const splitLink = split(
-			({ query }) => {
-				const definition = getMainDefinition(query);
-				return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-			},
-			wsLink,
-			authLink.concat(link),
-		);
+		const splitLink = wsLink
+			? split(
+					({ query }) => {
+						const definition = getMainDefinition(query);
+						return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+					},
+					wsLink,
+					authLink.concat(link),
+				)
+			: authLink.concat(link);
 
 		return from([errorLink, tokenRefreshLink, splitLink]);
 	}

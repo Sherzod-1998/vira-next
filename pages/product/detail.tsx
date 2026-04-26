@@ -134,26 +134,28 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.id) {
-			setProductId(router.query.id as string);
-			setCommentInquiry({
-				...commentInquiry,
-				search: {
-					commentRefId: router.query.id as string,
-				},
-			});
-			setInsertCommentData({
-				...insertCommentData,
-				commentRefId: router.query.id as string,
-			});
-		}
-	}, [router]);
+		const id = router.query.id;
+		if (!id || Array.isArray(id)) return;
+
+		setProductId(id);
+		setCommentInquiry((prev) => ({
+			...prev,
+			search: {
+				...prev.search,
+				commentRefId: id,
+			},
+		}));
+		setInsertCommentData((prev) => ({
+			...prev,
+			commentRefId: id,
+		}));
+	}, [router.query.id]);
 
 	useEffect(() => {
 		if (commentInquiry.search.commentRefId) {
 			getCommentsRefetch({ input: commentInquiry });
 		}
-	}, [commentInquiry]);
+	}, [commentInquiry, getCommentsRefetch]);
 
 	/** HANDLERS **/
 	const changeImageHandler = (image: string) => {
@@ -315,7 +317,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 										alt="seller"
 									/>
 									<Stack spacing={0.3}>
-										<Link href={`/member?memberId=${product.memberData._id}`}>
+											<Link href={`/member?memberId=${product.memberData._id}`} passHref>
 											<Typography className="m-seller-name">
 												{product.memberData.memberNick}
 											</Typography>
@@ -581,16 +583,17 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack className={'info-box'}>
 									<Typography className={'main-title'}>Get More Information</Typography>
 									<Stack className={'image-info'}>
-										<img
-											className={'member-image'}
-											src={
-												product?.memberData?.memberImage
-													? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
-													: '/img/profile/defaultUser.svg'
-											}
-										/>
-										<Stack className={'name-phone-listings'}>
-											<Link href={`/member?memberId=${product?.memberData?._id}`}>
+											<img
+												className={'member-image'}
+												src={
+													product?.memberData?.memberImage
+														? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
+														: '/img/profile/defaultUser.svg'
+												}
+												alt="member profile"
+											/>
+											<Stack className={'name-phone-listings'}>
+												<Link href={`/member?memberId=${product?.memberData?._id}`} passHref>
 												<Typography className={'name'}>{product?.memberData?.memberNick}</Typography>
 											</Link>
 											<Stack className={'phone-number'}>

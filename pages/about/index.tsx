@@ -14,9 +14,9 @@ const About: NextPage = () => {
 			<Stack className={'about-page'}>
 				<Stack className={'intro'}>
 					<Stack className={'container'}>
-						<Stack className={'left'}>
-							<strong>We're on a Mission to Change View of Real Estate Field.</strong>
-						</Stack>
+							<Stack className={'left'}>
+								<strong>We&apos;re on a Mission to Change View of Real Estate Field.</strong>
+							</Stack>
 						<Stack className={'right'}>
 							<p>
 								It doesn’t matter how organized you are — a surplus of toys will always ensure your house is a mess
@@ -118,7 +118,7 @@ const About: NextPage = () => {
 				</Stack>
 				<Stack className={'partners'}>
 					<Stack className={'container'}>
-						<span>Trusted bu the world's best</span>
+							<span>Trusted bu the world&apos;s best</span>
 						<Stack className={'wrap'}>
 							<img src="/img/icons/brands/amazon.svg" alt="" />
 							<img src="/img/icons/brands/amd.svg" alt="" />

@@ -51,7 +51,7 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		getAllBoardArticlesRefetch({ input: communityInquiry }).then();
-	}, [communityInquiry]);
+	}, [communityInquiry, getAllBoardArticlesRefetch]);
 
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {

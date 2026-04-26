@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 

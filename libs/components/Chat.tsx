@@ -28,6 +28,7 @@ interface InfoPayload {
 
 const Chat = () => {
 	const chatContentRef = useRef<HTMLDivElement>(null);
+	const manualCloseRef = useRef(false);
 	const [messagesList, setMessagesList] = useState<MessagePayload[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<number>(0);
 	const [messageInput, setMessageInput] = useState<string>('');
@@ -47,43 +48,36 @@ const Chat = () => {
 		const token = getJwtToken();
 		const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
 
-		console.log('[Chat] opening WS:', CHAT_WS_URL);
-
 		const ws = new WebSocket(CHAT_WS_URL);
 
-		ws.onopen = () => {
-			console.log('[Chat] Chat WebSocket OPEN');
-		};
-
 		ws.onerror = (e) => {
-			console.error('[Chat] Chat WebSocket ERROR', e);
-		};
-
-		ws.onclose = (e) => {
-			console.log('[Chat] Chat WebSocket CLOSED', e.code, e.reason);
+			if (!manualCloseRef.current) {
+				console.error('[Chat] Chat WebSocket ERROR', e);
+			}
 		};
 
 		setSocket(ws);
 
 		return () => {
-			ws.close();
+			manualCloseRef.current = true;
+			if (ws.readyState === WebSocket.OPEN) {
+				ws.close();
+				return;
+			}
+			if (ws.readyState === WebSocket.CONNECTING) {
+				const closeOnOpen = () => ws.close();
+				ws.addEventListener('open', closeOnOpen, { once: true });
+			}
 		};
 	}, []);
 
 	/** WS MESSAGE HANDLER */
 	useEffect(() => {
-		if (!socket) {
-			console.log('[Chat] socket hali tayyor emas');
-			return;
-		}
+		if (!socket) return;
 
 		const handleMessage = (msg: MessageEvent) => {
 			try {
-				const raw = msg.data as string;
-				console.log('[Chat] raw message data:', raw);
-
-				const data = JSON.parse(raw);
-				console.log('[Chat] parsed message:', data);
+				const data = JSON.parse(msg.data as string);
 
 				const event = data.event;
 
@@ -95,20 +89,16 @@ const Chat = () => {
 					}
 					case 'getMessages': {
 						const list: MessagePayload[] = data.list;
-						console.log('[Chat] getMessages list length:', list.length);
 						setMessagesList(list);
 						break;
 					}
 					case 'message': {
 						const payload: MessagePayload = data.data && data.data.text ? data.data : data;
-
-						console.log('[Chat] new message payload:', payload);
 						setMessagesList((prev) => [...prev, payload]);
 						break;
 					}
-					default: {
-						console.log('[Chat] unknown event type:', event, data);
-					}
+					default:
+						break;
 				}
 			} catch (err) {
 				console.error('[Chat] WebSocket parse error: ', err);
@@ -154,18 +144,14 @@ const Chat = () => {
 			return;
 		}
 		if (!socket) {
-			console.log('[Chat] chat socket hali yo‘q, faqat localda ko‘rinadi');
 			setMessageInput('');
 			return;
 		}
 
 		if (socket.readyState !== WebSocket.OPEN) {
-			console.log('[Chat] chat socket OPEN emas, readyState =', socket.readyState);
 			setMessageInput('');
 			return;
 		}
-
-		console.log('[Chat] sending message to chat server: ', messageInput);
 
 		socket.send(
 			JSON.stringify({
@@ -176,8 +162,6 @@ const Chat = () => {
 
 		setMessageInput('');
 	};
-
-	console.log('[Chat] messagesList length:', messagesList.length);
 
 	return (
 		<Stack className="chatting">

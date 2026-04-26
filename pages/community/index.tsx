@@ -63,9 +63,9 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 					query: { articleCategory: 'FREE' },
 				},
 				router.pathname,
-				{ shallow: true },
-			);
-	}, []);
+					{ shallow: true },
+				);
+	}, [query?.articleCategory, router]);
 
 	/** HANDLERS **/
 	const tabChangeHandler = async (e: T, value: string) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Stack from '@mui/material/Stack';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 const HeaderContent = () => {

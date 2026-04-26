@@ -66,14 +66,9 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 		if (router.query.input) {
 			const inputObj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
 		}
-
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
-
-	useEffect(() => {
-		console.log('searchFilter', searchFilter);
-	}, [searchFilter]);
+	}, [router.query.input]);
 
 	/** HANDLERS **/
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {

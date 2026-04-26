@@ -22,7 +22,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const sellerList: NextPage = ({ initialInput, ...props }: any) => {
+const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [filterSortName, setFilterSortName] = useState('Recent');
@@ -59,12 +59,12 @@ const sellerList: NextPage = ({ initialInput, ...props }: any) => {
 		if (router.query.input) {
 			const input_obj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(input_obj);
+			setCurrentPage(input_obj.page === undefined ? 1 : input_obj.page);
 		} else {
-			router.replace(`/seller?input=${JSON.stringify(searchFilter)}`, `/seller?input=${JSON.stringify(searchFilter)}`);
+			const input = JSON.stringify(initialInput);
+			router.replace(`/seller?input=${input}`, `/seller?input=${input}`);
 		}
-
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
+	}, [initialInput, router, router.query.input]);
 
 	/** HANDLERS **/
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
@@ -317,7 +317,7 @@ const sellerList: NextPage = ({ initialInput, ...props }: any) => {
 	);
 };
 
-sellerList.defaultProps = {
+SellerList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
@@ -327,4 +327,4 @@ sellerList.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(sellerList);
+export default withLayoutBasic(SellerList);

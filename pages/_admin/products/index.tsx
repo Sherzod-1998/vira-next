@@ -51,7 +51,7 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		getAllProductsRefetch({ input: productsInquiry }).then();
-	}, [productsInquiry]);
+	}, [productsInquiry, getAllProductsRefetch]);
 
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {

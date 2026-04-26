@@ -1,0 +1,21 @@
+{
+	"extends": ["next/core-web-vitals"],
+	"overrides": [
+		{
+			"files": [
+				"pages/_admin/cs/faq.tsx",
+				"pages/_admin/users/index.tsx",
+				"pages/about/index.tsx",
+				"pages/community/detail.tsx",
+				"pages/community/index.tsx",
+				"pages/product/detail.tsx",
+				"pages/product/index.tsx",
+				"pages/seller/detail.tsx",
+				"pages/seller/index.tsx"
+			],
+			"rules": {
+				"@next/next/no-img-element": "off"
+			}
+		}
+	]
+}

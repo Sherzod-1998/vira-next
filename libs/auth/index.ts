@@ -5,9 +5,25 @@ import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
 
+const isTokenExpired = (token: string): boolean => {
+	try {
+		const claims = decodeJWT<{ exp?: number }>(token);
+		if (!claims?.exp) return false;
+		return claims.exp * 1000 <= Date.now();
+	} catch {
+		return true;
+	}
+};
+
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
-		return localStorage.getItem('accessToken') ?? '';
+		const token = localStorage.getItem('accessToken') ?? '';
+		if (!token) return '';
+		if (isTokenExpired(token)) {
+			localStorage.removeItem('accessToken');
+			return '';
+		}
+		return token;
 	}
 }
 

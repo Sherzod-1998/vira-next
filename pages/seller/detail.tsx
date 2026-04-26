@@ -34,7 +34,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
+const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -462,7 +462,7 @@ const sellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	}
 };
 
-sellerDetail.defaultProps = {
+SellerDetail.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 9,
@@ -481,4 +481,4 @@ sellerDetail.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(sellerDetail);
+export default withLayoutBasic(SellerDetail);

@@ -22,20 +22,19 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		setUpdateData({
-			...updateData,
+		setUpdateData((prev) => ({
+			...prev,
 			memberNick: user.memberNick,
 			memberPhone: user.memberPhone,
 			memberAddress: user.memberAddress,
 			memberImage: user.memberImage,
-		});
+		}));
 	}, [user]);
 
 	/** HANDLERS **/
 	const uploadImage = async (e: any) => {
 		try {
 			const image = e.target.files[0];
-			console.log('+image:', image);
 
 			const formData = new FormData();
 			formData.append(
@@ -67,7 +66,6 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			});
 
 			const responseImage = response.data.data.imageUploader;
-			console.log('+responseImage: ', responseImage);
 			updateData.memberImage = responseImage;
 			setUpdateData({ ...updateData });
 
@@ -95,7 +93,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
-	}, [updateData]);
+	}, [updateData, updateMember, user._id]);
 
 	const doDisabledCheck = () => {
 		if (
@@ -107,8 +105,6 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			return true;
 		}
 	};
-
-	console.log('+updateData', updateData);
 
 	if (device === 'mobile') {
 		return <>MY PROFILE PAGE MOBILE</>;

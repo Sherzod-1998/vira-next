@@ -108,7 +108,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (articleId) setSearchFilter({ ...searchFilter, search: { commentRefId: articleId } });
+		if (!articleId) return;
+		setSearchFilter((prev) => ({
+			...prev,
+			search: { ...prev.search, commentRefId: articleId },
+		}));
 	}, [articleId]);
 
 	/** HANDLERS **/
