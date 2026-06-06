@@ -36,3 +36,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+Configure these Environment Variables in Vercel after the Render API is live:
+
+```text
+REACT_APP_API_URL=https://your-api.onrender.com
+REACT_APP_API_GRAPHQL_URL=https://your-api.onrender.com/graphql
+REACT_APP_API_WS=wss://your-api.onrender.com
+NEXT_PUBLIC_CHAT_WS_URL=wss://your-api.onrender.com
+```
+
+Set the same values for Production and Preview if both environments should use
+the deployed API. Add the final Vercel domain to the backend's `CORS_ORIGINS`
+variable.
