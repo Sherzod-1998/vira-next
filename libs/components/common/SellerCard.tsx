@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography, IconButton } from '@mui/material';
 import Link from 'next/link';
-import { REACT_APP_API_URL } from '../../config';
+import { getMemberImage, REACT_APP_API_URL } from '../../config';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -18,9 +18,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
   const device = useDeviceDetect();
   const user = useReactiveVar(userVar);
 
-  const imagePath: string = seller?.memberImage
-    ? `${REACT_APP_API_URL}/${seller?.memberImage}`
-    : '/img/profile/defaultUser.svg';
+  const imagePath: string = getMemberImage(seller?.memberImage);
 
   const getLikedFromServer = (s: any) =>
     !!(s?.meLiked && s.meLiked[0]?.myFavorite);

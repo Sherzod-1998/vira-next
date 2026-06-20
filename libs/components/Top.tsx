@@ -516,7 +516,11 @@ const Top: React.FC = () => {
 								<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
 									<img
 										src={
-											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.png'
+											user?.memberImage
+												? user.memberImage.startsWith('http')
+													? user.memberImage
+													: `${REACT_APP_API_URL}/${user.memberImage}`
+												: '/img/profile/defaultUser.svg'
 										}
 										alt=""
 									/>

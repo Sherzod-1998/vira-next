@@ -15,7 +15,7 @@ import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
-import { Messages, REACT_APP_API_URL } from '../../libs/config';
+import { getMemberImage, Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
@@ -201,7 +201,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 					{/* SELLER HEADER */}
 					<Stack className="m-seller-header">
 						<img
-							src={seller?.memberImage ? `${REACT_APP_API_URL}/${seller?.memberImage}` : '/img/profile/defaultUser.svg'}
+							src={getMemberImage(seller?.memberImage)}
 							alt=""
 							className="m-avatar"
 							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
@@ -326,7 +326,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 				<Stack className={'container'}>
 					<Stack className={'seller-info'}>
 						<img
-							src={seller?.memberImage ? `${REACT_APP_API_URL}/${seller?.memberImage}` : '/img/profile/defaultUser.svg'}
+							src={getMemberImage(seller?.memberImage)}
 							alt=""
 						/>
 						<Box

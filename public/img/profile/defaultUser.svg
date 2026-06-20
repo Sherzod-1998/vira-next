@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.cls-1{fill:#f2f2f2;}.cls-2{fill:#fff;}</style></defs><title>Asset 15</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M50,56.39A43.61,43.61,0,0,1,89.24,81,50,50,0,1,0,0,50,49.74,49.74,0,0,0,10.76,81,43.61,43.61,0,0,1,50,56.39Z"/><path class="cls-2" d="M50,100A49.88,49.88,0,0,0,89.24,81a43.62,43.62,0,0,0-78.48,0A49.88,49.88,0,0,0,50,100Z"/><circle class="cls-2" cx="50" cy="30.46" r="18"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#7b5e2a"/>
+    </linearGradient>
+    <clipPath id="circle-clip">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+  </defs>
+  <!-- Background -->
+  <circle cx="50" cy="50" r="50" fill="url(#bg)"/>
+  <!-- Subtle inner highlight -->
+  <circle cx="50" cy="50" r="50" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <!-- Head -->
+  <circle cx="50" cy="36" r="16" fill="rgba(255,255,255,0.92)" clip-path="url(#circle-clip)"/>
+  <!-- Body -->
+  <path d="M8,100 Q8,62 50,62 Q92,62 92,100 Z" fill="rgba(255,255,255,0.92)" clip-path="url(#circle-clip)"/>
+</svg>

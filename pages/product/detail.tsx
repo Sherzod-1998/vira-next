@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { Product } from '../../libs/types/product/product';
 import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
-import { REACT_APP_API_URL } from '../../libs/config';
+import { getMemberImage, REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
@@ -309,11 +309,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack direction="row" spacing={1.5} alignItems="center">
 									<img
 										className="m-seller-img"
-										src={
-											product.memberData.memberImage
-												? `${REACT_APP_API_URL}/${product.memberData.memberImage}`
-												: '/img/profile/defaultUser.svg'
-										}
+										src={getMemberImage(product.memberData.memberImage)}
 										alt="seller"
 									/>
 									<Stack spacing={0.3}>
@@ -585,11 +581,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 									<Stack className={'image-info'}>
 											<img
 												className={'member-image'}
-												src={
-													product?.memberData?.memberImage
-														? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
-														: '/img/profile/defaultUser.svg'
-												}
+												src={getMemberImage(product?.memberData?.memberImage)}
 												alt="member profile"
 											/>
 											<Stack className={'name-phone-listings'}>

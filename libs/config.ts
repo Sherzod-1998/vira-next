@@ -1,5 +1,11 @@
 export const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}`;
 
+export const getMemberImage = (memberImage?: string): string => {
+	if (!memberImage) return '/img/profile/defaultUser.svg';
+	if (memberImage.startsWith('http')) return memberImage;
+	return `${REACT_APP_API_URL}/${memberImage}`;
+};
+
 export const availableOptions = ['productBarter', 'productRent'];
 
 const thisYear = new Date().getFullYear();
