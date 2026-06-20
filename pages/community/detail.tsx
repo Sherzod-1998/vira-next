@@ -58,9 +58,6 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		...initialInput,
 	});
 	const [memberImage, setMemberImage] = useState<string>('/img/community/articleImg.png');
-	const [anchorEl, setAnchorEl] = useState<any | null>(null);
-	const open = Boolean(anchorEl);
-	const id = open ? 'simple-popover' : undefined;
 	const [openBackdrop, setOpenBackdrop] = useState<boolean>(false);
 	const [updatedComment, setUpdatedComment] = useState<string>('');
 	const [updatedCommentId, setUpdatedCommentId] = useState<string>('');
@@ -143,14 +140,13 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 			await boardArticleRefetch({ input: articleId });
 			await sweetTopSmallSuccessAlert('Success', 800);
 		} catch (err: any) {
-			console.log('Error, likeBoArticleHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		} finally {
 			setLikeLoading(false);
 		}
 	};
 
-	const creteCommentHandler = async () => {
+	const createCommentHandler = async () => {
 		if (!comment) return;
 		try {
 			if (!user?._id) throw new Error(Messages.error2);
@@ -216,8 +212,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 
 	const getCommentMemberImage = (imageUrl: string | undefined) => {
 		if (!imageUrl) return '/img/community/articleImg.png';
-		if (imageUrl.startsWith('http')) return imageUrl;
-		return `${process.env.REACT_APP_API_URL}/${imageUrl}`;
+		return getMemberImage(imageUrl);
 	};
 
 	const goMemberPage = (id: any) => {
@@ -240,6 +235,67 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const paginationHandler = (e: T, value: number) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
+
+	const renderEditCommentBackdrop = () => (
+		<Backdrop
+			sx={{
+				top: device === 'mobile' ? '25%' : '40%',
+				right: device === 'mobile' ? '5%' : '25%',
+				left: device === 'mobile' ? '5%' : '25%',
+				width: device === 'mobile' ? '90%' : '1000px',
+				height: 'fit-content',
+				borderRadius: '10px',
+				color: '#ffffff',
+				zIndex: 999,
+			}}
+			open={openBackdrop}
+		>
+			<Stack
+				sx={{
+					width: '100%',
+					height: '100%',
+					background: 'white',
+					border: '1px solid #b9b9b9',
+					padding: '15px',
+					gap: '10px',
+					borderRadius: '10px',
+					boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+				}}
+			>
+				<Typography variant="h4" color={'#b9b9b9'}>
+					Update comment
+				</Typography>
+				<Stack gap={'20px'}>
+					<input
+						autoFocus
+						value={updatedComment}
+						onChange={(e) => updateCommentInputHandler(e.target.value)}
+						type="text"
+						style={{
+							border: '1px solid #b9b9b9',
+							outline: 'none',
+							height: '40px',
+							padding: '0px 10px',
+							borderRadius: '5px',
+						}}
+					/>
+					<Stack width={'100%'} flexDirection={'row'} justifyContent={'space-between'}>
+						<Typography variant="subtitle1" color={'#b9b9b9'}>
+							{updatedCommentWordsCnt}/100
+						</Typography>
+						<Stack sx={{ flexDirection: 'row', alignSelf: 'flex-end', gap: '10px' }}>
+							<Button variant="outlined" color="inherit" onClick={() => cancelButtonHandler()}>
+								Cancel
+							</Button>
+							<Button variant="contained" color="inherit" onClick={() => updateButtonHandler(updatedCommentId, undefined)}>
+								Update
+							</Button>
+						</Stack>
+					</Stack>
+				</Stack>
+			</Stack>
+		</Backdrop>
+	);
 
 	if (device === 'mobile') {
 		return (
@@ -346,7 +402,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							/>
 							<Stack className="m-comment-bottom-row">
 								<Typography className="m-counter">{wordsCnt}/100</Typography>
-								<Button className="m-comment-btn" onClick={creteCommentHandler}>
+								<Button className="m-comment-btn" onClick={createCommentHandler}>
 									Comment
 								</Button>
 							</Stack>
@@ -433,12 +489,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						</>
 					)}
 
-					{/* Mavjud Backdrop PC + mobile uchun bir xil qoladi */}
+					{renderEditCommentBackdrop()}
 				</div>
 			</div>
 		);
 	} else {
-		// eski PC qismi o'zgarishsiz else {
 		return (
 			<div id="community-detail-page">
 				<div className="container">
@@ -580,7 +635,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										/>
 										<Stack className="button-box">
 											<Typography>{wordsCnt}/100</Typography>
-											<Button onClick={creteCommentHandler}>comment</Button>
+											<Button onClick={createCommentHandler}>comment</Button>
 										</Stack>
 									</Stack>
 								</Stack>
@@ -628,72 +683,6 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 															>
 																<EditIcon sx={{ color: '#757575' }} />
 															</IconButton>
-															<Backdrop
-																sx={{
-																	top: '40%',
-																	right: '25%',
-																	left: '25%',
-																	width: '1000px',
-																	height: 'fit-content',
-																	borderRadius: '10px',
-																	color: '#ffffff',
-																	zIndex: 999,
-																}}
-																open={openBackdrop}
-															>
-																<Stack
-																	sx={{
-																		width: '100%',
-																		height: '100%',
-																		background: 'white',
-																		border: '1px solid #b9b9b9',
-																		padding: '15px',
-																		gap: '10px',
-																		borderRadius: '10px',
-																		boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-																	}}
-																>
-																	<Typography variant="h4" color={'#b9b9b9'}>
-																		Update comment
-																	</Typography>
-																	<Stack gap={'20px'}>
-																		<input
-																			autoFocus
-																			value={updatedComment}
-																			onChange={(e) => updateCommentInputHandler(e.target.value)}
-																			type="text"
-																			style={{
-																				border: '1px solid #b9b9b9',
-																				outline: 'none',
-																				height: '40px',
-																				padding: '0px 10px',
-																				borderRadius: '5px',
-																			}}
-																		/>
-																		<Stack width={'100%'} flexDirection={'row'} justifyContent={'space-between'}>
-																			<Typography variant="subtitle1" color={'#b9b9b9'}>
-																				{updatedCommentWordsCnt}/100
-																			</Typography>
-																			<Stack sx={{ flexDirection: 'row', alignSelf: 'flex-end', gap: '10px' }}>
-																				<Button
-																					variant="outlined"
-																					color="inherit"
-																					onClick={() => cancelButtonHandler()}
-																				>
-																					Cancel
-																				</Button>
-																				<Button
-																					variant="contained"
-																					color="inherit"
-																					onClick={() => updateButtonHandler(updatedCommentId, undefined)}
-																				>
-																					Update
-																				</Button>
-																			</Stack>
-																		</Stack>
-																	</Stack>
-																</Stack>
-															</Backdrop>
 														</Stack>
 													)}
 												</Stack>
@@ -725,6 +714,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										/>
 									</Stack>
 								)}
+								{renderEditCommentBackdrop()}
 							</div>
 						</div>
 					</Stack>

@@ -4,7 +4,7 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Typography } from '@mui/material';
 import { BoardArticle } from '../../types/board-article/board-article';
 import Moment from 'react-moment';
-import { REACT_APP_API_URL } from '../../config';
+import { getMemberImage, REACT_APP_API_URL } from '../../config';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +27,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 	const imagePath: string = boardArticle?.articleImage
 		? `${REACT_APP_API_URL}/${boardArticle?.articleImage}`
 		: '/img/community/communityImg.png';
+	const authorImagePath: string = getMemberImage(boardArticle?.memberData?.memberImage);
 
 	/** HANDLERS **/
 	const chooseArticleHandler = (e: React.SyntheticEvent, boardArticle: BoardArticle) => {
@@ -45,9 +46,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 		else router.push(`/member?memberId=${id}`);
 	};
 
-	/** =======================
-	 * 🔹 MOBILE LAYOUT
-	 * ======================= */
+	/** MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<Stack
@@ -74,6 +73,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 							goMemberPage(boardArticle?.memberData?._id as string);
 						}}
 					>
+						<img src={authorImagePath} alt="" />
 						{boardArticle?.memberData?.memberNick}
 					</Typography>
 
@@ -106,9 +106,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 		);
 	}
 
-	/** =======================
-	 * 🔹 DESKTOP LAYOUT
-	 * ======================= */
+	/** DESKTOP LAYOUT */
 	return (
 		<Stack
 			sx={{ width: size === 'small' ? '285px' : '317px' }}
@@ -127,6 +125,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 							goMemberPage(boardArticle?.memberData?._id as string);
 						}}
 					>
+						<img src={authorImagePath} alt="" />
 						{boardArticle?.memberData?.memberNick}
 					</Typography>
 					<Typography className="title">{boardArticle?.articleTitle}</Typography>

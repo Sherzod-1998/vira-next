@@ -141,12 +141,148 @@
 							}
 						}
 
+						.community-controls {
+							width: 100%;
+							margin-bottom: 28px;
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: center;
+							gap: 16px;
+
+							.search-box {
+								position: relative;
+								flex: 1;
+								max-width: 420px;
+
+								input {
+									width: 100%;
+									height: 46px;
+									padding: 0 44px 0 18px;
+									border-radius: 999px;
+									border: 1px solid rgba(201, 168, 76, 0.4);
+									background: #faf9f6;
+									color: #212121;
+									font-family: $font;
+									font-size: 14px;
+									outline: none;
+
+									&:focus {
+										border-color: #c9a84c;
+									}
+								}
+
+								button {
+									position: absolute;
+									top: 50%;
+									right: 14px;
+									transform: translateY(-50%);
+									border: none;
+									background: transparent;
+									color: #a98a34;
+									font-size: 14px;
+									font-weight: 700;
+									cursor: pointer;
+								}
+							}
+
+							.sort-box {
+								display: flex;
+								flex-direction: row;
+								align-items: center;
+								gap: 8px;
+
+								span {
+									color: #555;
+									font-family: $font;
+									font-size: 13px;
+									font-weight: 600;
+								}
+
+								button {
+									color: #212121;
+									font-family: $font;
+									font-size: 14px;
+									font-weight: 700;
+								}
+							}
+						}
+
 						.list-box {
 							width: 100%;
 							height: auto;
 							flex-direction: row;
 							flex-wrap: wrap;
 							gap: 30px;
+
+							.community-card-skeleton {
+								pointer-events: none;
+
+								.image-box {
+									width: 100%;
+									height: 283px;
+									transform: none;
+								}
+							}
+
+							.community-general-card-config {
+								.desc {
+									display: inline-flex;
+									align-items: center;
+									gap: 7px;
+
+									img {
+										width: 24px;
+										height: 24px;
+										border-radius: 50%;
+										object-fit: cover;
+									}
+								}
+							}
+
+							.empty-state {
+								width: 100%;
+								min-height: 320px;
+								align-items: center;
+								justify-content: center;
+								gap: 8px;
+								border: 1px solid rgba(201, 168, 76, 0.28);
+								border-radius: 16px;
+								background: #faf9f6;
+								text-align: center;
+
+								img {
+									width: 42px;
+									height: 42px;
+								}
+
+								.empty-title {
+									color: #212121;
+									font-family: Unbounded, $font;
+									font-size: 22px;
+									font-weight: 600;
+								}
+
+								.empty-subtitle {
+									color: #777;
+									font-family: $font;
+									font-size: 14px;
+								}
+
+								.clear-search-btn {
+									margin-top: 8px;
+									padding: 10px 22px;
+									border-radius: 999px;
+									background: #c9a84c;
+									color: #fff;
+									font-family: $font;
+									font-weight: 700;
+
+									&:hover {
+										background: #a98a34;
+									}
+								}
+							}
 						}
 					}
 				}
