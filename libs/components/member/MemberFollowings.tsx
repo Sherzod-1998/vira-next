@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
 import { FollowInquiry } from '../../types/follow/follow.input';
@@ -80,13 +80,18 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 						<Typography className="title-text">Details</Typography>
 						<Typography className="title-text">Subscription</Typography>
 					</Stack>
-					{memberFollowings?.length === 0 && (
+					{getMemberFollowingsLoading ? (
+						<Stack className="mypage-list-state">
+							<CircularProgress size={28} />
+							<Typography>Loading followings...</Typography>
+						</Stack>
+					) : memberFollowings?.length === 0 ? (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
 							<p>No Followings yet!</p>
 						</div>
-					)}
-					{memberFollowings.map((follower: Following) => {
+					) : null}
+					{!getMemberFollowingsLoading && memberFollowings.map((follower: Following) => {
 						const imagePath: string = getMemberImage(follower?.followingData?.memberImage);
 						return (
 							<Stack className="follows-card-box" key={follower._id}>

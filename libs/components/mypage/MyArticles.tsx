@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography } from '@mui/material';
+import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { T } from '../../types/common';
@@ -60,7 +60,6 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 			await boardArticlesRefetch({ input: searchCommunity });
 			await sweetTopSmallSuccessAlert('Success', 750);
 		} catch (err: any) {
-			console.log('ERROR, likeBoArticleHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -77,7 +76,12 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 					</Stack>
 				</Stack>
 				<Stack className="article-list-box">
-					{boardArticles?.length > 0 ? (
+					{boardArticlesLoading ? (
+						<Stack className="mypage-list-state">
+							<CircularProgress size={28} />
+							<Typography>Loading articles...</Typography>
+						</Stack>
+					) : boardArticles?.length > 0 ? (
 						boardArticles?.map((boardArticle: BoardArticle) => {
 							return (
 								<CommunityCard

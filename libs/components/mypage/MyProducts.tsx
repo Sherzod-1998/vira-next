@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import { Pagination, Stack, Typography } from '@mui/material';
+import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -128,7 +128,12 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							)}
 						</Stack>
 
-						{sellerProducts?.length === 0 ? (
+						{getSellerProductsLoading ? (
+							<Stack className="mypage-list-state">
+								<CircularProgress size={28} />
+								<Typography>Loading products...</Typography>
+							</Stack>
+						) : sellerProducts?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No Product found!</p>

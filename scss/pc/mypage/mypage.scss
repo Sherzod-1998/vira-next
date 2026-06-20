@@ -332,3 +332,55 @@
 		}
 	}
 }
+
+#pc-wrap {
+	#my-page {
+		.mypage-list-state,
+		.no-data {
+			width: 100%;
+			min-height: 220px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 14px;
+			border: 1px solid rgba(201, 168, 76, 0.28);
+			border-radius: 8px;
+			background: #faf9f6;
+			color: #212121;
+			font-family: $font;
+		}
+
+		.mypage-list-state {
+			flex-direction: column;
+			margin-top: 16px;
+			p {
+				color: #926a54;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 500;
+			}
+			.MuiCircularProgress-root {
+				color: #c9a84c;
+			}
+		}
+
+		.no-data {
+			flex-direction: column;
+			padding: 34px 20px;
+			img {
+				width: 46px;
+				height: 46px;
+				padding: 10px;
+				border-radius: 50%;
+				background: rgba(201, 168, 76, 0.14);
+			}
+			p {
+				margin: 0;
+				color: #926a54;
+				font-family: $font;
+				font-size: 16px;
+				font-weight: 600;
+			}
+		}
+	}
+}

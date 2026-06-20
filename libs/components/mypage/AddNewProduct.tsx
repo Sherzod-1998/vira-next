@@ -43,7 +43,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 
 
 
-	/** Enum ro‘yxatlari */
+	/** Enum option lists */
 	const [productTypeList] = useState<ProductType[]>(Object.values(ProductType));
 	const [productLocationList] = useState<ProductLocation[]>(Object.values(ProductLocation));
 	const [productMaterialList] = useState<ProductMaterial[]>(Object.values(ProductMaterial));
@@ -63,7 +63,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 		skip: !router.query.productId,
 	});
 
-	/** GET_PRODUCT kelganda formani to‘ldirib qo‘yish */
+	/** Populate the form when GET_PRODUCT returns */
 	useEffect(() => {
 		const p = getProductData?.getProduct;
 		if (!p) return;
@@ -128,12 +128,11 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 				productImages: responseImages,
 			}));
 		} catch (err: any) {
-			console.log('err: ', err.message);
 			await sweetMixinErrorAlert(err.message);
 		}
 	}
 
-	/** Disable holati — backend talablariga mos */
+	/** Disabled state based on backend requirements */
 	const doDisabledCheck = () => {
 		return !(
 			insertProductData.productTitle &&
@@ -180,7 +179,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 		}
 	}, [insertProductData, getProductData]);
 
-	// Seller bo'lmasa, orqaga qaytaramiz
+	// Redirect non-seller users back.
 	if (user?.memberType !== 'SELLER') {
 		router.back();
 	}

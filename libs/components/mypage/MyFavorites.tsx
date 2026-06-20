@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography } from '@mui/material';
+import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
 import { useMutation, useQuery } from '@apollo/client';
@@ -52,7 +52,6 @@ const MyFavorites: NextPage = () => {
 			});
 			await getFavoritesRefetch({ input: searchFavorites });
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -69,7 +68,12 @@ const MyFavorites: NextPage = () => {
 					</Stack>
 				</Stack>
 				<Stack className="favorites-list-box">
-					{myFavorites?.length ? (
+					{getFavoritesLoading ? (
+						<Stack className="mypage-list-state">
+							<CircularProgress size={28} />
+							<Typography>Loading favorites...</Typography>
+						</Stack>
+					) : myFavorites?.length ? (
 						myFavorites?.map((product: Product) => {
 							return <ProductCard product={product} likeProductHandler={likeProductHandler} myFavorites={true} />;
 						})

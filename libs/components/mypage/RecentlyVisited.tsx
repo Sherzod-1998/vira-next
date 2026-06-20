@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography } from '@mui/material';
+import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import ProductCard from '../product/ProductCard';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
@@ -36,7 +36,7 @@ const RecentlyVisited: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>VIRA MY FAVORITES MOBILE</div>;
+		return <div>VIRA RECENTLY VISITED MOBILE</div>;
 	} else {
 		return (
 			<div id="my-favorites-page">
@@ -47,7 +47,12 @@ const RecentlyVisited: NextPage = () => {
 					</Stack>
 				</Stack>
 				<Stack className="favorites-list-box">
-					{recentlyVisited?.length ? (
+					{getVisitedLoading ? (
+						<Stack className="mypage-list-state">
+							<CircularProgress size={28} />
+							<Typography>Loading recently visited products...</Typography>
+						</Stack>
+					) : recentlyVisited?.length ? (
 						recentlyVisited?.map((product: Product) => {
 							return <ProductCard product={product} recentlyVisited={true} />;
 						})

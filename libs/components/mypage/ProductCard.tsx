@@ -26,7 +26,6 @@ export const ProductCard = (props: ProductCardProps) => {
 
 	/** HANDLERS **/
 	const pushEditProduct = async (id: string) => {
-		console.log('+pushEditProduct: ', id);
 		await router.push({
 			pathname: '/mypage',
 			query: { category: 'addProduct', productId: id },
