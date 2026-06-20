@@ -193,42 +193,68 @@ const Join: NextPage = () => {
 
 	return (
 		<Stack className="join-page">
-			<Stack className="container">
-				<Stack className="main">
-					<Stack className="left">
-						<Box className="hero-block" />
+			<Stack className="main">
+				{/* LEFT — luxury visual panel */}
+				<Stack className="visual">
+					<Box className="overlay" />
+					<Box className="brand">
+						<h1 className="logo">VIRA</h1>
+						<span className="tagline">Luxury Jewelry Marketplace</span>
+					</Box>
+					<Box className="quote">
+						<p>“Where timeless elegance meets the people who cherish it.”</p>
+					</Box>
+				</Stack>
 
-						<Box className="info">
-							<span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
-							<p>{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED"}</p>
+				{/* RIGHT — form panel */}
+				<Stack className="form-side">
+					<Box className="form-inner">
+						<Box className="heading">
+							<span className="title">{loginView ? 'Welcome back' : 'Create your account'}</span>
+							<p className="subtitle">
+								{loginView ? 'Sign in to continue to Vira' : 'Join Vira and start exploring'}
+							</p>
 						</Box>
 
-						<Box className="social-btn google" onClick={() => handleGoogleLogin()} style={{ cursor: 'pointer' }}>
+						<Box className="social-btn google" onClick={() => handleGoogleLogin()}>
 							<div className="icon">
 								<GoogleIcon />
 							</div>
-							<span>Login With Google</span>
+							<span>Continue with Google</span>
 						</Box>
 
 						<Box className="divider-or">
-							<span>Or</span>
+							<span>or</span>
 						</Box>
 
 						<Box className="input-wrap">
 							<div className="input-box">
 								<span>Email / Nickname</span>
-								<input onChange={(e) => handleInput('nick', e.target.value)} />
+								<input
+									placeholder="Enter your nickname"
+									value={input.nick}
+									onChange={(e) => handleInput('nick', e.target.value)}
+								/>
 							</div>
 
 							<div className="input-box">
 								<span>Password</span>
-								<input type="password" onChange={(e) => handleInput('password', e.target.value)} />
+								<input
+									type="password"
+									placeholder="Enter your password"
+									value={input.password}
+									onChange={(e) => handleInput('password', e.target.value)}
+								/>
 							</div>
 
 							{!loginView && (
 								<div className="input-box">
 									<span>Phone</span>
-									<input onChange={(e) => handleInput('phone', e.target.value)} />
+									<input
+										placeholder="Enter your phone number"
+										value={input.phone}
+										onChange={(e) => handleInput('phone', e.target.value)}
+									/>
 								</div>
 							)}
 						</Box>
@@ -267,26 +293,27 @@ const Join: NextPage = () => {
 							<Button
 								variant="contained"
 								className="primary-btn"
-								disabled={!input.nick || !input.password}
+								disabled={loginView ? !input.nick || !input.password : !input.nick || !input.password || !input.phone}
 								onClick={loginView ? doLogin : doSignUp}
 							>
-								{loginView ? 'LOGIN' : 'SIGNUP'}
+								{loginView ? 'Sign In' : 'Sign Up'}
 							</Button>
 						</Box>
+
 						<Box className="ask-info">
 							{loginView ? (
 								<p>
-									Don&apos;t Have An Account?
-									<b onClick={() => viewChangeHandler(false)}> Create Account</b>
+									Don&apos;t have an account?
+									<b onClick={() => viewChangeHandler(false)}> Create account</b>
 								</p>
 							) : (
 								<p>
-									Already have account?
-									<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
+									Already have an account?
+									<b onClick={() => viewChangeHandler(true)}> Sign in</b>
 								</p>
 							)}
 						</Box>
-					</Stack>
+					</Box>
 				</Stack>
 			</Stack>
 		</Stack>
