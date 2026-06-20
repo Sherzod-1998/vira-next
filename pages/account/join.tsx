@@ -8,6 +8,8 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useGoogleLogin } from '@react-oauth/google';
+import { googleLogin } from '../../libs/auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -54,6 +56,18 @@ const Join: NextPage = () => {
 		}
 	}, [input, router]);
 
+	const handleGoogleLogin = useGoogleLogin({
+		onSuccess: async (tokenResponse) => {
+			try {
+				await googleLogin(tokenResponse.access_token);
+				router.push(`${router.query.referrer ?? '/'}`);
+			} catch (err: any) {
+				sweetMixinErrorAlert(err.message);
+			}
+		},
+		onError: () => sweetMixinErrorAlert('Google login failed'),
+	});
+
 	if (device === 'mobile') {
 		return (
 			<Stack className="join-page-mo">
@@ -65,7 +79,7 @@ const Join: NextPage = () => {
 						<p>{loginView ? 'Login to continue' : 'Start your free trial'}</p>
 					</Box>
 
-					<Box className="social-btn google">
+					<Box className="social-btn google" onClick={() => handleGoogleLogin()} style={{ cursor: 'pointer' }}>
 						<div className="icon">
 							<GoogleIcon />
 						</div>
@@ -189,7 +203,7 @@ const Join: NextPage = () => {
 							<p>{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED"}</p>
 						</Box>
 
-						<Box className="social-btn google">
+						<Box className="social-btn google" onClick={() => handleGoogleLogin()} style={{ cursor: 'pointer' }}>
 							<div className="icon">
 								<GoogleIcon />
 							</div>

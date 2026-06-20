@@ -3,7 +3,7 @@ import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
-import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { LOGIN, SIGN_UP, GOOGLE_LOGIN } from '../../apollo/user/mutation';
 
 const isTokenExpired = (token: string): boolean => {
 	try {
@@ -132,6 +132,26 @@ const requestSignUpJwtToken = async ({
 				break;
 		}
 		throw new Error('token error');
+	}
+};
+
+export const googleLogin = async (googleAccessToken: string): Promise<void> => {
+	const apolloClient = await initializeApollo();
+	try {
+		const result = await apolloClient.mutate({
+			mutation: GOOGLE_LOGIN,
+			variables: { accessToken: googleAccessToken },
+			fetchPolicy: 'network-only',
+		});
+		const { accessToken: jwtToken } = result?.data?.googleLogin;
+		if (jwtToken) {
+			updateStorage({ jwtToken });
+			updateUserInfo(jwtToken);
+		}
+	} catch (err: any) {
+		console.log('Google login err', err);
+		await sweetMixinErrorAlert('Google login failed. Please try again.');
+		throw new Error('Google login failed');
 	}
 };
 
