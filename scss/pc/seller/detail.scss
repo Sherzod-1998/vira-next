@@ -28,6 +28,7 @@
 				.info {
 					display: flex;
 					flex-direction: column;
+					align-items: flex-start;
 					strong {
 						color: #181a20;
 						font-family: $font;
@@ -37,6 +38,31 @@
 						line-height: normal;
 						text-transform: capitalize;
 						cursor: pointer;
+					}
+					.seller-name-row {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 10px;
+						margin-top: 0;
+					}
+					.verified-badge {
+						display: inline-flex;
+						align-items: center;
+						gap: 4px;
+						padding: 5px 9px;
+						border-radius: 999px;
+						background: #f4f1ec;
+						color: #a98a34;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+						line-height: 1;
+
+						svg {
+							width: 16px;
+							height: 16px;
+						}
 					}
 					div {
 						margin-top: 13px;
@@ -55,6 +81,75 @@
 							font-style: normal;
 							font-weight: 400;
 							line-height: 28px;
+						}
+					}
+					.seller-name-row {
+						margin-top: 0;
+
+						.verified-badge {
+							margin-top: 0;
+							color: #a98a34;
+							font-size: 12px;
+							font-weight: 700;
+							line-height: 1;
+						}
+					}
+					.seller-stats {
+						margin-top: 18px;
+						display: flex;
+						flex-direction: row;
+						align-items: stretch;
+						gap: 10px;
+						flex-wrap: wrap;
+
+						.stat-item {
+							min-width: 104px;
+							padding: 10px 14px;
+							border: 1px solid rgba(201, 168, 76, 0.28);
+							border-radius: 12px;
+							background: #faf9f6;
+							display: flex;
+							flex-direction: column;
+							gap: 3px;
+
+							b {
+								color: #212121;
+								font-family: $font;
+								font-size: 16px;
+								font-weight: 700;
+								line-height: 1;
+							}
+
+							small {
+								color: #777;
+								font-family: $font;
+								font-size: 11px;
+								font-weight: 600;
+								line-height: 1.2;
+							}
+						}
+					}
+					.follow-btn {
+						margin-top: 16px;
+						min-width: 138px;
+						height: 42px;
+						border-radius: 999px;
+						background: linear-gradient(135deg, #c9a84c 0%, #a98a34 100%);
+						color: #fff;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 700;
+						box-shadow: 0 8px 18px rgba(169, 138, 52, 0.22);
+
+						&:hover {
+							background: linear-gradient(135deg, #d7b85e 0%, #a98a34 100%);
+						}
+
+						&.is-following {
+							background: #fff;
+							color: #a98a34;
+							border: 1px solid #c9a84c;
+							box-shadow: none;
 						}
 					}
 				}

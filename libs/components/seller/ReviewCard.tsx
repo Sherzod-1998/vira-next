@@ -15,7 +15,7 @@ const ReviewCard = (props: ReviewCardProps) => {
 	const device = useDeviceDetect();
 	const imagePath: string = getMemberImage(comment?.memberData?.memberImage);
 
-	/** 🔹 MOBILE LAYOUT */
+	/** MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<Box component="div" className="m-review-card">

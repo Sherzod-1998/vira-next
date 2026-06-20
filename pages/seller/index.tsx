@@ -2,7 +2,7 @@ import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Stack, Box, Button, Pagination } from '@mui/material';
+import { Stack, Box, Button, Pagination, Skeleton, Typography } from '@mui/material';
 import { Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { T } from '../../libs/types/common';
 import { Messages } from '../../libs/config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import SellerCard from '../../libs/components/common/SellerCard';
+import { SellersInquiry } from '../../libs/types/member/member.input';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -28,7 +29,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	const [filterSortName, setFilterSortName] = useState('Recent');
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [searchFilter, setSearchFilter] = useState<any>(
+	const [searchFilter, setSearchFilter] = useState<SellersInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 	const [sellers, setSellers] = useState<Member[]>([]);
@@ -57,9 +58,11 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (router.query.input) {
-			const input_obj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(input_obj);
-			setCurrentPage(input_obj.page === undefined ? 1 : input_obj.page);
+			const inputObj = JSON.parse(router?.query?.input as string);
+			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+			setSearchText(inputObj.search?.text || '');
+			setFilterSortName(getSortLabel(inputObj.sort, inputObj.direction));
 		} else {
 			const input = JSON.stringify(initialInput);
 			router.replace(`/seller?input=${input}`, `/seller?input=${input}`);
@@ -67,6 +70,63 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	}, [initialInput, router, router.query.input]);
 
 	/** HANDLERS **/
+	const getSortLabel = (sort?: string, direction?: string) => {
+		if (sort === 'createdAt' && direction === 'ASC') return 'Oldest order';
+		if (sort === 'memberLikes') return 'Likes';
+		if (sort === 'memberViews') return 'Views';
+		return 'Recent';
+	};
+
+	const pushSearchFilter = async (input: SellersInquiry) => {
+		await router.push({ pathname: '/seller', query: { input: JSON.stringify(input) } }, undefined, { scroll: false });
+		setSearchFilter(input);
+		setCurrentPage(input.page === undefined ? 1 : input.page);
+		setSearchText(input.search?.text || '');
+	};
+
+	const submitSearchHandler = async () => {
+		await pushSearchFilter({
+			...searchFilter,
+			page: 1,
+			search: { ...searchFilter.search, text: searchText },
+		});
+	};
+
+	const resetSearchHandler = async () => {
+		setSearchText('');
+		await pushSearchFilter(initialInput);
+	};
+
+	const renderSellerSkeletons = (mobile = false) => (
+		<Stack className={mobile ? 'm-card-wrap' : 'card-wrap'}>
+			{Array.from({ length: 6 }).map((_, index) => (
+				<Stack
+					className={mobile ? 'm-seller-card seller-card-skeleton' : 'seller-general-card seller-card-skeleton'}
+					key={`seller-skeleton-${index}`}
+				>
+					<Skeleton variant="rounded" className={mobile ? 'm-skeleton-avatar' : 'seller-img'} />
+					<Stack className={mobile ? 'm-right' : 'seller-desc'}>
+						<Stack className={mobile ? 'm-info' : 'seller-info'}>
+							<Skeleton variant="text" width={mobile ? 130 : 120} height={24} />
+							<Skeleton variant="text" width={mobile ? 70 : 58} height={20} />
+						</Stack>
+						<Skeleton variant="rounded" width={mobile ? 120 : 92} height={28} />
+					</Stack>
+				</Stack>
+			))}
+		</Stack>
+	);
+
+	const renderEmptyState = (mobile = false) => (
+		<div className={mobile ? 'm-empty-state' : 'seller-empty-state'}>
+			<Typography className="empty-title">No sellers found</Typography>
+			<Typography className="empty-subtitle">Try a different seller name or reset the search.</Typography>
+			<Button className="empty-reset-btn" onClick={resetSearchHandler}>
+				Reset
+			</Button>
+		</div>
+	);
+
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
 		setAnchorEl(e.currentTarget);
 		setSortingOpen(true);
@@ -78,38 +138,33 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextInput = { ...searchFilter };
+
 		switch (e.currentTarget.id) {
 			case 'recent':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'DESC' });
+				nextInput = { ...searchFilter, sort: 'createdAt', direction: 'DESC' as any };
 				setFilterSortName('Recent');
 				break;
 			case 'old':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'ASC' });
+				nextInput = { ...searchFilter, sort: 'createdAt', direction: 'ASC' as any };
 				setFilterSortName('Oldest order');
 				break;
 			case 'likes':
-				setSearchFilter({ ...searchFilter, sort: 'memberLikes', direction: 'DESC' });
+				nextInput = { ...searchFilter, sort: 'memberLikes', direction: 'DESC' as any };
 				setFilterSortName('Likes');
 				break;
 			case 'views':
-				setSearchFilter({ ...searchFilter, sort: 'memberViews', direction: 'DESC' });
+				nextInput = { ...searchFilter, sort: 'memberViews', direction: 'DESC' as any };
 				setFilterSortName('Views');
 				break;
 		}
+		pushSearchFilter(nextInput).then();
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
 
 	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(
-			`/seller?input=${JSON.stringify(searchFilter)}`,
-			`/seller?input=${JSON.stringify(searchFilter)}`,
-			{
-				scroll: false,
-			},
-		);
-		setCurrentPage(value);
+		await pushSearchFilter({ ...searchFilter, page: value });
 	};
 
 	const likeMemberHandler = async (user: any, id: string) => {
@@ -125,12 +180,12 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 			await getSellersRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
+			throw err;
 		}
 	};
 
-	/* 🔹 MOBILE LAYOUT */
+	/* MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<div id="m-seller-list-page">
@@ -145,10 +200,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 								onChange={(e: any) => setSearchText(e.target.value)}
 								onKeyDown={(event: any) => {
 									if (event.key === 'Enter') {
-										setSearchFilter({
-											...searchFilter,
-											search: { ...searchFilter.search, text: searchText },
-										});
+										submitSearchHandler().then();
 									}
 								}}
 							/>
@@ -179,18 +231,15 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 					</Stack>
 
 					{/* SELLERS LIST */}
-					<Stack className="m-card-wrap">
-						{sellers?.length === 0 ? (
-							<div className="m-no-data">
-								<img src="/img/icons/icoAlert.svg" alt="No data" />
-								<p>No Sellers found!</p>
-							</div>
-						) : (
-							sellers.map((seller: Member) => (
+					{getSellersLoading && renderSellerSkeletons(true)}
+					{!getSellersLoading && sellers?.length === 0 && renderEmptyState(true)}
+					{!getSellersLoading && sellers?.length > 0 && (
+						<Stack className="m-card-wrap">
+							{sellers.map((seller: Member) => (
 								<SellerCard seller={seller} key={seller._id} likeMemberHandler={likeMemberHandler} />
-							))
-						)}
-					</Stack>
+							))}
+						</Stack>
+					)}
 
 					{/* PAGINATION */}
 					{sellers.length !== 0 && (
@@ -225,7 +274,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 		);
 	}
 
-	/* 🔹 DESKTOP LAYOUT */
+	/* DESKTOP LAYOUT */
 	return (
 		<Stack className={'seller-list-page'}>
 			<Stack className={'container'}>
@@ -238,10 +287,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 							onChange={(e: any) => setSearchText(e.target.value)}
 							onKeyDown={(event: any) => {
 								if (event.key == 'Enter') {
-									setSearchFilter({
-										...searchFilter,
-										search: { ...searchFilter.search, text: searchText },
-									});
+									submitSearchHandler().then();
 								}
 							}}
 						/>
@@ -269,18 +315,15 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 						</div>
 					</Box>
 				</Stack>
-				<Stack className={'card-wrap'}>
-					{sellers?.length === 0 ? (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Sellers found!</p>
-						</div>
-					) : (
-						sellers.map((seller: Member) => {
+				{getSellersLoading && renderSellerSkeletons()}
+				{!getSellersLoading && sellers?.length === 0 && renderEmptyState()}
+				{!getSellersLoading && sellers?.length > 0 && (
+					<Stack className={'card-wrap'}>
+						{sellers.map((seller: Member) => {
 							return <SellerCard seller={seller} key={seller._id} likeMemberHandler={likeMemberHandler} />;
-						})
-					)}
-				</Stack>
+						})}
+					</Stack>
+				)}
 				<Stack className={'pagination'}>
 					<Stack className="pagination-box">
 						{sellers.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (

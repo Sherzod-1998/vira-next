@@ -5,6 +5,7 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ReviewCard from '../../libs/components/seller/ReviewCard';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Product } from '../../libs/types/product/product';
@@ -17,7 +18,7 @@ import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { getMemberImage, Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import MainProductCard from '../../libs/components/homepage/MainProductCard';
@@ -25,6 +26,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Pagination as SwiperPagination } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import moment from 'moment';
 
 SwiperCore.use([SwiperPagination]);
 
@@ -46,6 +48,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [sellerComments, setsellerComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
+	const [isFollowing, setIsFollowing] = useState<boolean>(false);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.MEMBER,
 		commentContent: '',
@@ -55,6 +58,8 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	/** APOLLO REQUESTS **/
 	const [createComment] = useMutation(CREATE_COMMENT);
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
 
 	const {
 		loading: getMemberLoading,
@@ -63,10 +68,11 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 		refetch: getMemberRefetch,
 	} = useQuery(GET_MEMBER, {
 		fetchPolicy: 'network-only',
-		variables: { memberId: sellerId }, // ✅ nomini query’ga mos qildik
+		variables: { memberId: sellerId },
 		skip: !sellerId,
 		onCompleted: (data: T) => {
 			setseller(data?.getMember);
+			setIsFollowing(!!data?.getMember?.meFollowed?.[0]?.myFollowing);
 			setSearchFilter({
 				...searchFilter,
 				search: {
@@ -125,17 +131,60 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 		if (router.query.sellerId) setsellerId(router.query.sellerId as string);
 	}, [router]);
 
-	useEffect(() => {}, [searchFilter]);
-	useEffect(() => {}, [commentInquiry]);
-
 	/** HANDLERS **/
+	const isOwnProfile = !!seller?._id && seller?._id === user?._id;
+	const isVerifiedSeller = (seller?.memberRank || 0) > 0;
+
+	const sellerStats = [
+		{ label: 'Followers', value: seller?.memberFollowers ?? 0 },
+		{ label: 'Following', value: seller?.memberFollowings ?? 0 },
+		{ label: 'Products', value: seller?.memberProducts ?? 0 },
+		{ label: 'Likes', value: seller?.memberLikes ?? 0 },
+		{ label: 'Member since', value: seller?.createdAt ? moment(seller.createdAt).format('YYYY') : '-' },
+	];
+
+	const followSellerHandler = async () => {
+		if (!sellerId) return;
+		if (!user?._id) {
+			sweetMixinErrorAlert('Please log in first').then();
+			return;
+		}
+		if (isOwnProfile) return;
+
+		const previousFollowing = isFollowing;
+		const previousFollowers = seller?.memberFollowers ?? 0;
+		const nextFollowing = !previousFollowing;
+
+		setIsFollowing(nextFollowing);
+		setseller((prev) =>
+			prev
+				? {
+						...prev,
+						memberFollowers: nextFollowing ? previousFollowers + 1 : Math.max(previousFollowers - 1, 0),
+				  }
+				: prev,
+		);
+
+		try {
+			if (nextFollowing) {
+				await subscribe({ variables: { input: sellerId } });
+			} else {
+				await unsubscribe({ variables: { input: sellerId } });
+			}
+			await getMemberRefetch({ memberId: sellerId });
+		} catch (err: any) {
+			setIsFollowing(previousFollowing);
+			setseller((prev) => (prev ? { ...prev, memberFollowers: previousFollowers } : prev));
+			sweetMixinErrorAlert(err.message).then();
+		}
+	};
 
 	const onLike = async (id: string) => {
 		try {
 			await likeTargetProduct({ variables: { input: id } });
 			await getProductsRefetch({ input: searchFilter });
-		} catch (e) {
-			console.log('like error:', (e as any)?.message);
+		} catch (e: any) {
+			sweetMixinErrorAlert(e.message).then();
 		}
 	};
 
@@ -189,7 +238,6 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 			await getProductsRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -206,13 +254,34 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							className="m-avatar"
 							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
 						/>
-						<Box component="div" className="m-info" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
-							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+						<Box component="div" className="m-info">
+							<div className="m-name-row" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
+								<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+								{isVerifiedSeller && (
+									<span className="m-verified-badge">
+										<VerifiedOutlinedIcon />
+										Verified Seller
+									</span>
+								)}
+							</div>
 							<span className="m-phone">{seller?.memberPhone}</span>
 							<span className="m-meta">
 								{seller?.memberProducts ?? 0} products · {commentTotal} review
 								{commentTotal > 1 ? 's' : ''}
 							</span>
+							<div className="m-seller-stats">
+								{sellerStats.map((stat) => (
+									<span className="m-stat-item" key={stat.label}>
+										<b>{stat.value}</b>
+										<small>{stat.label}</small>
+									</span>
+								))}
+							</div>
+							{seller && !isOwnProfile && (
+								<Button className={`m-follow-btn ${isFollowing ? 'is-following' : ''}`} onClick={followSellerHandler}>
+									{isFollowing ? 'Following' : 'Follow'}
+								</Button>
+							)}
 						</Box>
 					</Stack>
 
@@ -329,16 +398,33 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							src={getMemberImage(seller?.memberImage)}
 							alt=""
 						/>
-						<Box
-							component={'div'}
-							className={'info'}
-							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
-						>
-							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+						<Box component={'div'} className={'info'}>
+							<div className="seller-name-row" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
+								<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+								{isVerifiedSeller && (
+									<span className="verified-badge">
+										<VerifiedOutlinedIcon />
+										Verified Seller
+									</span>
+								)}
+							</div>
 							<div>
 								<img src="/img/icons/call.svg" alt="" />
 								<span>{seller?.memberPhone}</span>
 							</div>
+							<div className="seller-stats">
+								{sellerStats.map((stat) => (
+									<span className="stat-item" key={stat.label}>
+										<b>{stat.value}</b>
+										<small>{stat.label}</small>
+									</span>
+								))}
+							</div>
+							{seller && !isOwnProfile && (
+								<Button className={`follow-btn ${isFollowing ? 'is-following' : ''}`} onClick={followSellerHandler}>
+									{isFollowing ? 'Following' : 'Follow'}
+								</Button>
+							)}
 						</Box>
 					</Stack>
 					<Stack className={'seller-home-list'}>

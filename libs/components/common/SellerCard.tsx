@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography, IconButton } from '@mui/material';
 import Link from 'next/link';
-import { getMemberImage, REACT_APP_API_URL } from '../../config';
+import { getMemberImage } from '../../config';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { sweetMixinErrorAlert } from '../../sweetAlert';
 
 interface SellerCardProps {
   seller: any;
@@ -25,8 +28,9 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
 
   const [isLiked, setIsLiked] = useState<boolean>(getLikedFromServer(seller));
   const [likeCount, setLikeCount] = useState<number>(seller?.memberLikes || 0);
+  const isVerified = (seller?.memberRank || 0) > 0;
 
-  // 🔄 props o‘zgarsa – local state sync
+  // Keep local like state synced when seller props change.
   useEffect(() => {
     setIsLiked(getLikedFromServer(seller));
     setLikeCount(seller?.memberLikes || 0);
@@ -34,7 +38,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
 
   const handleLikeClick = async () => {
     if (!user?._id) {
-      alert('Avval tizimga kiring.');
+      sweetMixinErrorAlert('Please log in first').then();
       return;
     }
 
@@ -53,7 +57,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
     }
   };
 
-  /* 🔹 MOBILE CARD */
+  /* MOBILE CARD */
   if (device === 'mobile') {
     return (
       <Stack className="m-seller-card">
@@ -87,7 +91,15 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
                 query: { sellerId: seller?._id },
               }}
             >
-              <strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+              <strong>
+                {seller?.memberFullName ?? seller?.memberNick}
+                {isVerified && (
+                  <span className="m-verified-badge">
+                    <VerifiedOutlinedIcon />
+                    Verified Seller
+                  </span>
+                )}
+              </strong>
             </Link>
             <span className="m-role">seller</span>
           </div>
@@ -96,6 +108,10 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
             <div className="m-meta-item">
               <RemoveRedEyeIcon className="m-icon" />
               <span>{seller?.memberViews}</span>
+            </div>
+            <div className="m-meta-item">
+              <PeopleAltOutlinedIcon className="m-icon" />
+              <span>{seller?.memberFollowers ?? 0}</span>
             </div>
 
             <button
@@ -116,7 +132,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
     );
   }
 
-  /* 🔹 DESKTOP CARD */
+  /* DESKTOP CARD */
   return (
     <Stack className="seller-general-card">
       <Link
@@ -149,6 +165,12 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
           >
             <strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
           </Link>
+          {isVerified && (
+            <span className="verified-badge">
+              <VerifiedOutlinedIcon />
+              Verified Seller
+            </span>
+          )}
           <span>seller</span>
         </Box>
 
@@ -159,6 +181,14 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
 
           <Typography className="view-cnt">
             {seller?.memberViews}
+          </Typography>
+
+          <IconButton>
+            <PeopleAltOutlinedIcon />
+          </IconButton>
+
+          <Typography className="view-cnt">
+            {seller?.memberFollowers ?? 0}
           </Typography>
 
           <IconButton onClick={handleLikeClick}>

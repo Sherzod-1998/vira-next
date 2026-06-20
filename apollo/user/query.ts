@@ -34,7 +34,7 @@ export const GET_SELLERS = gql`
 				updatedAt
 				accessToken
 
-				# 🔴 MUHIM: shu qatorni qo‘shing
+				# Include viewer like state for seller cards.
 				meLiked {
 					myFavorite
 				}
