@@ -1,0 +1,45 @@
+// Additional footer styles for desktop — scoped under #pc-wrap #footer.
+// Do NOT import this file into main.scss; it is wired separately.
+
+#pc-wrap {
+	#footer {
+		// Newsletter input inside the existing white .right-content pill
+		.news-input {
+			flex: 1;
+			height: 56px;
+			border: none;
+			outline: none;
+			background: transparent;
+			padding: 0 24px;
+			font-family: Karla, sans-serif;
+			font-size: 14px;
+			color: #333;
+
+			&::placeholder {
+				color: #999;
+			}
+		}
+
+		// Trust badge row inside .footer-bottom
+		.footer-trust {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 10px;
+			margin-top: 14px;
+
+			svg {
+				width: 18px;
+				height: 18px;
+				flex-shrink: 0;
+				color: #c9a84c;
+			}
+
+			span {
+				color: rgba(255, 255, 255, 0.7);
+				font-family: Karla, sans-serif;
+				font-size: 13px;
+			}
+		}
+	}
+}
