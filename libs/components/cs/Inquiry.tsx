@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stack, TextField, Button } from '@mui/material';
+import { Box, Stack, TextField, Button, Pagination } from '@mui/material';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { GET_MY_CS_INQUIRIES } from '../../../apollo/user/query';
@@ -50,8 +50,13 @@ const Inquiry = () => {
 	};
 
 	const list = data?.getMyCsInquiries?.list ?? [];
+	const total = data?.getMyCsInquiries?.total ?? 0;
+	const totalPages = Math.ceil(total / limit) || 1;
+	const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => setPage(value);
 
-	/* 🔹 MOBILE LAYOUT */
+	const getStatusClass = (status: string) => `status-badge ${status === 'ANSWERED' ? 'answered' : 'pending'}`;
+
+	/* MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<Stack className="m-inquiry-content">
@@ -71,7 +76,8 @@ const Inquiry = () => {
 						onChange={(e) => setContent(e.target.value)}
 						fullWidth
 						size="small"
-					
+						multiline
+						rows={5}
 					/>
 
 					<Button
@@ -86,13 +92,14 @@ const Inquiry = () => {
 
 				<Box className="m-inquiry-list">
 					{loading && <p>Loading...</p>}
+					{error && <p className="m-error-text">Unable to load inquiries. Please try again.</p>}
 					{!loading && list.length === 0 && <p>No inquiries yet.</p>}
 
 					{list.map((item: any) => (
 						<Box key={item._id} className="m-inquiry-card">
 							<div className="m-inquiry-header">
 								<span className="m-inquiry-title">{item.title}</span>
-								<span className="m-inquiry-status">{item.status}</span>
+								<span className={getStatusClass(item.status)}>{item.status}</span>
 							</div>
 							<p className="m-inquiry-content-text">{item.content}</p>
 							<div className="m-inquiry-answer">
@@ -103,12 +110,17 @@ const Inquiry = () => {
 							</div>
 						</Box>
 					))}
+					{!loading && !error && totalPages > 1 && (
+						<Stack className="m-pagination">
+							<Pagination size="small" page={page} count={totalPages} onChange={paginationChangeHandler} />
+						</Stack>
+					)}
 				</Box>
 			</Stack>
 		);
 	}
 
-	/* 🔹 PC LAYOUT */
+	/* PC LAYOUT */
 	return (
 		<Stack className="inquiry-content">
 			<span className="title">1:1 Inquiry</span>
@@ -143,13 +155,14 @@ const Inquiry = () => {
 
 			<Box className="inquiry-list">
 				{loading && <p>Loading...</p>}
+				{error && <p className="error-text">Unable to load inquiries. Please try again.</p>}
 				{!loading && list.length === 0 && <p>No inquiries yet.</p>}
 
 				{list.map((item: any) => (
 					<Box key={item._id} className="inquiry-card">
 						<div className="inquiry-header">
 							<span className="inquiry-title">{item.title}</span>
-							<span className="inquiry-status">{item.status}</span>
+							<span className={getStatusClass(item.status)}>{item.status}</span>
 						</div>
 						<p className="inquiry-content-text">{item.content}</p>
 						<div className="inquiry-answer">
@@ -160,6 +173,11 @@ const Inquiry = () => {
 						</div>
 					</Box>
 				))}
+				{!loading && !error && totalPages > 1 && (
+					<Stack className="pagination">
+						<Pagination page={page} count={totalPages} onChange={paginationChangeHandler} shape="circular" color="primary" />
+					</Stack>
+				)}
 			</Box>
 		</Stack>
 	);

@@ -36,9 +36,11 @@ const Faq = () => {
 	const router = useRouter();
 	const [category, setCategory] = useState<string>('product');
 	const [expanded, setExpanded] = useState<string | false>('panel1');
+	const [searchText, setSearchText] = useState<string>('');
 
 	const changeCategoryHandler = (category: string) => {
 		setCategory(category);
+		setExpanded(false);
 	};
 
 	const handleChange = (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
@@ -411,11 +413,40 @@ const Faq = () => {
 			},
 		],
 	};
+	const visibleItems = (data[category] || []).filter((item) => {
+		const query = searchText.trim().toLowerCase();
+		if (!query) return true;
+		return `${item.subject} ${item.content}`.toLowerCase().includes(query);
+	});
 
-	// 🔹 MOBILE LAYOUT
+	const renderSearch = (mobile = false) => (
+		<Box className={mobile ? 'm-faq-search' : 'faq-search'} component="div">
+			<input
+				type="text"
+				placeholder="Search help articles"
+				value={searchText}
+				onChange={(e) => setSearchText(e.target.value)}
+			/>
+			{searchText && (
+				<button type="button" onClick={() => setSearchText('')} aria-label="Clear search">
+					✕
+				</button>
+			)}
+		</Box>
+	);
+
+	const renderNoResults = (mobile = false) => (
+		<Stack className={mobile ? 'm-faq-no-results' : 'faq-no-results'}>
+			<Typography>No results</Typography>
+			<span>Try a different keyword in this category.</span>
+		</Stack>
+	);
+
+	// MOBILE LAYOUT
 	if (device === 'mobile') {
 		return (
 			<Stack className="m-faq-content">
+				{renderSearch(true)}
 				<Box className="m-categories" component="div">
 					<div
 						className={category === 'product' ? 'active' : ''}
@@ -461,8 +492,9 @@ const Faq = () => {
 					</div>
 				</Box>
 				<Box className="m-wrap" component="div">
-					{data[category] &&
-						data[category].map((ele) => (
+					{visibleItems.length === 0 && renderNoResults(true)}
+					{visibleItems.length > 0 &&
+						visibleItems.map((ele) => (
 							<Accordion
 								expanded={expanded === ele.id}
 								onChange={handleChange(ele.id)}
@@ -493,9 +525,10 @@ const Faq = () => {
 		);
 	}
 
-	// 🔹 PC LAYOUT
+	// PC LAYOUT
 	return (
 		<Stack className={'faq-content'}>
+			{renderSearch()}
 			<Box className={'categories'} component={'div'}>
 				<div
 					className={category === 'product' ? 'active' : ''}
@@ -541,8 +574,9 @@ const Faq = () => {
 				</div>
 			</Box>
 			<Box className={'wrap'} component={'div'}>
-				{data[category] &&
-					data[category].map((ele) => (
+				{visibleItems.length === 0 && renderNoResults()}
+				{visibleItems.length > 0 &&
+					visibleItems.map((ele) => (
 						<Accordion
 							expanded={expanded === ele.id}
 							onChange={handleChange(ele.id)}
