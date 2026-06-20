@@ -7,7 +7,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import IconButton from '@mui/material/IconButton';
-import { REACT_APP_API_URL } from '../../config';
+import { getMemberImage } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../sweetAlert';
 
@@ -35,13 +35,7 @@ const MyMenu = () => {
 				<Stack className={'profile'}>
 					<Box component={'div'} className={'profile-img'}>
 						<img
-							src={
-								user?.memberImage
-									? user.memberImage.startsWith('http')
-										? user.memberImage
-										: `${REACT_APP_API_URL}/${user.memberImage}`
-									: '/img/profile/defaultUser.svg'
-							}
+							src={getMemberImage(user?.memberImage)}
 							alt={'member-photo'}
 						/>
 					</Box>

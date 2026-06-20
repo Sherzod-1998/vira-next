@@ -31,7 +31,7 @@ import Link from 'next/link';
 import { useReactiveVar, useQuery, useMutation, gql } from '@apollo/client';
 import { socketVar, unreadNotificationCountVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
-import { REACT_APP_API_URL } from '../config';
+import { getMemberImage } from '../config';
 import {
 	GET_MY_NOTIFICATIONS,
 	GET_MY_UNREAD_NOTIFICATIONS_COUNT,
@@ -301,7 +301,7 @@ const Top: React.FC = () => {
 									<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
 										<img
 											src={
-												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.png'
+												getMemberImage(user?.memberImage)
 											}
 											alt=""
 										/>
@@ -515,13 +515,7 @@ const Top: React.FC = () => {
 							<>
 								<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
 									<img
-										src={
-											user?.memberImage
-												? user.memberImage.startsWith('http')
-													? user.memberImage
-													: `${REACT_APP_API_URL}/${user.memberImage}`
-												: '/img/profile/defaultUser.svg'
-										}
+										src={getMemberImage(user?.memberImage)}
 										alt=""
 									/>
 								</div>
