@@ -1,0 +1,181 @@
+.home-page {
+	.new-arrivals {
+		width: 100%;
+		background: #ffffff;
+		padding: 70px 0;
+
+		&.mobile {
+			padding: 40px 0;
+		}
+
+		.new-arrivals__inner {
+			max-width: 1280px;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
+
+		// ── Section header ──────────────────────────────────────
+		.new-arrivals__header {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-end;
+			justify-content: space-between;
+			margin-bottom: 32px;
+		}
+
+		.new-arrivals__header-left {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.new-arrivals__eyebrow {
+			margin: 0;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: #c9a84c;
+		}
+
+		.new-arrivals__title {
+			margin: 0;
+			font-family: 'Unbounded', system-ui, -apple-system, sans-serif;
+			font-size: 34px;
+			font-weight: 500;
+			line-height: 1.2;
+			letter-spacing: -0.5px;
+			color: #212121;
+		}
+
+		// ── Right side: nav buttons + view-all link ─────────────
+		.new-arrivals__header-right {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.new-arrivals__nav-btns {
+			display: flex;
+			flex-direction: row;
+			gap: 8px;
+		}
+
+		.new-arrivals__nav-btn {
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			border: 1px solid #ece7dd;
+			background: #ffffff;
+			color: #c9a84c;
+			font-size: 18px;
+			display: grid;
+			place-items: center;
+			cursor: pointer;
+			transition: border-color 0.2s ease, transform 0.12s ease, background 0.2s ease;
+			line-height: 1;
+
+			&:hover {
+				border-color: #c9a84c;
+				background: #faf9f6;
+				transform: translateY(-1px);
+			}
+
+			&:active {
+				transform: translateY(0);
+			}
+
+			&.swiper-button-disabled {
+				opacity: 0.35;
+				cursor: not-allowed;
+				pointer-events: none;
+			}
+		}
+
+		.new-arrivals__view-all {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 600;
+			color: #c9a84c;
+			text-decoration: none;
+			letter-spacing: 0.02em;
+			transition: color 0.2s ease;
+
+			.new-arrivals__view-all-arrow {
+				font-size: 16px;
+				transition: transform 0.2s ease;
+			}
+
+			&:hover {
+				color: #a98a34;
+				text-decoration: underline;
+
+				.new-arrivals__view-all-arrow {
+					transform: translateX(3px);
+				}
+			}
+		}
+
+		// ── Carousel ─────────────────────────────────────────────
+		.new-arrivals__carousel {
+			position: relative;
+
+			.swiper {
+				overflow: hidden;
+				padding-bottom: 32px;
+
+				.swiper-wrapper {
+					align-items: stretch;
+				}
+
+				.swiper-slide {
+					display: flex;
+				}
+			}
+		}
+
+		// ── Pagination dots ───────────────────────────────────────
+		.swiper-new-pagination {
+			display: flex;
+			justify-content: center;
+			gap: 8px;
+			margin-top: 8px;
+
+			.swiper-pagination-bullet {
+				background: #cfd3da;
+				opacity: 1;
+				transition: background 0.2s ease, transform 0.2s ease;
+			}
+
+			.swiper-pagination-bullet-active {
+				background: #c9a84c;
+				transform: scale(1.2);
+			}
+		}
+
+		// ── Mobile overrides ─────────────────────────────────────
+		@media (max-width: 768px) {
+			padding: 40px 0;
+
+			.new-arrivals__header {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 16px;
+				margin-bottom: 20px;
+			}
+
+			.new-arrivals__title {
+				font-size: 26px;
+			}
+
+			.new-arrivals__header-right {
+				align-self: flex-end;
+			}
+		}
+	}
+}

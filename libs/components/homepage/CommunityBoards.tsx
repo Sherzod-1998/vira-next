@@ -46,7 +46,7 @@ const CommunityBoards = () => {
 
           {getLatestLoading && <div className="grid-placeholder">Loading...</div>}
           {getLatestError && (
-            <div className="grid-error">Maqolalarni yuklashda xatolik yuz berdi.</div>
+            <div className="grid-error">Failed to load articles. Please try again.</div>
           )}
 
           {!getLatestLoading && !getLatestError && (
@@ -91,7 +91,7 @@ const CommunityBoards = () => {
 
             {getLatestLoading && <div className="grid-placeholder">Loading...</div>}
             {getLatestError && (
-              <div className="grid-error">Maqolalarni yuklashda xatolik yuz berdi.</div>
+              <div className="grid-error">Failed to load articles. Please try again.</div>
             )}
           </Stack>
         </Stack>

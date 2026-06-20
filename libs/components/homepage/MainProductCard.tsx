@@ -71,13 +71,13 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 				{/* rating bloki */}
 				<Stack className="rating" direction="row" alignItems="center" spacing={1}>
 					<Stack className="stars" direction="row" spacing={0.5}>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
+						{[1, 2, 3, 4, 5].map((n) => (
+							<span key={n} className={`star${Math.round(data.productRank ?? 0) >= n ? '' : ' star--empty'}`}>
+								★
+							</span>
+						))}
 					</Stack>
-					<Typography className="review-count">{data.productViews ?? 0} reviews</Typography>
+					<Typography className="review-count">{data.productViews ?? 0} views</Typography>
 				</Stack>
 
 				{/* Price row */}

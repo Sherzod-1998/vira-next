@@ -45,9 +45,9 @@ export default function ExquisiteSection() {
 					</h2>
 
 					<p className="desc">
-						Praesent maximus est a ligula ultricies, sit amet ornare dui mattis. Donec ac mi dui. Donec commodo ultrices
-						elit eu sodales. Maecenas ut orci hendrerit. Nunc in arcu et nunc scelerisque dignissim. Aliquam enim nunc,
-						volutpat eget.
+						From timeless solitaires to rare heirloom pieces, every item on Vira is curated for those who appreciate true
+						craftsmanship. Discover jewelry that carries meaning — verified, authentic, and ready to become part of your
+						story.
 					</p>
 
 					<div className="cta-row">
