@@ -8,6 +8,7 @@ import {
   IconButton,
   Button,
 } from '@mui/material';
+import Nouislider from 'nouislider-react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductType, ProductMaterial } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
@@ -21,6 +22,12 @@ interface FilterType {
   setSearchFilter: (val: ProductsInquiry) => void;
   initialInput: ProductsInquiry;
 }
+
+const PRICE_MIN = 0;
+const PRICE_MAX = 2000000;
+const PRICE_STEP = 50000;
+
+const formatPrice = (value: number) => `$${value.toLocaleString()}`;
 
 const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialInput }) => {
   const device = useDeviceDetect();
@@ -36,8 +43,20 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
   const [showLocation, setShowLocation] = useState<boolean>(false);
   const [showType, setShowType] = useState<boolean>(false);
   const [showMaterial, setShowMaterial] = useState<boolean>(false);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    searchFilter?.search?.pricesRange?.start ?? PRICE_MIN,
+    searchFilter?.search?.pricesRange?.end ?? PRICE_MAX,
+  ]);
 
   /** EFFECTS **/
+  useEffect(() => {
+    setSearchText(searchFilter?.search?.text || '');
+    setPriceRange([
+      searchFilter?.search?.pricesRange?.start ?? PRICE_MIN,
+      searchFilter?.search?.pricesRange?.end ?? PRICE_MAX,
+    ]);
+  }, [searchFilter]);
+
   useEffect(() => {
     if (searchFilter?.search?.locationList?.length === 0) {
       delete searchFilter.search.locationList;
@@ -244,46 +263,71 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
   );
 
   const productPriceHandler = useCallback(
-    async (value: number, type: 'start' | 'end') => {
-      if (type === 'start') {
-        await router.push(
-          `/product?input=${JSON.stringify({
-            ...searchFilter,
-            search: {
-              ...searchFilter.search,
-              pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-            },
-          })}`,
-          `/product?input=${JSON.stringify({
-            ...searchFilter,
-            search: {
-              ...searchFilter.search,
-              pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-            },
-          })}`,
-          { scroll: false },
-        );
-      } else {
-        await router.push(
-          `/product?input=${JSON.stringify({
-            ...searchFilter,
-            search: {
-              ...searchFilter.search,
-              pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-            },
-          })}`,
-          `/product?input=${JSON.stringify({
-            ...searchFilter,
-            search: {
-              ...searchFilter.search,
-              pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-            },
-          })}`,
-          { scroll: false },
-        );
-      }
+    async (values: number[]) => {
+      const start = Math.max(PRICE_MIN, Math.min(values[0], PRICE_MAX));
+      const end = Math.max(start, Math.min(values[1], PRICE_MAX));
+
+      await router.push(
+        `/product?input=${JSON.stringify({
+          ...searchFilter,
+          page: 1,
+          search: {
+            ...searchFilter.search,
+            pricesRange: { start, end },
+          },
+        })}`,
+        `/product?input=${JSON.stringify({
+          ...searchFilter,
+          page: 1,
+          search: {
+            ...searchFilter.search,
+            pricesRange: { start, end },
+          },
+        })}`,
+        { scroll: false },
+      );
     },
     [router, searchFilter],
+  );
+
+  const pushFilterInput = useCallback(
+    async (input: ProductsInquiry) => {
+      setSearchFilter(input);
+      await router.push(`/product?input=${JSON.stringify(input)}`, `/product?input=${JSON.stringify(input)}`, {
+        scroll: false,
+      });
+    },
+    [router, setSearchFilter],
+  );
+
+  const priceSlideHandler = useCallback((values: any[], handle: number, unencodedValues: number[]) => {
+    setPriceRange([Math.round(unencodedValues[0]), Math.round(unencodedValues[1])]);
+  }, []);
+
+  const priceSetHandler = useCallback(
+    async (values: any[], handle: number, unencodedValues: number[]) => {
+      const nextRange = [Math.round(unencodedValues[0]), Math.round(unencodedValues[1])];
+      setPriceRange(nextRange as [number, number]);
+      await productPriceHandler(nextRange);
+    },
+    [productPriceHandler],
+  );
+
+  const renderPriceSlider = () => (
+    <Stack className="price-slider-wrap">
+      <Stack className="price-slider-values" direction="row" justifyContent="space-between">
+        <Typography>{formatPrice(priceRange[0])}</Typography>
+        <Typography>{formatPrice(priceRange[1])}</Typography>
+      </Stack>
+      <Nouislider
+        range={{ min: PRICE_MIN, max: PRICE_MAX }}
+        start={priceRange}
+        step={PRICE_STEP}
+        connect
+        onSlide={priceSlideHandler}
+        onSet={priceSetHandler}
+      />
+    </Stack>
   );
 
   // Reset
@@ -304,7 +348,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
     }
   };
 
-  /** 📱 MOBILE LAYOUT **/
+  /** MOBILE LAYOUT **/
   if (device === 'mobile') {
     return (
       <Stack className="m-filter-main" spacing={2}>
@@ -336,10 +380,10 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             onChange={(e: any) => setSearchText(e.target.value)}
             onKeyDown={(event: any) => {
               if (event.key === 'Enter') {
-                setSearchFilter({
+                pushFilterInput({
                   ...searchFilter,
                   search: { ...searchFilter.search, text: searchText },
-                });
+                }).then();
               }
             }}
             endAdornment={
@@ -347,10 +391,10 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
                 sx={{ cursor: 'pointer' }}
                 onClick={() => {
                   setSearchText('');
-                  setSearchFilter({
+                  pushFilterInput({
                     ...searchFilter,
-                    search: { ...searchFilter.search, text: '' },
-                  });
+                    search: { ...searchFilter.search, text: undefined },
+                  }).then();
                 }}
               />
             }
@@ -495,53 +539,13 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             Price Range
           </Typography>
 
-          <Stack direction="row" alignItems="center" gap={1}>
-            <OutlinedInput
-              type="number"
-              placeholder="$ min"
-              inputProps={{ min: 0 }}
-              value={searchFilter?.search?.pricesRange?.start ?? 0}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const v = Number(e.target.value);
-                if (v >= 0) {
-                  productPriceHandler(v, 'start');
-                }
-              }}
-              sx={{
-                flex: 1,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#ddd' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#bbb' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#000' },
-                fontSize: 13,
-              }}
-            />
-            <Typography fontSize={13}>–</Typography>
-            <OutlinedInput
-              type="number"
-              placeholder="$ max"
-              inputProps={{ min: 0 }}
-              value={searchFilter?.search?.pricesRange?.end ?? 0}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const v = Number(e.target.value);
-                if (v >= 0) {
-                  productPriceHandler(v, 'end');
-                }
-              }}
-              sx={{
-                flex: 1,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#ddd' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#bbb' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#000' },
-                fontSize: 13,
-              }}
-            />
-          </Stack>
+          {renderPriceSlider()}
         </Stack>
       </Stack>
     );
   }
 
-  /** 💻 DESKTOP **/
+  /** DESKTOP **/
   return (
     <Stack className="filter-main">
       {/* SEARCH */}
@@ -568,20 +572,20 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             }}
             onKeyDown={(event: any) => {
               if (event.key === 'Enter') {
-                setSearchFilter({
+                pushFilterInput({
                   ...searchFilter,
                   search: { ...searchFilter.search, text: searchText },
-                });
+                }).then();
               }
             }}
             endAdornment={
               <CancelRoundedIcon
                 onClick={() => {
                   setSearchText('');
-                  setSearchFilter({
+                  pushFilterInput({
                     ...searchFilter,
-                    search: { ...searchFilter.search, text: '' },
-                  });
+                    search: { ...searchFilter.search, text: undefined },
+                  }).then();
                 }}
               />
             }
@@ -702,33 +706,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
       <Stack className="find-your-jewelry">
         <Typography className="title">Price Range</Typography>
 
-        <Stack className="square-year-input">
-          <input
-            type="number"
-            placeholder="$ min"
-            min={0}
-            value={searchFilter?.search?.pricesRange?.start ?? 0}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const v = Number(e.target.value);
-              if (v >= 0) {
-                productPriceHandler(v, 'start');
-              }
-            }}
-          />
-          <div className="central-divider" />
-          <input
-            type="number"
-            placeholder="$ max"
-            min={0}
-            value={searchFilter?.search?.pricesRange?.end ?? 0}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const v = Number(e.target.value);
-              if (v >= 0) {
-                productPriceHandler(v, 'end');
-              }
-            }}
-          />
-        </Stack>
+        {renderPriceSlider()}
       </Stack>
     </Stack>
   );

@@ -1,8 +1,7 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
-import ProductCard from '../../libs/components/product/ProductCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/product/Filter';
@@ -18,6 +17,18 @@ import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import MainProductCard from '../../libs/components/homepage/MainProductCard';
+
+const DEFAULT_PRICE_START = 0;
+const DEFAULT_PRICE_END = 2000000;
+
+const formatFilterLabel = (value: string) =>
+	value
+		.toLowerCase()
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+
+const formatPrice = (value: number) => `$${value.toLocaleString()}`;
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -40,7 +51,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
 
-	// 🔹 MOBILE FILTER DRAWER HOLATI
+	// Mobile filter drawer state
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	/** APOLLO REQUESTS **/
@@ -67,10 +78,142 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			const inputObj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(inputObj);
 			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+			setFilterSortName(getSortLabel(inputObj.sort, inputObj.direction));
 		}
 	}, [router.query.input]);
 
 	/** HANDLERS **/
+	const getSortLabel = (sort?: string, direction?: Direction) => {
+		if (sort === 'productPrice' && direction === Direction.ASC) return 'Lowest Price';
+		if (sort === 'productPrice' && direction === Direction.DESC) return 'Highest Price';
+		if (sort === 'productViews' && direction === Direction.DESC) return 'Most Popular';
+		if (sort === 'productLikes' && direction === Direction.DESC) return 'Most Liked';
+		return 'New';
+	};
+
+	const pushSearchFilter = async (input: ProductsInquiry) => {
+		await router.push(`/product?input=${JSON.stringify(input)}`, `/product?input=${JSON.stringify(input)}`, {
+			scroll: false,
+		});
+		setSearchFilter(input);
+		setCurrentPage(input.page === undefined ? 1 : input.page);
+	};
+
+	const resetFilters = async () => {
+		await pushSearchFilter(initialInput);
+	};
+
+	const removeFilterValue = async (field: 'locationList' | 'typeList' | 'materialList', value: string) => {
+		const nextValues = ((searchFilter.search as any)?.[field] || []).filter((item: string) => item !== value);
+		const nextSearch = { ...searchFilter.search, [field]: nextValues };
+
+		if (nextValues.length === 0) delete (nextSearch as any)[field];
+
+		await pushSearchFilter({ ...searchFilter, page: 1, search: nextSearch });
+	};
+
+	const removeTextFilter = async () => {
+		const nextSearch = { ...searchFilter.search };
+		delete nextSearch.text;
+		await pushSearchFilter({ ...searchFilter, page: 1, search: nextSearch });
+	};
+
+	const resetPriceFilter = async () => {
+		await pushSearchFilter({
+			...searchFilter,
+			page: 1,
+			search: {
+				...searchFilter.search,
+				pricesRange: { start: DEFAULT_PRICE_START, end: DEFAULT_PRICE_END },
+			},
+		});
+	};
+
+	const activeFilterChips = [
+		...((searchFilter.search?.typeList || []).map((value: string) => ({
+			key: `type-${value}`,
+			label: `Type: ${formatFilterLabel(value)}`,
+			onRemove: () => removeFilterValue('typeList', value),
+		})) || []),
+		...((searchFilter.search?.materialList || []).map((value: string) => ({
+			key: `material-${value}`,
+			label: `Material: ${formatFilterLabel(value)}`,
+			onRemove: () => removeFilterValue('materialList', value),
+		})) || []),
+		...((searchFilter.search?.locationList || []).map((value: string) => ({
+			key: `location-${value}`,
+			label: `Location: ${formatFilterLabel(value)}`,
+			onRemove: () => removeFilterValue('locationList', value),
+		})) || []),
+		...(searchFilter.search?.text
+			? [
+					{
+						key: 'text',
+						label: `Search: ${searchFilter.search.text}`,
+						onRemove: removeTextFilter,
+					},
+			  ]
+			: []),
+		...(searchFilter.search?.pricesRange &&
+		(searchFilter.search.pricesRange.start !== DEFAULT_PRICE_START ||
+			searchFilter.search.pricesRange.end !== DEFAULT_PRICE_END)
+			? [
+					{
+						key: 'price',
+						label: `${formatPrice(searchFilter.search.pricesRange.start)} - ${formatPrice(
+							searchFilter.search.pricesRange.end,
+						)}`,
+						onRemove: resetPriceFilter,
+					},
+			  ]
+			: []),
+	];
+
+	const renderActiveFilters = (mobile = false) =>
+		activeFilterChips.length > 0 && (
+			<Stack className={mobile ? 'm-active-filters' : 'active-filters'} direction="row">
+				{activeFilterChips.map((chip) => (
+					<button className="filter-chip" key={chip.key} type="button" onClick={chip.onRemove}>
+						<span>{chip.label}</span>
+						<b>✕</b>
+					</button>
+				))}
+				<button className="filter-chip clear-chip" type="button" onClick={resetFilters}>
+					Clear all
+				</button>
+			</Stack>
+		);
+
+	const renderSkeletonCards = (mobile = false) => (
+		<div className={mobile ? 'm-product-grid' : 'list-config'}>
+			{Array.from({ length: 9 }).map((_, index) => (
+				<Stack
+					className={`product-card product-card-skeleton ${mobile ? 'mobile' : ''}`}
+					key={`product-skeleton-${index}`}
+				>
+					<Skeleton variant="rectangular" className="skeleton-image" />
+					<Stack className="product-info">
+						<Skeleton variant="text" width="38%" height={22} />
+						<Skeleton variant="text" width="80%" height={28} />
+						<Skeleton variant="text" width="64%" height={24} />
+						<Skeleton variant="text" width="44%" height={28} />
+						<Skeleton variant="rounded" width="100%" height={44} />
+					</Stack>
+				</Stack>
+			))}
+		</div>
+	);
+
+	const renderEmptyState = (mobile = false) => (
+		<div className={mobile ? 'm-empty-state' : 'empty-state'}>
+			<Typography className="empty-title">No pieces found</Typography>
+			<Typography className="empty-subtitle">Try adjusting your filters</Typography>
+			<Button className="empty-clear-btn" onClick={resetFilters}>
+				Clear filters
+			</Button>
+		</div>
+	);
+
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
 		await router.push(
@@ -125,24 +268,36 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextInput = { ...searchFilter };
+
 		switch (e.currentTarget.id) {
 			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC });
+				nextInput = { ...searchFilter, sort: 'createdAt', direction: Direction.DESC };
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.ASC });
+				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.ASC };
 				setFilterSortName('Lowest Price');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.DESC });
+				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.DESC };
 				setFilterSortName('Highest Price');
+				break;
+			case 'popular':
+				nextInput = { ...searchFilter, sort: 'productViews', direction: Direction.DESC };
+				setFilterSortName('Most Popular');
+				break;
+			case 'liked':
+				nextInput = { ...searchFilter, sort: 'productLikes', direction: Direction.DESC };
+				setFilterSortName('Most Liked');
+				break;
 		}
+		pushSearchFilter(nextInput).then();
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
 
-	/* 📱 MOBILE LAYOUT */
+	/* MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<div id="product-list-page-mobile">
@@ -171,9 +326,21 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								<MenuItem onClick={sortingHandler} id="highest" disableRipple>
 									Highest Price
 								</MenuItem>
+								<MenuItem onClick={sortingHandler} id="popular" disableRipple>
+									Most Popular
+								</MenuItem>
+								<MenuItem onClick={sortingHandler} id="liked" disableRipple>
+									Most Liked
+								</MenuItem>
 							</Menu>
 						</div>
 					</Stack>
+
+					{renderActiveFilters(true)}
+
+					<Typography className="m-result-count">
+						Showing {products?.length || 0} of {total || 0} pieces
+					</Typography>
 
 					{/* FILTER BUTTON */}
 					<Stack className="m-filter-bar">
@@ -184,18 +351,9 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 					{/* LIST / CONTENT */}
 					<Stack className="m-content" spacing={2}>
-						{getProductsLoading && (
-							<div className="m-loading">
-								<p>Loading products...</p>
-							</div>
-						)}
+						{getProductsLoading && renderSkeletonCards(true)}
 
-						{!getProductsLoading && products?.length === 0 && (
-							<div className="m-no-data">
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No products found!</p>
-							</div>
-						)}
+						{!getProductsLoading && products?.length === 0 && renderEmptyState(true)}
 
 						{!getProductsLoading && products?.length > 0 && (
 							<div className="m-product-grid">
@@ -217,9 +375,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								shape="circular"
 								color="secondary"
 							/>
-							<Typography className="m-total">
-								Total {total} product{total > 1 ? 's' : ''} available
-							</Typography>
+							<Typography className="m-total">Showing {products.length} of {total} pieces</Typography>
 						</Stack>
 					)}
 
@@ -238,7 +394,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 						}}
 					>
 						<Stack spacing={2}>
-							{/* Asl Filter component - mobil uchun ham o‘sha */}
+							{/* The same filter component is used for mobile. */}
 							{/* @ts-ignore */}
 							<Filter
 								searchFilter={searchFilter}
@@ -261,7 +417,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 		);
 	}
 
-	/* 💻 DESKTOP LAYOUT */
+	/* DESKTOP LAYOUT */
 	return (
 		<div id="product-list-page" style={{ position: 'relative' }}>
 			<div className="container">
@@ -296,6 +452,22 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 							>
 								Highest Price
 							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'popular'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								Most Popular
+							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'liked'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								Most Liked
+							</MenuItem>
 						</Menu>
 					</div>
 				</Box>
@@ -305,18 +477,21 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 						<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
 					</Stack>
 					<Stack className="main-config" mb={'76px'}>
-						<Stack className={'list-config'}>
-							{products?.length === 0 ? (
-								<div className={'no-data'}>
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No Products found!</p>
-								</div>
-							) : (
-								products.map((product: Product) => {
-									return <MainProductCard product={product} onLike={onLike} key={product?._id} />;
-								})
-							)}
+						<Stack className="result-toolbar">
+							<Typography className="result-count">
+								Showing {products?.length || 0} of {total || 0} pieces
+							</Typography>
+							{renderActiveFilters()}
 						</Stack>
+						{getProductsLoading && renderSkeletonCards()}
+						{!getProductsLoading && products?.length === 0 && renderEmptyState()}
+						{!getProductsLoading && products?.length > 0 && (
+							<Stack className={'list-config'}>
+								{products.map((product: Product) => {
+									return <MainProductCard product={product} onLike={onLike} key={product?._id} />;
+								})}
+							</Stack>
+						)}
 						<Stack className="pagination-config">
 							{products.length !== 0 && (
 								<Stack className="pagination-box">
@@ -342,9 +517,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 							{products.length !== 0 && (
 								<Stack className="total-result">
-									<Typography>
-										Total {total} product{total > 1 ? 's' : ''} available
-									</Typography>
+									<Typography>Showing {products.length} of {total} pieces</Typography>
 								</Stack>
 							)}
 						</Stack>

@@ -7,6 +7,7 @@ import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../apollo/client';
 import { appWithTranslation } from 'next-i18next';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import 'nouislider/distribute/nouislider.css';
 import '../scss/app.scss';
 import '../scss/pc/main.scss';
 import '../scss/mobile/main.scss';
