@@ -43,7 +43,6 @@ const NewArrivals: React.FC = () => {
 			await likeTargetProduct({ variables: { input: id } });
 			await refetch(variables);
 		} catch (e) {
-			console.log('like error:', (e as any)?.message);
 		}
 	};
 

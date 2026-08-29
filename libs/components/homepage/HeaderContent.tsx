@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -59,12 +60,11 @@ const HeaderContent = () => {
 							left: -28, // moved further to the left
 						}}
 					>
-						<img
+						<Image
 							src="/img/banner/circle.jpg"
 							alt="Header Banner"
+							fill
 							style={{
-								width: '100%',
-								height: '100%',
 								borderRadius: '50%',
 								objectFit: 'cover',
 							}}
@@ -140,12 +140,11 @@ const HeaderContent = () => {
 							left: -28, // moved further to the left
 						}}
 					>
-						<img
+						<Image
 							src="/img/banner/circle.jpg"
 							alt="Header Banner"
+							fill
 							style={{
-								width: '100%',
-								height: '100%',
 								borderRadius: '50%',
 								objectFit: 'cover',
 							}}

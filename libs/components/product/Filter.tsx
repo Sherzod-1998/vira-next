@@ -154,7 +154,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
           );
         }
       } catch (err: any) {
-        console.log('ERROR, productLocationSelectHandler:', err);
       }
     },
     [router, searchFilter],
@@ -205,7 +204,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
           );
         }
       } catch (err: any) {
-        console.log('ERROR, productTypeSelectHandler:', err);
       }
     },
     [router, searchFilter],
@@ -256,7 +254,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
           );
         }
       } catch (err: any) {
-        console.log('ERROR, productMaterialSelectHandler:', err);
       }
     },
     [router, searchFilter],
@@ -344,7 +341,6 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
         { scroll: false },
       );
     } catch (err: any) {
-      console.log('ERROR, refreshHandler:', err);
     }
   };
 

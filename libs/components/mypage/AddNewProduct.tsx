@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -255,7 +256,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									))}
 								</select>
 								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 							</Stack>
 						</Stack>
 
@@ -283,7 +284,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									))}
 								</select>
 								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 							</Stack>
 
 							<Stack className="price-year-after-price">
@@ -327,7 +328,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									))}
 								</select>
 								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 							</Stack>
 
 							<Stack className="price-year-after-price" />
@@ -405,7 +406,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 								const imagePath: string = `${REACT_APP_API_URL}/${image}`;
 								return (
 									<Stack className="image-box" key={image}>
-										<img src={imagePath} alt="" />
+										<Image src={imagePath} alt="Product image" fill style={{ objectFit: 'cover' }} />
 									</Stack>
 								);
 							})}

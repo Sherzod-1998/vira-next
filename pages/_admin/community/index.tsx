@@ -115,13 +115,11 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 				setCommunityInquiry({ ...communityInquiry });
 			}
 		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
 		}
 	};
 
 	const updateArticleHandler = async (updateData: BoardArticleUpdate) => {
 		try {
-			console.log('+updateData: ', updateData);
 			await updateBoardArticleByAdmin({
 				variables: {
 					input: updateData,
@@ -150,9 +148,6 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 			sweetErrorHandling(err).then();
 		}
 	};
-
-	console.log('+communityInquiry', communityInquiry);
-	console.log('+articles', articles);
 
 	return (
 		<Box component={'div'} className={'content'}>

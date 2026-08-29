@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
@@ -202,10 +203,12 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				<div className="m-container">
 					{/* GALLERY */}
 					<Stack className="m-gallery">
-						<div className="m-main-img">
-							<img
+						<div className="m-main-img" style={{ position: 'relative', width: '100%', height: 320 }}>
+							<Image
 								src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
 								alt="product-main"
+								fill
+								style={{ objectFit: 'cover' }}
 							/>
 						</div>
 
@@ -221,7 +224,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 											className={`m-thumb ${active ? 'is-active' : ''}`}
 											onClick={() => changeImageHandler(subImg)}
 										>
-											<img src={imagePath} alt="thumb" />
+											<Image src={imagePath} alt="thumb" width={72} height={72} style={{ objectFit: 'cover' }} />
 										</button>
 									);
 								})}
@@ -307,10 +310,12 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							<Stack className="m-seller" spacing={1.5}>
 								<span className="m-seller-label">Seller</span>
 								<Stack direction="row" spacing={1.5} alignItems="center">
-									<img
+									<Image
 										className="m-seller-img"
 										src={getMemberImage(product.memberData.memberImage)}
 										alt="seller"
+										width={48}
+										height={48}
 									/>
 									<Stack spacing={0.3}>
 											<Link href={`/member?memberId=${product.memberData._id}`} passHref>
@@ -395,9 +400,11 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								{/* LEFT: GALLERY */}
 								<Stack className="pd-left">
 									<div className="pd-main">
-										<img
+										<Image
 											src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
 											alt="product-main"
+											width={467}
+											height={640}
 										/>
 									</div>
 
@@ -413,7 +420,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 														className={`pd-thumb ${active ? 'is-active' : ''}`}
 														onClick={() => changeImageHandler(subImg)}
 													>
-														<img src={imagePath} alt="thumb" />
+														<Image src={imagePath} alt="thumb" width={151} height={195} />
 													</button>
 												);
 											})}
@@ -579,10 +586,12 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack className={'info-box'}>
 									<Typography className={'main-title'}>Get More Information</Typography>
 									<Stack className={'image-info'}>
-											<img
+											<Image
 												className={'member-image'}
 												src={getMemberImage(product?.memberData?.memberImage)}
 												alt="member profile"
+												width={95}
+												height={95}
 											/>
 											<Stack className={'name-phone-listings'}>
 												<Link href={`/member?memberId=${product?.memberData?._id}`} passHref>

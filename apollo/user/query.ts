@@ -32,7 +32,6 @@ export const GET_SELLERS = gql`
 				deletedAt
 				createdAt
 				updatedAt
-				accessToken
 
 				# Include viewer like state for seller cards.
 				meLiked {
@@ -73,7 +72,6 @@ query GetMember($memberId: String!) {
         deletedAt
         createdAt
         updatedAt
-        accessToken
         _id
         meLiked {
             memberId
@@ -171,7 +169,6 @@ export const GET_PRODUCTS = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 				meLiked {
 					memberId
@@ -338,7 +335,6 @@ export const GET_BOARD_ARTICLE = gql`
 				deletedAt
 				createdAt
 				updatedAt
-				accessToken
 			}
 		}
 	}
@@ -390,7 +386,6 @@ export const GET_BOARD_ARTICLES = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
@@ -441,7 +436,6 @@ export const GET_COMMENTS = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
@@ -510,7 +504,6 @@ export const GET_MEMBER_FOLLOWERS = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
@@ -564,7 +557,6 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 					meLiked {
 						memberId
 						likeRefId

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Stack, Typography, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -38,8 +39,9 @@ const ProductCard = (props: ProductCardType) => {
 							pathname: '/product/detail',
 							query: { id: product?._id },
 						}}
+						style={{ position: 'relative', display: 'block', width: '100%', height: '100%' }}
 					>
-						<img src={imagePath} alt="" />
+						<Image src={imagePath} alt={product?.productTitle || 'Product image'} fill style={{ objectFit: 'cover' }} />
 					</Link>
 					{product && product?.productRank > topProductRank && (
 						<Box component={'div'} className={'top-badge'}>
