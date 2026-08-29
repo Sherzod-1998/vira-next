@@ -68,10 +68,6 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 	});
 	const [quantity, setQuantity] = useState(2);
 
-	const handleAddToCart = () => {
-		alert('Mahsulot savatga qo‘shildi!');
-	};
-
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const [createComment] = useMutation(CREATE_COMMENT);
@@ -665,7 +661,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								</Stack>
 								<Stack className={'info-box'}>
 									<Typography className={'sub-title'}>{t('detail.phone')}</Typography>
-									<input type={'text'} placeholder={t('detail.phonePlaceholder') as string} />≠
+									<input type={'text'} placeholder={t('detail.phonePlaceholder') as string} />
 								</Stack>
 								<Stack className={'info-box'}>
 									<Typography className={'sub-title'}>{t('detail.email')}</Typography>
