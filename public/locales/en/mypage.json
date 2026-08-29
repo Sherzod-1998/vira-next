@@ -1,0 +1,111 @@
+{
+  "subtitle": "We are glad to see you again!",
+  "mobile": {
+    "myPage": "MY PAGE"
+  },
+  "alerts": {
+    "subscribed": "Subscribed!",
+    "unsubscribed": "Unsubscribed!",
+    "success": "Success!"
+  },
+  "menu": {
+    "manageListings": "MANAGE LISTINGS",
+    "addProduct": "Add Product",
+    "myProducts": "My Products",
+    "myFavorites": "My Favorites",
+    "recentlyVisited": "Recently Visited",
+    "myFollowers": "My Followers",
+    "myFollowings": "My Followings",
+    "community": "Community",
+    "articles": "Articles",
+    "writeArticle": "Write Article",
+    "manageAccount": "MANAGE ACCOUNT",
+    "myProfile": "My Profile",
+    "logout": "Logout",
+    "logoutConfirm": "Do you want to logout?"
+  },
+  "articles": {
+    "title": "Article",
+    "loading": "Loading articles...",
+    "empty": "No articles found",
+    "emptyHint": "You haven't written any articles yet",
+    "totalCount": "Total {{count}} article(s) available",
+    "likeSuccess": "Success"
+  },
+  "products": {
+    "title": "My Products",
+    "onSale": "On Sale",
+    "onSold": "On Sold",
+    "listingTitle": "Listing title",
+    "datePublished": "Date Published",
+    "status": "Status",
+    "view": "View",
+    "action": "Action",
+    "loading": "Loading products...",
+    "empty": "No products found",
+    "emptyHint": "Products you list will show up here",
+    "totalCount": "{{count}} product available",
+    "sold": "Sold",
+    "deleteConfirm": "Are you sure to delete this product?",
+    "statusConfirm": "Are you sure change to {{status}} status?"
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "loading": "Loading favorites...",
+    "empty": "No favorites found",
+    "emptyHint": "Products you like will show up here",
+    "totalCount": "Total {{count}} favorite product{{suffix}}"
+  },
+  "recentlyVisited": {
+    "title": "Recently Visited",
+    "loading": "Loading recently visited products...",
+    "empty": "No recently visited products found",
+    "emptyHint": "Products you view will show up here",
+    "totalCount": "Total {{count}} recently visited product{{suffix}}"
+  },
+  "profile": {
+    "title": "My Profile",
+    "photo": "Photo",
+    "uploadImage": "Upload Profile Image",
+    "photoFormatHint": "A photo must be in JPG, JPEG or PNG format!",
+    "username": "Username",
+    "usernamePlaceholder": "Your username",
+    "phone": "Phone",
+    "phonePlaceholder": "Your Phone",
+    "address": "Address",
+    "addressPlaceholder": "Your address",
+    "updateButton": "Update Profile",
+    "updateSuccess": "Information updated successfully!"
+  },
+  "writeArticle": {
+    "title": "Write an Article",
+    "subtitle": "Feel free to write your ideas!"
+  },
+  "addProduct": {
+    "title": "Add New Product",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Title",
+    "price": "Price",
+    "pricePlaceholder": "Price",
+    "selectType": "Select Type",
+    "selectLocation": "Select Location",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Address",
+    "selectMaterial": "Select Material",
+    "select": "Select",
+    "productDescriptionTitle": "Product Description",
+    "descriptionLabel": "Description",
+    "uploadTitle": "Upload photos of your product",
+    "dragDrop": "Drag and drop images here",
+    "formatHint": "Photos must be JPEG or PNG format and least 2048x768",
+    "browseFiles": "Browse Files",
+    "save": "Save",
+    "createSuccess": "This product has been created successfully.",
+    "updateSuccess": "This product has been updated successfully.",
+    "maxImagesError": "Cannot upload more than 5 images!"
+  },
+  "productCard": {
+    "editAria": "Edit product",
+    "deleteAria": "Delete product"
+  }
+}

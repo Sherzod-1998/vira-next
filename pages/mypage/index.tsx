@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { NextPage } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 import { Stack } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProducts from '../../libs/components/mypage/MyProducts';
@@ -21,14 +22,15 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { Messages } from '../../libs/config';
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'mypage'])),
 	},
 });
 
 const MyPage: NextPage = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 	const category: any = router.query?.category ?? 'myProfile';
@@ -54,7 +56,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Subscribed!', 800);
+			await sweetTopSmallSuccessAlert(t('alerts.subscribed'), 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
@@ -71,7 +73,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Unsubscribed!', 800);
+			await sweetTopSmallSuccessAlert(t('alerts.unsubscribed'), 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
@@ -88,7 +90,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Success!', 800);
+			await sweetTopSmallSuccessAlert(t('alerts.success'), 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetMixinErrorAlert(err.message).then();
@@ -105,7 +107,7 @@ const MyPage: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
+		return <div>{t('mobile.myPage')}</div>;
 	} else {
 		return (
 			<div id="my-page" style={{ position: 'relative' }}>

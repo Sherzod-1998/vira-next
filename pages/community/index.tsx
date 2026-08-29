@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Stack, Tab, Typography, Button, Pagination, Menu, MenuItem, Skeleton } from '@mui/material';
+import Head from 'next/head';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
 import CommunityCard from '../../libs/components/common/CommunityCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -19,14 +22,15 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/swee
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction } from '../../libs/enums/common.enum';
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'community'])),
 	},
 });
 
 const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('community');
 	const router = useRouter();
 	const { query } = router;
 	const articleCategory = query?.articleCategory as string;
@@ -37,7 +41,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const [searchText, setSearchText] = useState<string>('');
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState<boolean>(false);
-	const [filterSortName, setFilterSortName] = useState<string>('Newest');
+	const [filterSortName, setFilterSortName] = useState<string>(t('list.sort.newest'));
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
@@ -88,10 +92,10 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	/** HANDLERS **/
 	const getSortLabel = (sort?: string, direction?: Direction) => {
-		if (sort === 'articleLikes') return 'Most Liked';
-		if (sort === 'articleViews') return 'Most Viewed';
-		if (sort === 'articleComments') return 'Most Commented';
-		return 'Newest';
+		if (sort === 'articleLikes') return t('list.sort.liked');
+		if (sort === 'articleViews') return t('list.sort.viewed');
+		if (sort === 'articleComments') return t('list.sort.commented');
+		return t('list.sort.newest');
 	};
 
 	const pushCommunityQuery = async (input: BoardArticlesInquiry) => {
@@ -210,12 +214,12 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	const renderEmptyState = (mobile = false) => (
 		<Stack className={mobile ? 'no-data m-empty-state' : 'no-data empty-state'}>
-			<img src="/img/icons/icoAlert.svg" alt="" />
-			<Typography className="empty-title">No Article found!</Typography>
-			<Typography className="empty-subtitle">Try another category or search phrase.</Typography>
+			<Image src="/img/icons/icoAlert.svg" alt="" width={40} height={40} />
+			<Typography className="empty-title">{t('list.emptyTitle')}</Typography>
+			<Typography className="empty-subtitle">{t('list.emptySubtitle')}</Typography>
 			{searchCommunity.search.text && (
 				<Button className="clear-search-btn" onClick={clearSearchHandler}>
-					Clear search
+					{t('list.clearSearch')}
 				</Button>
 			)}
 		</Stack>
@@ -239,7 +243,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 			<div className={mobile ? 'm-search-box' : 'search-box'}>
 				<input
 					type="text"
-					placeholder="Search articles"
+					placeholder={t('list.searchPlaceholder')}
 					value={searchText}
 					onChange={(e) => setSearchText(e.target.value)}
 					onKeyDown={(event) => {
@@ -247,28 +251,28 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 					}}
 				/>
 				{searchText && (
-					<button type="button" onClick={clearSearchHandler} aria-label="Clear search">
+					<button type="button" onClick={clearSearchHandler} aria-label={t('list.clearSearch')}>
 						✕
 					</button>
 				)}
 			</div>
 			<div className={mobile ? 'm-sort-box' : 'sort-box'}>
-				<span>Sort by</span>
+				<span>{t('list.sortBy')}</span>
 				<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
 					{filterSortName}
 				</Button>
 				<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
 					<MenuItem onClick={sortingHandler} id="newest" disableRipple>
-						Newest
+						{t('list.sort.newest')}
 					</MenuItem>
 					<MenuItem onClick={sortingHandler} id="liked" disableRipple>
-						Most Liked
+						{t('list.sort.liked')}
 					</MenuItem>
 					<MenuItem onClick={sortingHandler} id="viewed" disableRipple>
-						Most Viewed
+						{t('list.sort.viewed')}
 					</MenuItem>
 					<MenuItem onClick={sortingHandler} id="commented" disableRipple>
-						Most Commented
+						{t('list.sort.commented')}
 					</MenuItem>
 				</Menu>
 			</div>
@@ -279,13 +283,15 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	if (device === 'mobile') {
 		return (
 			<div id="m-community-list-page">
+				<Head>
+					<title>{t('list.metaTitle')}</title>
+					<meta name="description" content={t('list.metaDescription')} />
+				</Head>
 				<div className="m-container">
 					<TabContext value={searchCommunity.search.articleCategory}>
 						<Stack className="m-header">
-							<Typography className="m-title">Vira Community</Typography>
-							<Typography className="m-sub">
-								Share your thoughts, recommendations, news and humor with the Vira family.
-							</Typography>
+							<Typography className="m-title">{t('list.pageTitle')}</Typography>
+							<Typography className="m-sub">{t('list.heroSubtitle')}</Typography>
 						</Stack>
 
 						<Stack className="m-tabs-wrap">
@@ -300,22 +306,22 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							>
 								<Tab
 									value="FREE"
-									label="Free"
+									label={t('list.tabsMobile.free')}
 									className={`m-tab-button ${searchCommunity.search.articleCategory === 'FREE' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="RECOMMEND"
-									label="Recommend"
+									label={t('list.tabsMobile.recommend')}
 									className={`m-tab-button ${searchCommunity.search.articleCategory === 'RECOMMEND' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="NEWS"
-									label="News"
+									label={t('list.tabsMobile.news')}
 									className={`m-tab-button ${searchCommunity.search.articleCategory === 'NEWS' ? 'active' : ''}`}
 								/>
 								<Tab
 									value="HUMOR"
-									label="Humor"
+									label={t('list.tabsMobile.humor')}
 									className={`m-tab-button ${searchCommunity.search.articleCategory === 'HUMOR' ? 'active' : ''}`}
 								/>
 							</TabList>
@@ -335,7 +341,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 									})
 								}
 							>
-								Write
+								{t('list.write')}
 							</Button>
 						</Stack>
 
@@ -379,9 +385,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 									/>
 								</Stack>
 								<Stack className="m-total-result">
-									<Typography>
-										Total {totalCount} article{totalCount > 1 ? 's' : ''} available
-									</Typography>
+									<Typography>{t('list.totalResult', { count: totalCount })}</Typography>
 								</Stack>
 							</Stack>
 						)}
@@ -393,13 +397,17 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	return (
 		<div id="community-list-page">
+			<Head>
+				<title>{t('list.metaTitle')}</title>
+				<meta name="description" content={t('list.metaDescription')} />
+			</Head>
 			<div className="container">
 				<TabContext value={searchCommunity.search.articleCategory}>
 					<Stack className="main-box">
 						<Stack className="left-config">
 							<Stack className={'image-info'}>
 								<Stack className={'community-name'} justifyContent={'center'} alignItems={'center'}>
-									<Typography className={'name'}>Vira Community</Typography>
+									<Typography className={'name'}>{t('list.pageTitle')}</Typography>
 								</Stack>
 							</Stack>
 
@@ -413,22 +421,22 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							>
 								<Tab
 									value={'FREE'}
-									label={'Free Board'}
+									label={t('list.tabsDesktop.free')}
 									className={`tab-button ${searchCommunity.search.articleCategory == 'FREE' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'RECOMMEND'}
-									label={'Recommendation'}
+									label={t('list.tabsDesktop.recommend')}
 									className={`tab-button ${searchCommunity.search.articleCategory == 'RECOMMEND' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'NEWS'}
-									label={'News'}
+									label={t('list.tabsDesktop.news')}
 									className={`tab-button ${searchCommunity.search.articleCategory == 'NEWS' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'HUMOR'}
-									label={'Humor'}
+									label={t('list.tabsDesktop.humor')}
 									className={`tab-button ${searchCommunity.search.articleCategory == 'HUMOR' ? 'active' : ''}`}
 								/>
 							</TabList>
@@ -438,10 +446,10 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							<Stack className="panel-config">
 								<Stack className="title-box">
 									<Stack className="left">
-										<Typography className="title">{searchCommunity.search.articleCategory} BOARD</Typography>
-										<Typography className="sub-title">
-											Express your opinions freely here without content restrictions
+										<Typography className="title">
+											{searchCommunity.search.articleCategory} {t('list.board')}
 										</Typography>
+										<Typography className="sub-title">{t('list.boardSubtitle')}</Typography>
 									</Stack>
 									<Button
 										onClick={() =>
@@ -454,7 +462,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 										}
 										className="right"
 									>
-										Write
+										{t('list.write')}
 									</Button>
 								</Stack>
 
@@ -502,9 +510,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>
-								Total {totalCount} article{totalCount > 1 ? 's' : ''} available
-							</Typography>
+							<Typography>{t('list.totalResult', { count: totalCount })}</Typography>
 						</Stack>
 					</Stack>
 				)}

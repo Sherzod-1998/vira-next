@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
+import { Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { T } from '../../types/common';
@@ -14,6 +15,7 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAler
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const user = useReactiveVar(userVar);
 	const [searchCommunity, setSearchCommunity] = useState({
 		...initialInput,
@@ -58,11 +60,30 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 			});
 
 			await boardArticlesRefetch({ input: searchCommunity });
-			await sweetTopSmallSuccessAlert('Success', 750);
+			await sweetTopSmallSuccessAlert(t('articles.likeSuccess'), 750);
 		} catch (err: any) {
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
+
+	const renderSkeletonCards = () => (
+		<>
+			{Array.from({ length: 3 }).map((_, index) => (
+				<Stack key={`article-skeleton-${index}`} className="community-general-card-config" sx={{ width: '285px' }}>
+					<Skeleton variant="rectangular" className="card-img" width="100%" height={170} />
+					<Stack className="desc-box" sx={{ marginTop: '-20px' }}>
+						<Stack>
+							<Skeleton variant="text" width="50%" height={20} />
+							<Skeleton variant="text" width="80%" height={24} />
+						</Stack>
+						<Stack className={'buttons'}>
+							<Skeleton variant="text" width="30%" height={24} />
+						</Stack>
+					</Stack>
+				</Stack>
+			))}
+		</>
+	);
 
 	if (device === 'mobile') {
 		return <>ARTICLE PAGE MOBILE</>;
@@ -71,16 +92,13 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 			<div id="my-articles-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">Article</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title">{t('articles.title')}</Typography>
+						<Typography className="sub-title">{t('subtitle')}</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="article-list-box">
 					{boardArticlesLoading ? (
-						<Stack className="mypage-list-state">
-							<CircularProgress size={28} />
-							<Typography>Loading articles...</Typography>
-						</Stack>
+						renderSkeletonCards()
 					) : boardArticles?.length > 0 ? (
 						boardArticles?.map((boardArticle: BoardArticle) => {
 							return (
@@ -93,10 +111,10 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 							);
 						})
 					) : (
-						<div className={'no-data'}>
+						<Stack className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Articles found!</p>
-						</div>
+							<Typography>{t('articles.empty')}</Typography>
+						</Stack>
 					)}
 				</Stack>
 
@@ -122,7 +140,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 							/>
 						</Stack>
 						<Stack className="total">
-							<Typography>Total {totalCount ?? 0} article(s) available</Typography>
+							<Typography>{t('articles.totalCount', { count: totalCount ?? 0 })}</Typography>
 						</Stack>
 					</Stack>
 				)}

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Button, Stack, Typography, Tab, Tabs, IconButton, Backdrop, Pagination } from '@mui/material';
@@ -34,14 +37,15 @@ import {
 
 const ToastViewerComponent = dynamic(() => import('../../libs/components/community/TViewer'), { ssr: false });
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'community'])),
 	},
 });
 
 const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('community');
 	const router = useRouter();
 	const { query } = router;
 
@@ -263,7 +267,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 				}}
 			>
 				<Typography variant="h4" color={'#b9b9b9'}>
-					Update comment
+					{t('detail.updateComment')}
 				</Typography>
 				<Stack gap={'20px'}>
 					<input
@@ -285,10 +289,10 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						</Typography>
 						<Stack sx={{ flexDirection: 'row', alignSelf: 'flex-end', gap: '10px' }}>
 							<Button variant="outlined" color="inherit" onClick={() => cancelButtonHandler()}>
-								Cancel
+								{t('detail.cancel')}
 							</Button>
 							<Button variant="contained" color="inherit" onClick={() => updateButtonHandler(updatedCommentId, undefined)}>
-								Update
+								{t('detail.update')}
 							</Button>
 						</Stack>
 					</Stack>
@@ -300,10 +304,19 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	if (device === 'mobile') {
 		return (
 			<div id="m-community-detail-page">
+				<Head>
+					<title>{boardArticle?.articleTitle || t('detail.boardArticleTitle')}</title>
+					<meta
+						name="description"
+						content={boardArticle?.articleContent?.slice(0, 150) || t('detail.boardSubtitle')}
+					/>
+				</Head>
 				<div className="m-container">
 					{/* HEADER: CATEGORY + WRITE BUTTON */}
 					<Stack className="m-header">
-						<Typography className="m-section-title">{articleCategory} BOARD</Typography>
+						<Typography className="m-section-title">
+							{articleCategory} {t('detail.board')}
+						</Typography>
 						<Button
 							className="m-write-btn"
 							onClick={() =>
@@ -313,7 +326,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 								})
 							}
 						>
-							Write
+							{t('detail.write')}
 						</Button>
 					</Stack>
 
@@ -322,7 +335,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						{/* Author row */}
 						<Stack className="m-author-row">
 							<Stack className="m-author-left" onClick={() => goMemberPage(boardArticle?.memberData?._id as string)}>
-								<img src={memberImage} alt="" className="m-author-img" />
+								<Image src={memberImage} alt="" width={40} height={40} className="m-author-img" />
 								<Stack className="m-author-info">
 									<Typography className="m-author-name">{boardArticle?.memberData?.memberNick}</Typography>
 									<Typography className="m-created-at">
@@ -379,8 +392,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									<ThumbUpOffAltIcon className="m-like-icon" />
 								)}
 								<Typography className="m-like-text">
-									{boardArticle?.articleLikes} Like
-									{(boardArticle?.articleLikes || 0) > 1 ? 's' : ''}
+									{t('detail.likeCount', { count: boardArticle?.articleLikes || 0 })}
 								</Typography>
 							</Button>
 						</Stack>
@@ -388,11 +400,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 
 					{/* COMMENTS INPUT */}
 					<Stack className="m-comments-card">
-						<Typography className="m-comments-title">Comments ({total})</Typography>
+						<Typography className="m-comments-title">{t('detail.commentsTitle', { count: total })}</Typography>
 						<Stack className="m-comment-input-box">
 							<input
 								type="text"
-								placeholder="Leave a comment"
+								placeholder={t('detail.leaveComment')}
 								value={comment}
 								onChange={(e) => {
 									if (e.target.value.length > 100) return;
@@ -403,7 +415,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							<Stack className="m-comment-bottom-row">
 								<Typography className="m-counter">{wordsCnt}/100</Typography>
 								<Button className="m-comment-btn" onClick={createCommentHandler}>
-									Comment
+									{t('detail.comment')}
 								</Button>
 							</Stack>
 						</Stack>
@@ -412,7 +424,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 					{/* COMMENTS LIST */}
 					{total > 0 && (
 						<>
-							<Typography className="m-comments-list-title">Comments</Typography>
+							<Typography className="m-comments-list-title">{t('detail.comments')}</Typography>
 
 							<Stack className="m-comments-list">
 								{comments?.map((commentData) => (
@@ -422,9 +434,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 												className="m-comment-user"
 												onClick={() => goMemberPage(commentData?.memberData?._id as string)}
 											>
-												<img
+												<Image
 													src={getCommentMemberImage(commentData?.memberData?.memberImage)}
 													alt=""
+													width={36}
+													height={36}
 													className="m-comment-img"
 												/>
 												<Stack className="m-comment-user-info">
@@ -438,6 +452,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 											{commentData?.memberId === user?._id && (
 												<Stack className="m-comment-actions">
 													<IconButton
+														aria-label={t('detail.deleteCommentAria')}
 														onClick={() => {
 															setUpdatedCommentId(commentData?._id);
 															updateButtonHandler(commentData?._id, CommentStatus.DELETE);
@@ -446,6 +461,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 														<DeleteForeverIcon sx={{ color: '#757575', cursor: 'pointer' }} />
 													</IconButton>
 													<IconButton
+														aria-label={t('detail.editCommentAria')}
 														onClick={() => {
 															setUpdatedComment(commentData?.commentContent);
 															setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
@@ -496,12 +512,19 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	} else {
 		return (
 			<div id="community-detail-page">
+				<Head>
+					<title>{boardArticle?.articleTitle || t('detail.boardArticleTitle')}</title>
+					<meta
+						name="description"
+						content={boardArticle?.articleContent?.slice(0, 150) || t('detail.boardSubtitle')}
+					/>
+				</Head>
 				<div className="container">
 					<Stack className="main-box">
 						<Stack className="left-config">
 							<Stack className={'image-info'}>
 								<Stack className={'community-name'}>
-									<Typography className={'name'}>Community Board Article</Typography>
+									<Typography className={'name'}>{t('detail.boardArticleTitle')}</Typography>
 								</Stack>
 							</Stack>
 							<Tabs
@@ -515,22 +538,22 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							>
 								<Tab
 									value={'FREE'}
-									label={'Free Board'}
+									label={t('list.tabsDesktop.free')}
 									className={`tab-button ${articleCategory === 'FREE' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'RECOMMEND'}
-									label={'Recommendation'}
+									label={t('list.tabsDesktop.recommend')}
 									className={`tab-button ${articleCategory === 'RECOMMEND' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'NEWS'}
-									label={'News'}
+									label={t('list.tabsDesktop.news')}
 									className={`tab-button ${articleCategory === 'NEWS' ? 'active' : ''}`}
 								/>
 								<Tab
 									value={'HUMOR'}
-									label={'Humor'}
+									label={t('list.tabsDesktop.humor')}
 									className={`tab-button ${articleCategory === 'HUMOR' ? 'active' : ''}`}
 								/>
 							</Tabs>
@@ -538,10 +561,10 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						<div className="community-detail-config">
 							<Stack className="title-box">
 								<Stack className="left">
-									<Typography className="title">{articleCategory} BOARD</Typography>
-									<Typography className="sub-title">
-										Express your opinions freely here without content restrictions
+									<Typography className="title">
+										{articleCategory} {t('detail.board')}
 									</Typography>
+									<Typography className="sub-title">{t('detail.boardSubtitle')}</Typography>
 								</Stack>
 								<Button
 									onClick={() =>
@@ -554,7 +577,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									}
 									className="right"
 								>
-									Write
+									{t('detail.write')}
 								</Button>
 							</Stack>
 							<div className="config">
@@ -563,9 +586,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										<Stack className="content">
 											<Typography className="content-data">{boardArticle?.articleTitle}</Typography>
 											<Stack className="member-info">
-												<img
+												<Image
 													src={memberImage}
 													alt=""
+													width={30}
+													height={30}
 													className="member-img"
 													onClick={() => goMemberPage(boardArticle?.memberData?._id)}
 												/>
@@ -621,11 +646,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									className="second-box-config"
 									sx={{ borderBottom: total > 0 ? 'none' : '1px solid #eee', border: '1px solid #eee' }}
 								>
-									<Typography className="title-text">Comments ({total})</Typography>
+									<Typography className="title-text">{t('detail.commentsTitle', { count: total })}</Typography>
 									<Stack className="leave-comment">
 										<input
 											type="text"
-											placeholder="Leave a comment"
+											placeholder={t('detail.leaveComment')}
 											value={comment}
 											onChange={(e) => {
 												if (e.target.value.length > 100) return;
@@ -635,13 +660,13 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										/>
 										<Stack className="button-box">
 											<Typography>{wordsCnt}/100</Typography>
-											<Button onClick={createCommentHandler}>comment</Button>
+											<Button onClick={createCommentHandler}>{t('detail.comment')}</Button>
 										</Stack>
 									</Stack>
 								</Stack>
 								{total > 0 && (
 									<Stack className="comments">
-										<Typography className="comments-title">Comments</Typography>
+										<Typography className="comments-title">{t('detail.comments')}</Typography>
 									</Stack>
 								)}
 								{comments?.map((commentData, index) => {
@@ -653,7 +678,12 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 														className="name-date"
 														onClick={() => goMemberPage(commentData?.memberData?._id as string)}
 													>
-														<img src={getCommentMemberImage(commentData?.memberData?.memberImage)} alt="" />
+														<Image
+															src={getCommentMemberImage(commentData?.memberData?.memberImage)}
+															alt=""
+															width={45}
+															height={45}
+														/>
 														<Stack className="name-date-column">
 															<Typography className="name">{commentData?.memberData?.memberNick}</Typography>
 															<Typography className="date">
@@ -666,6 +696,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 													{commentData?.memberId === user?._id && (
 														<Stack className="buttons">
 															<IconButton
+																aria-label={t('detail.deleteCommentAria')}
 																onClick={() => {
 																	setUpdatedCommentId(commentData?._id);
 																	updateButtonHandler(commentData?._id, CommentStatus.DELETE);
@@ -674,6 +705,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 																<DeleteForeverIcon sx={{ color: '#757575', cursor: 'pointer' }} />
 															</IconButton>
 															<IconButton
+																aria-label={t('detail.editCommentAria')}
 																onClick={() => {
 																	setUpdatedComment(commentData?.commentContent);
 																	setUpdatedCommentWordsCnt(commentData?.commentContent?.length);

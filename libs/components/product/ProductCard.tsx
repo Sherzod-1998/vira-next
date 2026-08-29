@@ -12,6 +12,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useTranslation } from 'next-i18next';
 
 interface ProductCardType {
 	product: Product;
@@ -23,6 +24,7 @@ interface ProductCardType {
 const ProductCard = (props: ProductCardType) => {
 	const { product, likeProductHandler, myFavorites, recentlyVisited } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('product');
 	const user = useReactiveVar(userVar);
 	const imagePath: string = product?.productImages[0]
 		? `${REACT_APP_API_URL}/${product?.productImages[0]}`
@@ -45,8 +47,8 @@ const ProductCard = (props: ProductCardType) => {
 					</Link>
 					{product && product?.productRank > topProductRank && (
 						<Box component={'div'} className={'top-badge'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<Typography>TOP</Typography>
+							<Image src="/img/icons/electricity.svg" alt={t('card.topBadgeAlt') as string} width={16} height={16} />
+							<Typography>{t('card.top')}</Typography>
 						</Box>
 					)}
 					<Box component={'div'} className={'price-box'}>
@@ -81,11 +83,19 @@ const ProductCard = (props: ProductCardType) => {
 						</Stack>
 						{!recentlyVisited && (
 							<Stack className="buttons">
-								<IconButton color={'default'}>
+								<IconButton color={'default'} aria-label={t('detail.viewsAria') as string}>
 									<RemoveRedEyeIcon />
 								</IconButton>
 								<Typography className="view-cnt">{product?.productViews}</Typography>
-								<IconButton color={'default'} onClick={() => likeProductHandler(user, product?._id)}>
+								<IconButton
+									color={'default'}
+									onClick={() => likeProductHandler(user, product?._id)}
+									aria-label={
+										myFavorites || (product?.meLiked && product?.meLiked[0]?.myFavorite)
+											? (t('card.removeFromFavorites') as string)
+											: (t('card.addToFavorites') as string)
+									}
+								>
 									{myFavorites ? (
 										<FavoriteIcon color="primary" />
 									) : product?.meLiked && product?.meLiked[0]?.myFavorite ? (

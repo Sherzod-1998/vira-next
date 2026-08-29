@@ -1,5 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Typography } from '@mui/material';
 import { BoardArticle } from '../../types/board-article/board-article';
@@ -21,6 +23,7 @@ interface CommunityCardProps {
 const CommunityCard = (props: CommunityCardProps) => {
 	const { boardArticle, size = 'normal', likeArticleHandler } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('community');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
@@ -54,7 +57,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 				onClick={(e: React.SyntheticEvent<Element, Event>) => chooseArticleHandler(e, boardArticle)}
 			>
 				<Stack className="m-image-wrapper">
-					<img src={imagePath} alt="" className="m-card-img" />
+					<Image src={imagePath} alt="" fill sizes="90px" className="m-card-img" style={{ objectFit: 'cover' }} />
 					<Stack className="m-date-badge">
 						<Typography className="m-month">
 							<Moment format={'MMM'}>{boardArticle?.createdAt}</Moment>
@@ -73,7 +76,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 							goMemberPage(boardArticle?.memberData?._id as string);
 						}}
 					>
-						<img src={authorImagePath} alt="" />
+						<Image src={authorImagePath} alt="" width={20} height={20} />
 						{boardArticle?.memberData?.memberNick}
 					</Typography>
 
@@ -90,6 +93,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 						<Stack className="m-meta-right" direction="row" alignItems="center" spacing={0.5}>
 							<IconButton
 								size="small"
+								aria-label={t('card.likeAria')}
 								onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}
 							>
 								{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
@@ -113,8 +117,8 @@ const CommunityCard = (props: CommunityCardProps) => {
 			className="community-general-card-config"
 			onClick={(e: React.SyntheticEvent<Element, Event>) => chooseArticleHandler(e, boardArticle)}
 		>
-			<Stack className="image-box">
-				<img src={imagePath} alt="" className="card-img" />
+			<Stack className="image-box" sx={{ position: 'relative' }}>
+				<Image src={imagePath} alt="" fill sizes="317px" className="card-img" style={{ objectFit: 'cover' }} />
 			</Stack>
 			<Stack className="desc-box" sx={{ marginTop: '-20px' }}>
 				<Stack>
@@ -125,17 +129,21 @@ const CommunityCard = (props: CommunityCardProps) => {
 							goMemberPage(boardArticle?.memberData?._id as string);
 						}}
 					>
-						<img src={authorImagePath} alt="" />
+						<Image src={authorImagePath} alt="" width={24} height={24} />
 						{boardArticle?.memberData?.memberNick}
 					</Typography>
 					<Typography className="title">{boardArticle?.articleTitle}</Typography>
 				</Stack>
 				<Stack className={'buttons'}>
-					<IconButton color={'default'}>
+					<IconButton color={'default'} aria-label={t('card.viewsAria')}>
 						<RemoveRedEyeIcon />
 					</IconButton>
 					<Typography className="view-cnt">{boardArticle?.articleViews}</Typography>
-					<IconButton color={'default'} onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}>
+					<IconButton
+						color={'default'}
+						aria-label={t('card.likeAria')}
+						onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}
+					>
 						{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
 							<FavoriteIcon color={'primary'} />
 						) : (

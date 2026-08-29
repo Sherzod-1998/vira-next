@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
+import { Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
 import { useMutation, useQuery } from '@apollo/client';
@@ -13,6 +14,7 @@ import ProductCard from '../product/ProductCard';
 
 const MyFavorites: NextPage = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const [myFavorites, setMyFavorites] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchFavorites, setSearchFavorites] = useState<T>({ page: 1, limit: 6 });
@@ -56,6 +58,22 @@ const MyFavorites: NextPage = () => {
 		}
 	};
 
+	const renderSkeletonCards = () => (
+		<>
+			{Array.from({ length: 6 }).map((_, index) => (
+				<Stack className="card-config" key={`favorite-skeleton-${index}`}>
+					<Skeleton variant="rectangular" className="top" width="100%" height={180} />
+					<Stack className="bottom">
+						<Stack className="name-address">
+							<Skeleton variant="text" width="70%" height={24} />
+							<Skeleton variant="text" width="50%" height={20} />
+						</Stack>
+					</Stack>
+				</Stack>
+			))}
+		</>
+	);
+
 	if (device === 'mobile') {
 		return <div>VIRA MY FAVORITES MOBILE</div>;
 	} else {
@@ -63,25 +81,22 @@ const MyFavorites: NextPage = () => {
 			<div id="my-favorites-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">My Favorites</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title">{t('favorites.title')}</Typography>
+						<Typography className="sub-title">{t('subtitle')}</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="favorites-list-box">
 					{getFavoritesLoading ? (
-						<Stack className="mypage-list-state">
-							<CircularProgress size={28} />
-							<Typography>Loading favorites...</Typography>
-						</Stack>
+						renderSkeletonCards()
 					) : myFavorites?.length ? (
 						myFavorites?.map((product: Product) => {
 							return <ProductCard product={product} likeProductHandler={likeProductHandler} myFavorites={true} />;
 						})
 					) : (
-						<div className={'no-data'}>
+						<Stack className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Favorites found!</p>
-						</div>
+							<Typography>{t('favorites.empty')}</Typography>
+						</Stack>
 					)}
 				</Stack>
 				{myFavorites?.length ? (
@@ -106,9 +121,7 @@ const MyFavorites: NextPage = () => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>
-								Total {total} favorite product{total > 1 ? 'ies' : 'y'}
-							</Typography>
+							<Typography>{t('favorites.totalCount', { count: total, suffix: total > 1 ? 'ies' : 'y' })}</Typography>
 						</Stack>
 					</Stack>
 				) : null}

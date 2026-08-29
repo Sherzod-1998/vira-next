@@ -4,7 +4,7 @@ import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
-import { getJwtToken } from '../libs/auth';
+import { getJwtToken, logOut } from '../libs/auth';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { sweetErrorAlert } from '../libs/sweetAlert';
 import { socketVar } from './store';
@@ -24,7 +24,12 @@ const tokenRefreshLink = new TokenRefreshLink({
 		return true;
 	}, // @ts-ignore
 	fetchAccessToken: () => {
-		// execute refresh token
+		// There is no refresh-token endpoint/mutation exposed by this codebase (verified: no
+		// "refresh" mutation/query in apollo/user or apollo/admin), so a real token refresh
+		// can't be implemented here. Instead of silently returning null and leaving the app
+		// in a half-logged-in state, clear the stale session and let the normal
+		// auth-required redirect handle re-login.
+		if (typeof window !== 'undefined') logOut();
 		return null;
 	},
 });
@@ -36,15 +41,9 @@ class LoggingWebSocket {
 		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
 		socketVar(this.socket);
 
-		this.socket.onopen = () => {
-			console.log('WebSocket connection!');
-		};
-		this.socket.onmessage = (msg) => {
-			console.log('WebSocket message!', msg.data);
-		};
-		this.socket.onerror = (error) => {
-			console.log('WebSocket error!', error);
-		};
+		this.socket.onopen = () => {};
+		this.socket.onmessage = (msg) => {};
+		this.socket.onerror = (error) => {};
 	}
 
 	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
@@ -93,18 +92,27 @@ function createIsomorphicLink() {
 		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
 			if (graphQLErrors) {
 				graphQLErrors.map(({ message, locations, path, extensions }) => {
-					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+					console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
 					const lowerMessage = message?.toLowerCase?.() || '';
-					if (lowerMessage.includes('jwt expired')) {
-						localStorage.removeItem('accessToken');
+					const isAuthError =
+						extensions?.code === 'UNAUTHENTICATED' ||
+						extensions?.code === 'FORBIDDEN' ||
+						lowerMessage.includes('jwt expired') ||
+						lowerMessage.includes('unauthenticated') ||
+						lowerMessage.includes('unauthorized');
+					if (isAuthError) {
+						// Auth failure from the server: drop the stale session instead of leaving
+						// the app in a broken half-logged-in state.
+						logOut();
 						return;
 					}
 					if (!message.includes('input')) sweetErrorAlert(message);
 				});
 			}
-			if (networkError) console.log(`[Network error]: ${networkError}`);
-			// @ts-ignore
-			if (networkError?.statusCode === 401) {
+			if (networkError) {
+				console.error(`[Network error]: ${networkError}`);
+				// @ts-ignore
+				if (networkError?.statusCode === 401) logOut();
 			}
 		});
 

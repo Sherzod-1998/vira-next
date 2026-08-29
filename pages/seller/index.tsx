@@ -1,5 +1,6 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
-import { NextPage } from 'next';
+import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Box, Button, Pagination, Skeleton, Typography } from '@mui/material';
@@ -7,6 +8,7 @@ import { Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { Member } from '../../libs/types/member/member';
 import { useMutation, useQuery } from '@apollo/client';
 import { LIKE_TARGET_MEMBER } from '../../apollo/user/mutation';
@@ -17,16 +19,17 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/swee
 import SellerCard from '../../libs/components/common/SellerCard';
 import { SellersInquiry } from '../../libs/types/member/member.input';
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'seller'])),
 	},
 });
 
 const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [filterSortName, setFilterSortName] = useState('Recent');
+	const { t } = useTranslation('seller');
+	const [filterSortName, setFilterSortName] = useState<string>(t('list.sort.recent'));
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [searchFilter, setSearchFilter] = useState<SellersInquiry>(
@@ -71,10 +74,10 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 
 	/** HANDLERS **/
 	const getSortLabel = (sort?: string, direction?: string) => {
-		if (sort === 'createdAt' && direction === 'ASC') return 'Oldest order';
-		if (sort === 'memberLikes') return 'Likes';
-		if (sort === 'memberViews') return 'Views';
-		return 'Recent';
+		if (sort === 'createdAt' && direction === 'ASC') return t('list.sort.oldest');
+		if (sort === 'memberLikes') return t('list.sort.likes');
+		if (sort === 'memberViews') return t('list.sort.views');
+		return t('list.sort.recent');
 	};
 
 	const pushSearchFilter = async (input: SellersInquiry) => {
@@ -119,10 +122,10 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 
 	const renderEmptyState = (mobile = false) => (
 		<div className={mobile ? 'm-empty-state' : 'seller-empty-state'}>
-			<Typography className="empty-title">No sellers found</Typography>
-			<Typography className="empty-subtitle">Try a different seller name or reset the search.</Typography>
+			<Typography className="empty-title">{t('list.emptyTitle')}</Typography>
+			<Typography className="empty-subtitle">{t('list.emptySubtitle')}</Typography>
 			<Button className="empty-reset-btn" onClick={resetSearchHandler}>
-				Reset
+				{t('list.reset')}
 			</Button>
 		</div>
 	);
@@ -143,19 +146,19 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 		switch (e.currentTarget.id) {
 			case 'recent':
 				nextInput = { ...searchFilter, sort: 'createdAt', direction: 'DESC' as any };
-				setFilterSortName('Recent');
+				setFilterSortName(t('list.sort.recent'));
 				break;
 			case 'old':
 				nextInput = { ...searchFilter, sort: 'createdAt', direction: 'ASC' as any };
-				setFilterSortName('Oldest order');
+				setFilterSortName(t('list.sort.oldest'));
 				break;
 			case 'likes':
 				nextInput = { ...searchFilter, sort: 'memberLikes', direction: 'DESC' as any };
-				setFilterSortName('Likes');
+				setFilterSortName(t('list.sort.likes'));
 				break;
 			case 'views':
 				nextInput = { ...searchFilter, sort: 'memberViews', direction: 'DESC' as any };
-				setFilterSortName('Views');
+				setFilterSortName(t('list.sort.views'));
 				break;
 		}
 		pushSearchFilter(nextInput).then();
@@ -189,13 +192,16 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	if (device === 'mobile') {
 		return (
 			<div id="m-seller-list-page">
+				<Head>
+					<title>{t('list.title')}</title>
+				</Head>
 				<div className="m-container">
 					{/* SEARCH + SORT */}
 					<Stack className="m-filter" spacing={2}>
 						<div className="m-search">
 							<input
 								type="text"
-								placeholder="Search for a seller"
+								placeholder={t('list.searchPlaceholder')}
 								value={searchText}
 								onChange={(e: any) => setSearchText(e.target.value)}
 								onKeyDown={(event: any) => {
@@ -207,7 +213,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 						</div>
 
 						<div className="m-sort">
-							<span className="m-sort-label">Sort by</span>
+							<span className="m-sort-label">{t('list.sortBy')}</span>
 							<button type="button" className="m-sort-button" onClick={sortingClickHandler}>
 								<span>{filterSortName}</span>
 								<KeyboardArrowDownRoundedIcon className="m-sort-icon" />
@@ -215,16 +221,16 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 
 							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
 								<MenuItem onClick={sortingHandler} id="recent" disableRipple>
-									Recent
+									{t('list.sort.recent')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="old" disableRipple>
-									Oldest
+									{t('list.sort.oldest')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="likes" disableRipple>
-									Likes
+									{t('list.sort.likes')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="views" disableRipple>
-									Views
+									{t('list.sort.views')}
 								</MenuItem>
 							</Menu>
 						</div>
@@ -264,9 +270,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 								/>
 							)}
 
-							<span className="m-total">
-								Total {total} seller{total > 1 ? 's' : ''} available
-							</span>
+							<span className="m-total">{t('list.totalAvailable', { count: total })}</span>
 						</Stack>
 					)}
 				</div>
@@ -277,12 +281,15 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	/* DESKTOP LAYOUT */
 	return (
 		<Stack className={'seller-list-page'}>
+			<Head>
+				<title>{t('list.title')}</title>
+			</Head>
 			<Stack className={'container'}>
 				<Stack className={'filter'}>
 					<Box component={'div'} className={'left'}>
 						<input
 							type="text"
-							placeholder={'Search for an seller'}
+							placeholder={t('list.searchPlaceholder')}
 							value={searchText}
 							onChange={(e: any) => setSearchText(e.target.value)}
 							onKeyDown={(event: any) => {
@@ -293,23 +300,23 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 						/>
 					</Box>
 					<Box component={'div'} className={'right'}>
-						<span>Sort by</span>
+						<span>{t('list.sortBy')}</span>
 						<div>
 							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
 								{filterSortName}
 							</Button>
 							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
 								<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
-									Recent
+									{t('list.sort.recent')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id={'old'} disableRipple>
-									Oldest
+									{t('list.sort.oldest')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id={'likes'} disableRipple>
-									Likes
+									{t('list.sort.likes')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id={'views'} disableRipple>
-									Views
+									{t('list.sort.views')}
 								</MenuItem>
 							</Menu>
 						</div>
@@ -349,11 +356,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 						)}
 					</Stack>
 
-					{sellers.length !== 0 && (
-						<span>
-							Total {total} seller{total > 1 ? 's' : ''} available
-						</span>
-					)}
+					{sellers.length !== 0 && <span>{t('list.totalAvailable', { count: total })}</span>}
 				</Stack>
 			</Stack>
 		</Stack>

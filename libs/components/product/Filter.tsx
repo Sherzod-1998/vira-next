@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   Stack,
   Typography,
@@ -16,6 +17,7 @@ import { useRouter } from 'next/router';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { useTranslation } from 'next-i18next';
 
 interface FilterType {
   searchFilter: ProductsInquiry;
@@ -32,6 +34,7 @@ const formatPrice = (value: number) => `$${value.toLocaleString()}`;
 const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialInput }) => {
   const device = useDeviceDetect();
   const router = useRouter();
+  const { t } = useTranslation('product');
 
   // Static data
   const [productLocation] = useState<string[]>(Object.values(ProductLocation));
@@ -351,7 +354,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
         {/* HEADER: FILTER & RESET */}
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography fontWeight={700} fontSize={16}>
-            Filter
+            {t('filter.title')}
           </Typography>
           <Button
             variant="text"
@@ -360,19 +363,19 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             startIcon={<RefreshIcon />}
             sx={{ textTransform: 'none', fontSize: 12 }}
           >
-            Reset
+            {t('filter.reset')}
           </Button>
         </Stack>
 
         {/* SEARCH */}
         <Stack spacing={1}>
           <Typography fontSize={13} fontWeight={600}>
-            Search
+            {t('filter.search')}
           </Typography>
           <OutlinedInput
             value={searchText}
             type="text"
-            placeholder="Type here..."
+            placeholder={t('filter.searchPlaceholder') as string}
             onChange={(e: any) => setSearchText(e.target.value)}
             onKeyDown={(event: any) => {
               if (event.key === 'Enter') {
@@ -413,7 +416,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             sx={{ cursor: 'pointer' }}
           >
             <Typography fontSize={13} fontWeight={600}>
-              Location
+              {t('filter.location')}
             </Typography>
             <KeyboardArrowDownRoundedIcon
               sx={{
@@ -455,7 +458,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             sx={{ cursor: 'pointer' }}
           >
             <Typography fontSize={13} fontWeight={600}>
-              Product Type
+              {t('filter.productType')}
             </Typography>
             <KeyboardArrowDownRoundedIcon
               sx={{
@@ -497,7 +500,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             sx={{ cursor: 'pointer' }}
           >
             <Typography fontSize={13} fontWeight={600}>
-              Material
+              {t('filter.material')}
             </Typography>
             <KeyboardArrowDownRoundedIcon
               sx={{
@@ -532,7 +535,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
         {/* PRICE RANGE */}
         <Stack className="m-filter-section" spacing={1}>
           <Typography fontSize={13} fontWeight={600}>
-            Price Range
+            {t('filter.priceRange')}
           </Typography>
 
           {renderPriceSlider()}
@@ -546,14 +549,14 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
     <Stack className="filter-main">
       {/* SEARCH */}
       <Stack className="find-your-jewelry" mb="40px">
-        <Typography className="title-main">shop by category</Typography>
+        <Typography className="title-main">{t('filter.shopByCategory')}</Typography>
 
         <Stack className="input-box">
           <OutlinedInput
             value={searchText}
             type="text"
             className="search-input"
-            placeholder="Type here..."
+            placeholder={t('filter.searchPlaceholder') as string}
             onChange={(e: any) => setSearchText(e.target.value)}
             sx={{
               '& .MuiOutlinedInput-notchedOutline': {
@@ -587,10 +590,10 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
             }
           />
 
-          <img src="/img/icons/search_icon.png" alt="" />
+          <Image src="/img/icons/search_icon.png" alt={t('filter.searchIconAlt') as string} width={20} height={20} />
 
-          <Tooltip title="Reset">
-            <IconButton onClick={refreshHandler}>
+          <Tooltip title={t('filter.resetTooltip') as string}>
+            <IconButton onClick={refreshHandler} aria-label={t('filter.reset') as string}>
               <RefreshIcon />
             </IconButton>
           </Tooltip>
@@ -600,7 +603,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
       {/* LOCATION */}
       <Stack className="find-your-jewelry" mb="30px">
         <p className="title" style={{ textShadow: '0px 3px 4px #b9b9b9' }}>
-          Location
+          {t('filter.location')}
         </p>
 
         <Stack
@@ -634,7 +637,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
 
       {/* TYPE */}
       <Stack className="find-your-jewelry" mb="30px">
-        <Typography className="title">Product Type</Typography>
+        <Typography className="title">{t('filter.productType')}</Typography>
 
         <Stack
           className="collapsible-list"
@@ -667,7 +670,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
 
       {/* MATERIAL */}
       <Stack className="find-your-jewelry" mb="30px">
-        <Typography className="title">Material</Typography>
+        <Typography className="title">{t('filter.material')}</Typography>
 
         <Stack
           className="collapsible-list"
@@ -700,7 +703,7 @@ const Filter: React.FC<FilterType> = ({ searchFilter, setSearchFilter, initialIn
 
       {/* PRICE RANGE */}
       <Stack className="find-your-jewelry">
-        <Typography className="title">Price Range</Typography>
+        <Typography className="title">{t('filter.priceRange')}</Typography>
 
         {renderPriceSlider()}
       </Stack>

@@ -1,5 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { NextPage } from 'next';
+import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ReviewCard from '../../libs/components/seller/ReviewCard';
@@ -18,6 +20,7 @@ import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { getMemberImage, Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
@@ -30,15 +33,16 @@ import moment from 'moment';
 
 SwiperCore.use([SwiperPagination]);
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'seller'])),
 	},
 });
 
 const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('seller');
 	const user = useReactiveVar(userVar);
 	const [sellerId, setsellerId] = useState<string | null>(null);
 	const [seller, setseller] = useState<Member | null>(null);
@@ -136,17 +140,17 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	const isVerifiedSeller = (seller?.memberRank || 0) > 0;
 
 	const sellerStats = [
-		{ label: 'Followers', value: seller?.memberFollowers ?? 0 },
-		{ label: 'Following', value: seller?.memberFollowings ?? 0 },
-		{ label: 'Products', value: seller?.memberProducts ?? 0 },
-		{ label: 'Likes', value: seller?.memberLikes ?? 0 },
-		{ label: 'Member since', value: seller?.createdAt ? moment(seller.createdAt).format('YYYY') : '-' },
+		{ label: t('detail.stats.followers'), value: seller?.memberFollowers ?? 0 },
+		{ label: t('detail.stats.following'), value: seller?.memberFollowings ?? 0 },
+		{ label: t('detail.stats.products'), value: seller?.memberProducts ?? 0 },
+		{ label: t('detail.stats.likes'), value: seller?.memberLikes ?? 0 },
+		{ label: t('detail.stats.memberSince'), value: seller?.createdAt ? moment(seller.createdAt).format('YYYY') : '-' },
 	];
 
 	const followSellerHandler = async () => {
 		if (!sellerId) return;
 		if (!user?._id) {
-			sweetMixinErrorAlert('Please log in first').then();
+			sweetMixinErrorAlert(t('detail.pleaseLogInFirst')).then();
 			return;
 		}
 		if (isOwnProfile) return;
@@ -210,7 +214,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	const createCommentHandler = async () => {
 		try {
 			if (!user._id) throw new Error(Messages.error2);
-			if (user._id === sellerId) throw Error('Cannot write a review for yourself');
+			if (user._id === sellerId) throw Error(t('detail.cannotReviewYourself'));
 			await createComment({
 				variables: {
 					input: insertCommentData,
@@ -245,29 +249,29 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	if (device === 'mobile') {
 		return (
 			<Stack className="m-seller-detail-page">
+				<Head>
+					<title>{seller?.memberFullName ?? seller?.memberNick ?? t('list.title')}</title>
+					<meta name="description" content={seller?.memberDesc || t('detail.seo.descriptionFallback')} />
+				</Head>
 				<Stack className="m-container">
 					{/* SELLER HEADER */}
 					<Stack className="m-seller-header">
-						<img
-							src={getMemberImage(seller?.memberImage)}
-							alt=""
-							className="m-avatar"
-							onClick={() => redirectToMemberPageHandler(seller?._id as string)}
-						/>
+						<div className="m-avatar" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
+							<Image src={getMemberImage(seller?.memberImage)} alt={seller?.memberFullName ?? seller?.memberNick ?? ''} fill style={{ objectFit: 'cover' }} />
+						</div>
 						<Box component="div" className="m-info">
 							<div className="m-name-row" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
 								<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
 								{isVerifiedSeller && (
 									<span className="m-verified-badge">
 										<VerifiedOutlinedIcon />
-										Verified Seller
+										{t('detail.verifiedSeller')}
 									</span>
 								)}
 							</div>
 							<span className="m-phone">{seller?.memberPhone}</span>
 							<span className="m-meta">
-								{seller?.memberProducts ?? 0} products · {commentTotal} review
-								{commentTotal > 1 ? 's' : ''}
+								{t('detail.productsMetaAndReviews', { products: seller?.memberProducts ?? 0, count: commentTotal })}
 							</span>
 							<div className="m-seller-stats">
 								{sellerStats.map((stat) => (
@@ -279,7 +283,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							</div>
 							{seller && !isOwnProfile && (
 								<Button className={`m-follow-btn ${isFollowing ? 'is-following' : ''}`} onClick={followSellerHandler}>
-									{isFollowing ? 'Following' : 'Follow'}
+									{isFollowing ? t('detail.following') : t('detail.follow')}
 								</Button>
 							)}
 						</Box>
@@ -287,7 +291,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 
 					{/* PRODUCTS SECTION */}
 					<Stack className="m-section m-products-section">
-						<Typography className="m-section-title">Products</Typography>
+						<Typography className="m-section-title">{t('detail.productsSection')}</Typography>
 
 						{productTotal ? (
 							<>
@@ -308,30 +312,28 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 
 								<Stack className="m-pagination">
 									<span className="m-pagination-text">
-										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
+										{t('detail.totalProductsAvailable', { count: productTotal })}
 									</span>
 								</Stack>
 							</>
 						) : (
 							<div className="m-no-data">
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No products found!</p>
+								<Image src="/img/icons/icoAlert.svg" alt="" width={40} height={40} />
+								<p>{t('detail.noProductsFound')}</p>
 							</div>
 						)}
 					</Stack>
 
 					{/* REVIEWS SECTION */}
 					<Stack className="m-section m-review-section">
-						<Typography className="m-section-title">Reviews</Typography>
-						<Typography className="m-section-subtitle">We are glad to see you again</Typography>
+						<Typography className="m-section-title">{t('detail.reviewsSection')}</Typography>
+						<Typography className="m-section-subtitle">{t('detail.reviewsSubtitle')}</Typography>
 
 						{commentTotal !== 0 && (
 							<Stack className="m-review-list">
 								<Box component="div" className="m-review-title-box">
 									<StarIcon className="m-star" />
-									<span>
-										{commentTotal} review{commentTotal > 1 ? 's' : ''}
-									</span>
+									<span>{t('detail.reviewsCount', { count: commentTotal })}</span>
 								</Box>
 
 								{sellerComments?.map((comment: Comment) => (
@@ -353,14 +355,14 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 
 						{/* LEAVE REVIEW */}
 						<Stack className="m-leave-review">
-							<Typography className="m-leave-title">Leave A Review</Typography>
-							<Typography className="m-leave-label">Review</Typography>
+							<Typography className="m-leave-title">{t('detail.leaveAReview')}</Typography>
+							<Typography className="m-leave-label">{t('detail.review')}</Typography>
 							<textarea
 								onChange={({ target: { value } }: any) => {
 									setInsertCommentData({ ...insertCommentData, commentContent: value });
 								}}
 								value={insertCommentData.commentContent}
-								placeholder="Write your review..."
+								placeholder={t('detail.writeReviewPlaceholder')}
 							></textarea>
 							<Box className="m-submit-wrap" component="div">
 								<Button
@@ -368,7 +370,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 									disabled={insertCommentData.commentContent === '' || user?._id === ''}
 									onClick={createCommentHandler}
 								>
-									<Typography className="title">Submit Review</Typography>
+									<Typography className="title">{t('detail.submitReview')}</Typography>
 									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 										<g clipPath="url(#clip0_6975_3642)">
 											<path
@@ -392,24 +394,32 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 	} else {
 		return (
 			<Stack className={'seller-detail-page'}>
+				<Head>
+					<title>{seller?.memberFullName ?? seller?.memberNick ?? t('list.title')}</title>
+					<meta name="description" content={seller?.memberDesc || t('detail.seo.descriptionFallback')} />
+				</Head>
 				<Stack className={'container'}>
 					<Stack className={'seller-info'}>
-						<img
-							src={getMemberImage(seller?.memberImage)}
-							alt=""
-						/>
+						<div className="avatar-img">
+							<Image
+								src={getMemberImage(seller?.memberImage)}
+								alt={seller?.memberFullName ?? seller?.memberNick ?? ''}
+								fill
+								style={{ objectFit: 'cover' }}
+							/>
+						</div>
 						<Box component={'div'} className={'info'}>
 							<div className="seller-name-row" onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
 								<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
 								{isVerifiedSeller && (
 									<span className="verified-badge">
 										<VerifiedOutlinedIcon />
-										Verified Seller
+										{t('detail.verifiedSeller')}
 									</span>
 								)}
 							</div>
 							<div>
-								<img src="/img/icons/call.svg" alt="" />
+								<Image src="/img/icons/call.svg" alt="" width={16} height={16} />
 								<span>{seller?.memberPhone}</span>
 							</div>
 							<div className="seller-stats">
@@ -422,7 +432,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 							</div>
 							{seller && !isOwnProfile && (
 								<Button className={`follow-btn ${isFollowing ? 'is-following' : ''}`} onClick={followSellerHandler}>
-									{isFollowing ? 'Following' : 'Follow'}
+									{isFollowing ? t('detail.following') : t('detail.follow')}
 								</Button>
 							)}
 						</Box>
@@ -459,30 +469,26 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 											}}
 										/>
 									</Stack>
-									<span>
-										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
-									</span>
+									<span>{t('detail.totalProductsAvailable', { count: productTotal })}</span>
 								</>
 							) : (
 								<div className={'no-data'}>
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No products found!</p>
+									<Image src="/img/icons/icoAlert.svg" alt="" width={40} height={40} />
+									<p>{t('detail.noProductsFound')}</p>
 								</div>
 							)}
 						</Stack>
 					</Stack>
 					<Stack className={'review-box'}>
 						<Stack className={'main-intro'}>
-							<span>Reviews</span>
-							<p>we are glad to see you again</p>
+							<span>{t('detail.reviewsSection')}</span>
+							<p>{t('detail.reviewsSubtitle')}</p>
 						</Stack>
 						{commentTotal !== 0 && (
 							<Stack className={'review-wrap'}>
 								<Box component={'div'} className={'title-box'}>
 									<StarIcon />
-									<span>
-										{commentTotal} review{commentTotal > 1 ? 's' : ''}
-									</span>
+									<span>{t('detail.reviewsCount', { count: commentTotal })}</span>
 								</Box>
 								{sellerComments?.map((comment: Comment) => {
 									return <ReviewCard comment={comment} key={comment?._id} />;
@@ -510,8 +516,8 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 						)}
 
 						<Stack className={'leave-review-config'}>
-							<Typography className={'main-title'}>Leave A Review</Typography>
-							<Typography className={'review-title'}>Review</Typography>
+							<Typography className={'main-title'}>{t('detail.leaveAReview')}</Typography>
+							<Typography className={'review-title'}>{t('detail.review')}</Typography>
 							<textarea
 								onChange={({ target: { value } }: any) => {
 									setInsertCommentData({ ...insertCommentData, commentContent: value });
@@ -524,7 +530,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 									disabled={insertCommentData.commentContent === '' || user?._id === ''}
 									onClick={createCommentHandler}
 								>
-									<Typography className={'title'}>Submit Review</Typography>
+									<Typography className={'title'}>{t('detail.submitReview')}</Typography>
 									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 										<g clipPath="url(#clip0_6975_3642)">
 											<path

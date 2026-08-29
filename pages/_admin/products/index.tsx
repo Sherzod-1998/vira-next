@@ -134,6 +134,7 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 				setProductsInquiry({ ...productsInquiry });
 			}
 		} catch (err: any) {
+			sweetErrorHandling(err).then();
 		}
 	};
 

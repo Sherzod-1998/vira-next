@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Stack, Box, Pagination, Skeleton, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { GET_NOTICES } from '../../../apollo/user/query';
 
@@ -14,6 +16,7 @@ const formatDate = (dateStr: string) => {
 
 const Notice = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('cs');
 	const [page, setPage] = useState<number>(1);
 	const limit = 10;
 	const { data, loading, error } = useQuery(GET_NOTICES, {
@@ -57,10 +60,12 @@ const Notice = () => {
 
 	const renderState = (type: 'empty' | 'error', mobile = false) => (
 		<Stack className={mobile ? 'm-notice-state' : 'notice-state'}>
-			<img src="/img/icons/icoAlert.svg" alt="" />
-			<Typography className="state-title">{type === 'empty' ? 'No notices yet' : 'Unable to load notices'}</Typography>
+			<Image src="/img/icons/icoAlert.svg" alt="" width={40} height={40} />
+			<Typography className="state-title">
+				{type === 'empty' ? t('notice.empty.title') : t('notice.error.title')}
+			</Typography>
 			<Typography className="state-subtitle">
-				{type === 'empty' ? 'Fresh support updates will appear here.' : 'Please refresh the page or try again shortly.'}
+				{type === 'empty' ? t('notice.empty.subtitle') : t('notice.error.subtitle')}
 			</Typography>
 		</Stack>
 	);
@@ -68,7 +73,7 @@ const Notice = () => {
 	if (device === 'mobile') {
 		return (
 			<Stack className="m-notice-content">
-				<span className="m-title">Notice</span>
+				<span className="m-title">{t('notice.title')}</span>
 				{loading && renderMobileSkeletons()}
 				{!loading && error && renderState('error', true)}
 				{!loading && !error && list.length === 0 && renderState('empty', true)}
@@ -101,10 +106,10 @@ const Notice = () => {
 			<Stack className={'notice-content'}>
 				<Stack className={'main'}>
 					<Box component={'div'} className={'top'}>
-						<span>number</span>
-						<span>title</span>
-						<span>content</span>
-						<span>date</span>
+						<span>{t('notice.columns.number')}</span>
+						<span>{t('notice.columns.title')}</span>
+						<span>{t('notice.columns.content')}</span>
+						<span>{t('notice.columns.date')}</span>
 					</Box>
 					{loading && renderDesktopSkeletons()}
 					{!loading && error && renderState('error')}

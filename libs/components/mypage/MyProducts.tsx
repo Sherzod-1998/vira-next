@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'next-i18next';
+import { Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -17,6 +18,7 @@ import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const [searchFilter, setSearchFilter] = useState<sellerProductsInquiry>(initialInput);
 	const [sellerProducts, setsellerProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
@@ -52,7 +54,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 
 	const deleteProductHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('Are you sure to delete this product?')) {
+			if (await sweetConfirmAlert(t('products.deleteConfirm'))) {
 				await updateProduct({
 					variables: {
 						input: {
@@ -71,7 +73,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 
 	const updateProductHandler = async (status: string, id: string) => {
 		try {
-			if (await sweetConfirmAlert(`Are you sure change to ${status} status?`)) {
+			if (await sweetConfirmAlert(t('products.statusConfirm', { status }))) {
 				await updateProduct({
 					variables: {
 						input: {
@@ -91,6 +93,38 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		router.back();
 	}
 
+	const renderSkeletonRows = () => (
+		<>
+			{Array.from({ length: 5 }).map((_, index) => (
+				<Stack className="product-card-box" key={`product-skeleton-${index}`}>
+					<Stack className="image-box">
+						<Skeleton variant="rectangular" width="100%" height="100%" />
+					</Stack>
+					<Stack className="information-box">
+						<Skeleton variant="text" width="70%" height={22} />
+						<Skeleton variant="text" width="50%" height={18} />
+						<Skeleton variant="text" width="30%" height={20} />
+					</Stack>
+					<Stack className="date-box">
+						<Skeleton variant="text" width="80%" height={18} />
+					</Stack>
+					<Stack className="status-box">
+						<Skeleton variant="rounded" width={70} height={26} />
+					</Stack>
+					<Stack className="views-box">
+						<Skeleton variant="text" width={30} height={18} />
+					</Stack>
+					{searchFilter.search.productStatus === 'ACTIVE' && (
+						<Stack className="action-box">
+							<Skeleton variant="circular" width={28} height={28} />
+							<Skeleton variant="circular" width={28} height={28} />
+						</Stack>
+					)}
+				</Stack>
+			))}
+		</>
+	);
+
 	if (device === 'mobile') {
 		return <div>VIRA PRODUCTS MOBILE</div>;
 	} else {
@@ -98,8 +132,8 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 			<div id="my-product-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">My Products</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title">{t('products.title')}</Typography>
+						<Typography className="sub-title">{t('subtitle')}</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="product-list-box">
@@ -108,36 +142,33 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
 							className={searchFilter.search.productStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sale
+							{t('products.onSale')}
 						</Typography>
 						<Typography
 							onClick={() => changeStatusHandler(ProductStatus.SOLD)}
 							className={searchFilter.search.productStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sold
+							{t('products.onSold')}
 						</Typography>
 					</Stack>
 					<Stack className="list-box">
 						<Stack className="listing-title-box">
-							<Typography className="title-text">Listing title</Typography>
-							<Typography className="title-text">Date Published</Typography>
-							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">View</Typography>
+							<Typography className="title-text">{t('products.listingTitle')}</Typography>
+							<Typography className="title-text">{t('products.datePublished')}</Typography>
+							<Typography className="title-text">{t('products.status')}</Typography>
+							<Typography className="title-text">{t('products.view')}</Typography>
 							{searchFilter.search.productStatus === 'ACTIVE' && (
-								<Typography className="title-text">Action</Typography>
+								<Typography className="title-text">{t('products.action')}</Typography>
 							)}
 						</Stack>
 
 						{getSellerProductsLoading ? (
-							<Stack className="mypage-list-state">
-								<CircularProgress size={28} />
-								<Typography>Loading products...</Typography>
-							</Stack>
+							renderSkeletonRows()
 						) : sellerProducts?.length === 0 ? (
-							<div className={'no-data'}>
+							<Stack className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Product found!</p>
-							</div>
+								<Typography>{t('products.empty')}</Typography>
+							</Stack>
 						) : (
 							sellerProducts.map((product: Product) => {
 								return (
@@ -172,7 +203,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} product available</Typography>
+									<Typography>{t('products.totalCount', { count: total })}</Typography>
 								</Stack>
 							</Stack>
 						)}

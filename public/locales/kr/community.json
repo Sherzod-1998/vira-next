@@ -1,0 +1,70 @@
+{
+  "list": {
+    "metaTitle": "커뮤니티 | Vira",
+    "metaDescription": "Vira 커뮤니티에 참여하여 다른 주얼리 애호가들과 생각, 추천, 뉴스, 유머를 나눠보세요.",
+    "pageTitle": "Vira 커뮤니티",
+    "heroSubtitle": "Vira 가족과 함께 생각, 추천, 뉴스, 유머를 나눠보세요.",
+    "tabsMobile": {
+      "free": "자유",
+      "recommend": "추천",
+      "news": "뉴스",
+      "humor": "유머"
+    },
+    "tabsDesktop": {
+      "free": "자유 게시판",
+      "recommend": "추천 게시판",
+      "news": "뉴스",
+      "humor": "유머"
+    },
+    "board": "게시판",
+    "boardSubtitle": "제한 없이 자유롭게 의견을 나눠보세요",
+    "write": "글쓰기",
+    "searchPlaceholder": "게시글 검색",
+    "clearSearch": "검색 지우기",
+    "sortBy": "정렬",
+    "sort": {
+      "newest": "최신순",
+      "liked": "좋아요순",
+      "viewed": "조회순",
+      "commented": "댓글순"
+    },
+    "emptyTitle": "게시글이 없습니다!",
+    "emptySubtitle": "다른 카테고리나 검색어를 사용해 보세요.",
+    "totalResult_one": "총 {{count}}개의 게시글",
+    "totalResult_other": "총 {{count}}개의 게시글"
+  },
+  "card": {
+    "viewsAria": "조회수",
+    "likeAria": "이 게시글 좋아요",
+    "authorAria": "작성자 페이지로 이동"
+  },
+  "detail": {
+    "boardArticleTitle": "커뮤니티 게시판 글",
+    "board": "게시판",
+    "boardSubtitle": "제한 없이 자유롭게 의견을 나눠보세요",
+    "write": "글쓰기",
+    "commentsTitle": "댓글 ({{count}})",
+    "leaveComment": "댓글을 남겨보세요",
+    "comment": "댓글 작성",
+    "updateComment": "댓글 수정",
+    "cancel": "취소",
+    "update": "수정",
+    "likeCount_one": "좋아요 {{count}}개",
+    "likeCount_other": "좋아요 {{count}}개",
+    "comments": "댓글",
+    "deleteCommentAria": "댓글 삭제",
+    "editCommentAria": "댓글 수정",
+    "likeArticleAria": "이 게시글 좋아요",
+    "viewsAria": "조회수"
+  },
+  "editor": {
+    "category": "카테고리",
+    "title": "제목",
+    "typeTitle": "제목을 입력하세요",
+    "register": "등록",
+    "free": "자유",
+    "humor": "유머",
+    "news": "뉴스",
+    "recommend": "추천"
+  }
+}

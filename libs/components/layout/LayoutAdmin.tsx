@@ -74,7 +74,7 @@ const withAdminLayout = (Component: ComponentType) => {
 					>
 						<Toolbar>
 							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} aria-label="Open settings">
 									<Avatar
 										src={getMemberImage(user?.memberImage)}
 									/>

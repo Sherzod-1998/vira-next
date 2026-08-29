@@ -19,6 +19,8 @@
       gap: 6px;
 
       .m-avatar {
+        position: relative;
+        overflow: hidden;
         width: 60px;
         height: 60px;
         border-radius: 50%;

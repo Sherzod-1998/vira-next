@@ -1,0 +1,79 @@
+{
+  "pageTitle": "Customer Support | Vira",
+  "hero": {
+    "title": "How can we help?",
+    "subtitle": "Find notices, quick answers, or send our support team a private inquiry."
+  },
+  "contact": {
+    "email": "Email",
+    "phone": "Phone",
+    "hours": "Hours"
+  },
+  "info": {
+    "title": "CS Center",
+    "subtitle": "We will answer your questions"
+  },
+  "tabs": {
+    "notice": "Notice",
+    "faq": "FAQ",
+    "inquiry": "1:1 Inquiry"
+  },
+  "faq": {
+    "searchLabel": "Search FAQ",
+    "searchPlaceholder": "Search help articles",
+    "clearSearch": "Clear search",
+    "expandAnswer": "Expand answer",
+    "collapseAnswer": "Collapse answer",
+    "categories": {
+      "product": "Product",
+      "payment": "Payment",
+      "buyers": "For Buyers",
+      "sellers": "For Sellers",
+      "membership": "Membership",
+      "community": "Community",
+      "other": "Other"
+    },
+    "noResults": {
+      "title": "No results",
+      "subtitle": "Try a different keyword in this category."
+    }
+  },
+  "notice": {
+    "title": "Notice",
+    "columns": {
+      "number": "number",
+      "title": "title",
+      "content": "content",
+      "date": "date"
+    },
+    "empty": {
+      "title": "No notices yet",
+      "subtitle": "Fresh support updates will appear here."
+    },
+    "error": {
+      "title": "Unable to load notices",
+      "subtitle": "Please refresh the page or try again shortly."
+    }
+  },
+  "inquiry": {
+    "title": "1:1 Inquiry",
+    "loginRequired": "You must be logged in to use Inquiry service.",
+    "form": {
+      "titleLabel": "Title",
+      "contentLabel": "Content",
+      "sending": "Sending...",
+      "send": "Send"
+    },
+    "list": {
+      "loading": "Loading...",
+      "error": "Unable to load inquiries. Please try again.",
+      "empty": "No inquiries yet.",
+      "answerLabel": "Answer:",
+      "noAnswer": "No answer yet"
+    },
+    "status": {
+      "answered": "Answered",
+      "pending": "Pending"
+    }
+  }
+}

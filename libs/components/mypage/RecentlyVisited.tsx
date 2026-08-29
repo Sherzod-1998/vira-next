@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
+import { Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import ProductCard from '../product/ProductCard';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
@@ -10,6 +11,7 @@ import { GET_VISITED } from '../../../apollo/user/query';
 
 const RecentlyVisited: NextPage = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -35,6 +37,22 @@ const RecentlyVisited: NextPage = () => {
 		setSearchVisited({ ...searchVisited, page: value });
 	};
 
+	const renderSkeletonCards = () => (
+		<>
+			{Array.from({ length: 6 }).map((_, index) => (
+				<Stack className="card-config" key={`recently-visited-skeleton-${index}`}>
+					<Skeleton variant="rectangular" className="top" width="100%" height={180} />
+					<Stack className="bottom">
+						<Stack className="name-address">
+							<Skeleton variant="text" width="70%" height={24} />
+							<Skeleton variant="text" width="50%" height={20} />
+						</Stack>
+					</Stack>
+				</Stack>
+			))}
+		</>
+	);
+
 	if (device === 'mobile') {
 		return <div>VIRA RECENTLY VISITED MOBILE</div>;
 	} else {
@@ -42,25 +60,22 @@ const RecentlyVisited: NextPage = () => {
 			<div id="my-favorites-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">Recently Visited</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title">{t('recentlyVisited.title')}</Typography>
+						<Typography className="sub-title">{t('subtitle')}</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="favorites-list-box">
 					{getVisitedLoading ? (
-						<Stack className="mypage-list-state">
-							<CircularProgress size={28} />
-							<Typography>Loading recently visited products...</Typography>
-						</Stack>
+						renderSkeletonCards()
 					) : recentlyVisited?.length ? (
 						recentlyVisited?.map((product: Product) => {
 							return <ProductCard product={product} recentlyVisited={true} />;
 						})
 					) : (
-						<div className={'no-data'}>
+						<Stack className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Products found!</p>
-						</div>
+							<Typography>{t('recentlyVisited.empty')}</Typography>
+						</Stack>
 					)}
 				</Stack>
 				{recentlyVisited?.length ? (
@@ -86,7 +101,7 @@ const RecentlyVisited: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently visited product{total > 1 ? 'ies' : 'y'}
+								{t('recentlyVisited.totalCount', { count: total, suffix: total > 1 ? 'ies' : 'y' })}
 							</Typography>
 						</Stack>
 					</Stack>

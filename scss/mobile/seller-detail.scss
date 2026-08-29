@@ -26,10 +26,12 @@
       box-shadow: 0 1px 4px rgba(24, 26, 32, 0.06);
 
       .m-avatar {
+        position: relative;
+        overflow: hidden;
         width: 68px;
         height: 68px;
         border-radius: 50%;
-        object-fit: cover;
+        cursor: pointer;
       }
 
       .m-info {

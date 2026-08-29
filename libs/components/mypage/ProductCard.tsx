@@ -1,5 +1,6 @@
 import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
@@ -20,6 +21,7 @@ interface ProductCardProps {
 export const ProductCard = (props: ProductCardProps) => {
 	const { product, deleteProductHandler, memberPage, updateProductHandler } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -106,7 +108,7 @@ export const ProductCard = (props: ProductCardProps) => {
 										updateProductHandler(ProductStatus.SOLD, product?._id);
 									}}
 								>
-									Sold
+									{t('products.sold')}
 								</MenuItem>
 							</>
 						)}
@@ -118,10 +120,18 @@ export const ProductCard = (props: ProductCardProps) => {
 				</Stack>
 				{!memberPage && product.productStatus === ProductStatus.ACTIVE && (
 					<Stack className="action-box">
-						<IconButton className="icon-button" onClick={() => pushEditProduct(product._id)}>
+						<IconButton
+							className="icon-button"
+							aria-label={t('productCard.editAria') as string}
+							onClick={() => pushEditProduct(product._id)}
+						>
 							<ModeIcon className="buttons" />
 						</IconButton>
-						<IconButton className="icon-button" onClick={() => deleteProductHandler(product._id)}>
+						<IconButton
+							className="icon-button"
+							aria-label={t('productCard.deleteAria') as string}
+							onClick={() => deleteProductHandler(product._id)}
+						>
 							<DeleteIcon className="buttons" />
 						</IconButton>
 					</Stack>

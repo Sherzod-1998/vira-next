@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { Button, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductType, ProductMaterial } from '../../enums/product.enum';
@@ -20,6 +21,7 @@ type AddProductProps = {
 
 const AddProduct: React.FC<AddProductProps> = ({ initialValues }) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -87,7 +89,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 		try {
 			const files = inputRef.current?.files;
 			if (!files || files.length === 0) return;
-			if (files.length > 5) throw new Error('Cannot upload more than 5 images!');
+			if (files.length > 5) throw new Error(t('addProduct.maxImagesError') as string);
 
 			const formData = new FormData();
 
@@ -152,7 +154,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 			await createProduct({
 				variables: { input: insertProductData },
 			});
-			await sweetMixinSuccessAlert('This product has been created successfully.');
+			await sweetMixinSuccessAlert(t('addProduct.createSuccess'));
 			await router.push({
 				pathname: '/mypage',
 				query: { category: 'myProducts' },
@@ -170,7 +172,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 			await updateProduct({
 				variables: { input: insertProductData },
 			});
-			await sweetMixinSuccessAlert('This product has been updated successfully.');
+			await sweetMixinSuccessAlert(t('addProduct.updateSuccess'));
 			await router.push({
 				pathname: '/mypage',
 				query: { category: 'myProducts' },
@@ -192,8 +194,8 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 	return (
 		<div id="add-product-page">
 			<Stack className="main-title-box">
-				<Typography className="main-title">Add New Product</Typography>
-				<Typography className="sub-title">We are glad to see you again!</Typography>
+				<Typography className="main-title">{t('addProduct.title')}</Typography>
+				<Typography className="sub-title">{t('subtitle')}</Typography>
 			</Stack>
 
 			<div>
@@ -201,11 +203,11 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 					<Stack className="description-box">
 						{/* Title */}
 						<Stack className="config-column">
-							<Typography className="title">Title</Typography>
+							<Typography className="title">{t('addProduct.titleLabel')}</Typography>
 							<input
 								type="text"
 								className="description-input"
-								placeholder="Title"
+								placeholder={t('addProduct.titlePlaceholder') as string}
 								value={insertProductData.productTitle ?? ''}
 								onChange={({ target: { value } }) =>
 									setInsertProductData((p) => ({
@@ -219,11 +221,11 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 						{/* Price + Type */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
-								<Typography className="title">Price</Typography>
+								<Typography className="title">{t('addProduct.price')}</Typography>
 								<input
 									type="number"
 									className="description-input"
-									placeholder="Price"
+									placeholder={t('addProduct.pricePlaceholder') as string}
 									value={insertProductData.productPrice ?? 0}
 									onChange={({ target: { value } }) =>
 										setInsertProductData((p) => ({
@@ -235,7 +237,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 							</Stack>
 
 							<Stack className="price-year-after-price">
-								<Typography className="title">Select Type</Typography>
+								<Typography className="title">{t('addProduct.selectType')}</Typography>
 								<select
 									className="select-description"
 									value={insertProductData.productType ?? ''}
@@ -247,7 +249,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									}
 								>
 									<option value="" disabled>
-										Select
+										{t('addProduct.select')}
 									</option>
 									{productTypeList.map((type) => (
 										<option value={type} key={type}>
@@ -263,7 +265,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 						{/* Location + Address */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
-								<Typography className="title">Select Location</Typography>
+								<Typography className="title">{t('addProduct.selectLocation')}</Typography>
 								<select
 									className="select-description"
 									value={insertProductData.productLocation ?? ''}
@@ -275,7 +277,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									}
 								>
 									<option value="" disabled>
-										Select
+										{t('addProduct.select')}
 									</option>
 									{productLocationList.map((loc) => (
 										<option value={loc} key={loc}>
@@ -288,11 +290,11 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 							</Stack>
 
 							<Stack className="price-year-after-price">
-								<Typography className="title">Address</Typography>
+								<Typography className="title">{t('addProduct.addressLabel')}</Typography>
 								<input
 									type="text"
 									className="description-input"
-									placeholder="Address"
+									placeholder={t('addProduct.addressPlaceholder') as string}
 									value={insertProductData.productAddress ?? ''}
 									onChange={({ target: { value } }) =>
 										setInsertProductData((p) => ({
@@ -307,7 +309,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 						{/* Material */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
-								<Typography className="title">Select Material</Typography>
+								<Typography className="title">{t('addProduct.selectMaterial')}</Typography>
 								<select
 									className="select-description"
 									value={insertProductData.productMaterial ?? ''}
@@ -319,7 +321,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 									}
 								>
 									<option value="" disabled>
-										Select
+										{t('addProduct.select')}
 									</option>
 									{productMaterialList.map((m) => (
 										<option value={m} key={m}>
@@ -335,9 +337,9 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 						</Stack>
 
 						{/* Description */}
-						<Typography className="product-title">Product Description</Typography>
+						<Typography className="product-title">{t('addProduct.productDescriptionTitle')}</Typography>
 						<Stack className="config-column">
-							<Typography className="title">Description</Typography>
+							<Typography className="title">{t('addProduct.descriptionLabel')}</Typography>
 							<textarea
 								className="description-text"
 								value={insertProductData.productDesc ?? ''}
@@ -352,7 +354,7 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 					</Stack>
 
 					{/* Upload images */}
-					<Typography className="upload-title">Upload photos of your product</Typography>
+					<Typography className="upload-title">{t('addProduct.uploadTitle')}</Typography>
 
 					<Stack className="images-box">
 						<Stack className="upload-box">
@@ -371,12 +373,12 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 							</svg>
 
 							<Stack className="text-box">
-								<Typography className="drag-title">Drag and drop images here</Typography>
-								<Typography className="format-title">Photos must be JPEG or PNG format and least 2048x768</Typography>
+								<Typography className="drag-title">{t('addProduct.dragDrop')}</Typography>
+								<Typography className="format-title">{t('addProduct.formatHint')}</Typography>
 							</Stack>
 
 							<Button className="browse-button" onClick={() => inputRef.current?.click()}>
-								<Typography className="browse-button-text">Browse Files</Typography>
+								<Typography className="browse-button-text">{t('addProduct.browseFiles')}</Typography>
 								<input
 									ref={inputRef}
 									type="file"
@@ -417,11 +419,11 @@ const [insertProductData, setInsertProductData] = useState<ProductInput>(
 					<Stack className="buttons-row">
 						{router.query.productId ? (
 							<Button className="next-button" disabled={doDisabledCheck()} onClick={updateProductHandler}>
-								<Typography className="next-button-text">Save</Typography>
+								<Typography className="next-button-text">{t('addProduct.save')}</Typography>
 							</Button>
 						) : (
 							<Button className="next-button" disabled={doDisabledCheck()} onClick={insertProductHandler}>
-								<Typography className="next-button-text">Save</Typography>
+								<Typography className="next-button-text">{t('addProduct.save')}</Typography>
 							</Button>
 						)}
 					</Stack>

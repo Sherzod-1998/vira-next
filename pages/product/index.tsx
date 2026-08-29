@@ -1,5 +1,7 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
+import type { GetStaticProps } from 'next';
+import Head from 'next/head';
 import { Box, Button, Menu, MenuItem, Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
@@ -9,6 +11,7 @@ import { useRouter } from 'next/router';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Product } from '../../libs/types/product/product';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { useMutation, useQuery } from '@apollo/client';
@@ -30,15 +33,16 @@ const formatFilterLabel = (value: string) =>
 
 const formatPrice = (value: number) => `$${value.toLocaleString()}`;
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'product'])),
 	},
 });
 
 const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('product');
 
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
@@ -49,7 +53,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
-	const [filterSortName, setFilterSortName] = useState('New');
+	const [filterSortName, setFilterSortName] = useState<string>(t('list.sort.new'));
 
 	// Mobile filter drawer state
 	const [filterOpen, setFilterOpen] = useState(false);
@@ -84,11 +88,11 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 	/** HANDLERS **/
 	const getSortLabel = (sort?: string, direction?: Direction) => {
-		if (sort === 'productPrice' && direction === Direction.ASC) return 'Lowest Price';
-		if (sort === 'productPrice' && direction === Direction.DESC) return 'Highest Price';
-		if (sort === 'productViews' && direction === Direction.DESC) return 'Most Popular';
-		if (sort === 'productLikes' && direction === Direction.DESC) return 'Most Liked';
-		return 'New';
+		if (sort === 'productPrice' && direction === Direction.ASC) return t('list.sort.lowestPrice');
+		if (sort === 'productPrice' && direction === Direction.DESC) return t('list.sort.highestPrice');
+		if (sort === 'productViews' && direction === Direction.DESC) return t('list.sort.mostPopular');
+		if (sort === 'productLikes' && direction === Direction.DESC) return t('list.sort.mostLiked');
+		return t('list.sort.new');
 	};
 
 	const pushSearchFilter = async (input: ProductsInquiry) => {
@@ -132,24 +136,24 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const activeFilterChips = [
 		...((searchFilter.search?.typeList || []).map((value: string) => ({
 			key: `type-${value}`,
-			label: `Type: ${formatFilterLabel(value)}`,
+			label: t('list.chipType', { value: formatFilterLabel(value) }),
 			onRemove: () => removeFilterValue('typeList', value),
 		})) || []),
 		...((searchFilter.search?.materialList || []).map((value: string) => ({
 			key: `material-${value}`,
-			label: `Material: ${formatFilterLabel(value)}`,
+			label: t('list.chipMaterial', { value: formatFilterLabel(value) }),
 			onRemove: () => removeFilterValue('materialList', value),
 		})) || []),
 		...((searchFilter.search?.locationList || []).map((value: string) => ({
 			key: `location-${value}`,
-			label: `Location: ${formatFilterLabel(value)}`,
+			label: t('list.chipLocation', { value: formatFilterLabel(value) }),
 			onRemove: () => removeFilterValue('locationList', value),
 		})) || []),
 		...(searchFilter.search?.text
 			? [
 					{
 						key: 'text',
-						label: `Search: ${searchFilter.search.text}`,
+						label: t('list.chipSearch', { value: searchFilter.search.text }),
 						onRemove: removeTextFilter,
 					},
 			  ]
@@ -179,7 +183,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 					</button>
 				))}
 				<button className="filter-chip clear-chip" type="button" onClick={resetFilters}>
-					Clear all
+					{t('list.clearAll')}
 				</button>
 			</Stack>
 		);
@@ -206,10 +210,10 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 	const renderEmptyState = (mobile = false) => (
 		<div className={mobile ? 'm-empty-state' : 'empty-state'}>
-			<Typography className="empty-title">No pieces found</Typography>
-			<Typography className="empty-subtitle">Try adjusting your filters</Typography>
+			<Typography className="empty-title">{t('list.emptyTitle')}</Typography>
+			<Typography className="empty-subtitle">{t('list.emptySubtitle')}</Typography>
 			<Button className="empty-clear-btn" onClick={resetFilters}>
-				Clear filters
+				{t('list.clearFilters')}
 			</Button>
 		</div>
 	);
@@ -236,7 +240,6 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			await getProductsRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, onLike:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -252,7 +255,6 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			await getProductsRefetch({ input: initialInput });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -273,23 +275,23 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 		switch (e.currentTarget.id) {
 			case 'new':
 				nextInput = { ...searchFilter, sort: 'createdAt', direction: Direction.DESC };
-				setFilterSortName('New');
+				setFilterSortName(t('list.sort.new'));
 				break;
 			case 'lowest':
 				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.ASC };
-				setFilterSortName('Lowest Price');
+				setFilterSortName(t('list.sort.lowestPrice'));
 				break;
 			case 'highest':
 				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.DESC };
-				setFilterSortName('Highest Price');
+				setFilterSortName(t('list.sort.highestPrice'));
 				break;
 			case 'popular':
 				nextInput = { ...searchFilter, sort: 'productViews', direction: Direction.DESC };
-				setFilterSortName('Most Popular');
+				setFilterSortName(t('list.sort.mostPopular'));
 				break;
 			case 'liked':
 				nextInput = { ...searchFilter, sort: 'productLikes', direction: Direction.DESC };
-				setFilterSortName('Most Liked');
+				setFilterSortName(t('list.sort.mostLiked'));
 				break;
 		}
 		pushSearchFilter(nextInput).then();
@@ -300,37 +302,42 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	/* MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
-			<div id="product-list-page-mobile">
-				<div className="container">
+			<>
+				<Head>
+					<title>{t('list.seo.title')}</title>
+				</Head>
+				<div id="product-list-page-mobile">
+					<div className="container">
 					{/* TOP BAR: Title + Sort */}
 					<Stack className="m-top-bar" direction="row" alignItems="center" justifyContent="space-between">
-						<Typography className="m-title">Products</Typography>
+						<Typography className="m-title">{t('list.title')}</Typography>
 
 						<div className="m-sort">
-							<span className="m-sort-label">Sort by</span>
+							<span className="m-sort-label">{t('list.sortBy')}</span>
 							<Button
 								className="m-sort-button"
 								onClick={sortingClickHandler}
 								endIcon={<KeyboardArrowDownRoundedIcon />}
+								aria-label={t('list.sortBy') as string}
 							>
 								{filterSortName}
 							</Button>
 
 							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler}>
 								<MenuItem onClick={sortingHandler} id="new" disableRipple>
-									New
+									{t('list.sort.new')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="lowest" disableRipple>
-									Lowest Price
+									{t('list.sort.lowestPrice')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="highest" disableRipple>
-									Highest Price
+									{t('list.sort.highestPrice')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="popular" disableRipple>
-									Most Popular
+									{t('list.sort.mostPopular')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="liked" disableRipple>
-									Most Liked
+									{t('list.sort.mostLiked')}
 								</MenuItem>
 							</Menu>
 						</div>
@@ -339,13 +346,13 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 					{renderActiveFilters(true)}
 
 					<Typography className="m-result-count">
-						Showing {products?.length || 0} of {total || 0} pieces
+						{t('list.showingCount', { count: products?.length || 0, total: total || 0 })}
 					</Typography>
 
 					{/* FILTER BUTTON */}
 					<Stack className="m-filter-bar">
 						<Button className="m-filter-btn" onClick={() => setFilterOpen(true)}>
-							Filter
+							{t('list.filter')}
 						</Button>
 					</Stack>
 
@@ -375,7 +382,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								shape="circular"
 								color="secondary"
 							/>
-							<Typography className="m-total">Showing {products.length} of {total} pieces</Typography>
+							<Typography className="m-total">{t('list.showingCount', { count: products.length, total })}</Typography>
 						</Stack>
 					)}
 
@@ -408,23 +415,32 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								onClick={() => setFilterOpen(false)}
 								sx={{ background: '#000', color: '#fff', borderRadius: '12px' }}
 							>
-								Apply Filter
+								{t('list.applyFilter')}
 							</Button>
 						</Stack>
 					</Drawer>
 				</div>
 			</div>
+			</>
 		);
 	}
 
 	/* DESKTOP LAYOUT */
 	return (
-		<div id="product-list-page" style={{ position: 'relative' }}>
+		<>
+			<Head>
+				<title>{t('list.seo.title')}</title>
+			</Head>
+			<div id="product-list-page" style={{ position: 'relative' }}>
 			<div className="container">
 				<Box component={'div'} className={'right'}>
-					<span>Sort by</span>
+					<span>{t('list.sortBy')}</span>
 					<div>
-						<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
+						<Button
+							onClick={sortingClickHandler}
+							endIcon={<KeyboardArrowDownRoundedIcon />}
+							aria-label={t('list.sortBy') as string}
+						>
 							{filterSortName}
 						</Button>
 						<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
@@ -434,7 +450,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								New
+								{t('list.sort.new')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -442,7 +458,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Lowest Price
+								{t('list.sort.lowestPrice')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -450,7 +466,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Highest Price
+								{t('list.sort.highestPrice')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -458,7 +474,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Most Popular
+								{t('list.sort.mostPopular')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -466,7 +482,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Most Liked
+								{t('list.sort.mostLiked')}
 							</MenuItem>
 						</Menu>
 					</div>
@@ -479,7 +495,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 					<Stack className="main-config" mb={'76px'}>
 						<Stack className="result-toolbar">
 							<Typography className="result-count">
-								Showing {products?.length || 0} of {total || 0} pieces
+								{t('list.showingCount', { count: products?.length || 0, total: total || 0 })}
 							</Typography>
 							{renderActiveFilters()}
 						</Stack>
@@ -517,7 +533,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 							{products.length !== 0 && (
 								<Stack className="total-result">
-									<Typography>Showing {products.length} of {total} pieces</Typography>
+									<Typography>{t('list.showingCount', { count: products.length, total })}</Typography>
 								</Stack>
 							)}
 						</Stack>
@@ -525,6 +541,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 			</div>
 		</div>
+		</>
 	);
 };
 
