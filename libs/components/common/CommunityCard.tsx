@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Typography } from '@mui/material';
 import { BoardArticle } from '../../types/board-article/board-article';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { getMemberImage, REACT_APP_API_URL } from '../../config';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
@@ -59,12 +59,8 @@ const CommunityCard = (props: CommunityCardProps) => {
 				<Stack className="m-image-wrapper">
 					<Image src={imagePath} alt="" fill sizes="90px" className="m-card-img" style={{ objectFit: 'cover' }} />
 					<Stack className="m-date-badge">
-						<Typography className="m-month">
-							<Moment format={'MMM'}>{boardArticle?.createdAt}</Moment>
-						</Typography>
-						<Typography className="m-day">
-							<Moment format={'DD'}>{boardArticle?.createdAt}</Moment>
-						</Typography>
+						<Typography className="m-month">{dayjs(boardArticle?.createdAt).format('MMM')}</Typography>
+						<Typography className="m-day">{dayjs(boardArticle?.createdAt).format('DD')}</Typography>
 					</Stack>
 				</Stack>
 
@@ -154,12 +150,8 @@ const CommunityCard = (props: CommunityCardProps) => {
 				</Stack>
 			</Stack>
 			<Stack className="date-box">
-				<Moment className="month" format={'MMMM'}>
-					{boardArticle?.createdAt}
-				</Moment>
-				<Typography className="day">
-					<Moment format={'DD'}>{boardArticle?.createdAt}</Moment>
-				</Typography>
+				<Typography className="month">{dayjs(boardArticle?.createdAt).format('MMMM')}</Typography>
+				<Typography className="day">{dayjs(boardArticle?.createdAt).format('DD')}</Typography>
 			</Stack>
 		</Stack>
 	);

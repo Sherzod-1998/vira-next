@@ -38,10 +38,15 @@ const tokenRefreshLink = new TokenRefreshLink({
 class LoggingWebSocket {
 	private socket: WebSocket;
 	constructor(url: string) {
-		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
+		// Token is sent as a post-connect 'auth' message instead of a URL query
+		// param, so it never lands in proxy/server access logs or browser history.
+		this.socket = new WebSocket(url);
 		socketVar(this.socket);
 
-		this.socket.onopen = () => {};
+		this.socket.onopen = () => {
+			const token = getJwtToken();
+			if (token) this.socket.send(JSON.stringify({ event: 'auth', token }));
+		};
 		this.socket.onmessage = (msg) => {};
 		this.socket.onerror = (error) => {};
 	}

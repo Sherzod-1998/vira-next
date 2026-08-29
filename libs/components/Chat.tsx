@@ -45,10 +45,14 @@ const Chat = () => {
 
 		const baseUrl = process.env.NEXT_PUBLIC_CHAT_WS_URL || 'ws://localhost:3007';
 
-		const token = getJwtToken();
-		const CHAT_WS_URL = token ? `${baseUrl}?token=${token}` : baseUrl;
+		// Token is sent as a post-connect 'auth' message instead of a URL query
+		// param, so it never lands in proxy/server access logs or browser history.
+		const ws = new WebSocket(baseUrl);
 
-		const ws = new WebSocket(CHAT_WS_URL);
+		ws.onopen = () => {
+			const token = getJwtToken();
+			if (token) ws.send(JSON.stringify({ event: 'auth', token }));
+		};
 
 		ws.onerror = (e) => {
 			if (!manualCloseRef.current) {

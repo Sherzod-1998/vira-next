@@ -1,4 +1,5 @@
 import decodeJWT from 'jwt-decode';
+import Cookies from 'js-cookie';
 import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
@@ -29,6 +30,12 @@ export function getJwtToken(): any {
 
 export function setJwtToken(token: string) {
 	localStorage.setItem('accessToken', token);
+	// Also mirrored into a cookie (not httpOnly, same trust level as localStorage)
+	// solely so Next.js middleware can read it server-side and ask the backend
+	// to verify the caller's real role before rendering the admin UI — the
+	// cookie value is never trusted directly, only used as the bearer token for
+	// that server-side verification call.
+	Cookies.set('accessToken', token, { sameSite: 'lax', expires: 30 });
 }
 
 export const logIn = async (nick: string, password: string): Promise<void> => {
@@ -192,6 +199,7 @@ export const logOut = () => {
 
 const deleteStorage = () => {
 	localStorage.removeItem('accessToken');
+	Cookies.remove('accessToken');
 	window.localStorage.setItem('logout', Date.now().toString());
 };
 

@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import OpenInBrowserRoundedIcon from '@mui/icons-material/OpenInBrowserRounded';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { BoardArticle } from '../../../types/board-article/board-article';
 import { getMemberImage, REACT_APP_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -182,7 +182,7 @@ const CommunityArticleList = (props: CommunityArticleListProps) => {
 									<TableCell align="center">{article?.articleViews}</TableCell>
 									<TableCell align="center">{article?.articleLikes}</TableCell>
 									<TableCell align="left">
-										<Moment format={'DD.MM.YY HH:mm'}>{article?.createdAt}</Moment>
+										{dayjs(article?.createdAt).format('DD.MM.YY HH:mm')}
 									</TableCell>
 									<TableCell align="center">
 										{article.articleStatus === BoardArticleStatus.DELETE ? (

@@ -29,7 +29,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Pagination as SwiperPagination } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 SwiperCore.use([SwiperPagination]);
 
@@ -144,7 +144,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment, ...props }: any)
 		{ label: t('detail.stats.following'), value: seller?.memberFollowings ?? 0 },
 		{ label: t('detail.stats.products'), value: seller?.memberProducts ?? 0 },
 		{ label: t('detail.stats.likes'), value: seller?.memberLikes ?? 0 },
-		{ label: t('detail.stats.memberSince'), value: seller?.createdAt ? moment(seller.createdAt).format('YYYY') : '-' },
+		{ label: t('detail.stats.memberSince'), value: seller?.createdAt ? dayjs(seller.createdAt).format('YYYY') : '-' },
 	];
 
 	const followSellerHandler = async () => {

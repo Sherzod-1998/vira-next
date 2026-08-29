@@ -17,7 +17,7 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Footer = () => {
 	const device = useDeviceDetect();
@@ -184,7 +184,7 @@ const Footer = () => {
 						<span>Secure Escrow Payment · Buyer Protection · Authenticity Guaranteed</span>
 					</div>
 					<div className="m-bottom-content">
-						<p className="m-copy">© VIRA {moment().year()} - All rights reserved</p>
+						<p className="m-copy">© VIRA {dayjs().year()} - All rights reserved</p>
 						<div className="m-bottom-links">
 							<a href="/cs">Terms & Condition</a>
 							<span>|</span>
@@ -364,7 +364,7 @@ const Footer = () => {
 					<span>Secure Escrow Payment · Buyer Protection · Authenticity Guaranteed</span>
 				</div>
 				<div className="content">
-					<p className="copy">© VIRA {moment().year()} - All rights Reserved</p>
+					<p className="copy">© VIRA {dayjs().year()} - All rights Reserved</p>
 					<div className="links">
 						<a href="/cs">Terms & Condition</a>
 						<span>|</span>

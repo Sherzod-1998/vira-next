@@ -16,7 +16,6 @@ import EastIcon from '@mui/icons-material/East';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Product } from '../../libs/types/product/product';
-import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
 import { getMemberImage, REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';

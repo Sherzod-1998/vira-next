@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Box } from '@mui/material';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { BoardArticle } from '../../types/board-article/board-article';
 
@@ -69,9 +69,7 @@ const CommunityCard: React.FC<CommunityCardProps> = ({
           <div className="media">
             <img src={articleImage} alt={article.articleTitle} />
             <span className="date-badge">
-              <Moment format="DD MMM YYYY">
-                {article.createdAt}
-              </Moment>
+              {dayjs(article.createdAt).format('DD MMM YYYY')}
             </span>
           </div>
 
@@ -115,9 +113,7 @@ const CommunityCard: React.FC<CommunityCardProps> = ({
           <div className="media">
             <img src={articleImage} alt={article.articleTitle} />
             <span className="date-badge">
-              <Moment format="DD MMMM YYYY">
-                {article.createdAt}
-              </Moment>
+              {dayjs(article.createdAt).format('DD MMMM YYYY')}
             </span>
           </div>
 
