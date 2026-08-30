@@ -219,15 +219,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	);
 
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(
-			`/product?input=${JSON.stringify(searchFilter)}`,
-			`/product?input=${JSON.stringify(searchFilter)}`,
-			{
-				scroll: false,
-			},
-		);
-		setCurrentPage(value);
+		await pushSearchFilter({ ...searchFilter, page: value });
 	};
 
 	const onLike = async (id: string) => {
