@@ -80,7 +80,7 @@ const HeaderContent = () => {
 					</h1>
 				</Stack>
 				<Stack className="buttons" direction="row" spacing={2}>
-					<button className="more-detail" onClick={() => (window.location.href = '/about-us')}>
+					<button className="more-detail" onClick={() => (window.location.href = '/about')}>
 						{t('MORE DETAILS')}
 					</button>
 					<button className="shop_now" onClick={() => (window.location.href = '/product')}>
@@ -160,7 +160,7 @@ const HeaderContent = () => {
 					</h1>
 				</Stack>
 				<Stack className="buttons" direction="row" spacing={2}>
-					<button className="more-detail" onClick={() => (window.location.href = '/about-us')}>
+					<button className="more-detail" onClick={() => (window.location.href = '/about')}>
 						{t('MORE DETAILS')}
 					</button>
 					<button className="shop_now" onClick={() => (window.location.href = '/product')}>

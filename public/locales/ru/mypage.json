@@ -9,7 +9,7 @@
     "success": "Успешно!"
   },
   "menu": {
-    "manageListings": "УПРАВЛЕНИЕ ОБЪЯВЛЕНИЯМИ",
+    "manageListings": "УПРАВЛЕНИЕ ТОВАРАМИ",
     "addProduct": "Добавить товар",
     "myProducts": "Мои товары",
     "myFavorites": "Избранное",

@@ -77,7 +77,7 @@ const TopSellers = (props: TopSellersProps) => {
 						<p>Our Top Sellers always ready to serve you</p>
 					</Box>
 					<Box component={'div'} className={'right'}>
-						<div className={'more-box'}>
+						<div className={'more-box'} onClick={() => router.push('/seller')}>
 							<span>See All Sellers</span>
 							<img src="/img/icons/rightup.svg" alt="" />
 						</div>

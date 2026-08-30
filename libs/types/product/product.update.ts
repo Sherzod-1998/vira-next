@@ -8,9 +8,6 @@ export interface ProductUpdate {
 	productAddress?: string;
 	productTitle?: string;
 	productPrice?: number;
-	productSquare?: number;
-	productBeds?: number;
-	productRooms?: number;
 	productImages?: string[];
 	productDesc?: string;
 	productBarter?: boolean;

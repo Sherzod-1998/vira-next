@@ -6,8 +6,6 @@ export const getMemberImage = (memberImage?: string): string => {
 	return `${REACT_APP_API_URL}/${memberImage}`;
 };
 
-export const availableOptions = ['productBarter', 'productRent'];
-
 const thisYear = new Date().getFullYear();
 
 export const productYears: any = [];

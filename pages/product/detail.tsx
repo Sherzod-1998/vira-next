@@ -186,7 +186,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 		}
 	};
 
-	if (getProductLoading) {
+	if (getProductLoading || !product) {
 		return (
 			<Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '1080px' }}>
 				<CircularProgress size={'4rem'} />
