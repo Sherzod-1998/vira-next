@@ -1,51 +1,98 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Vira — Fine Jewelry Marketplace
 
-## Getting Started
+Vira is a full-stack marketplace for discovering, buying, and selling fine
+jewelry from verified sellers. This repo is the customer-facing web app
+(buyers, sellers, and an admin dashboard); the GraphQL/WebSocket API lives in
+the companion [`vira`](https://github.com/Sherzod-1998/vira) backend repo.
 
-First, run the development server:
+**Live demo:** _add your deployed Vercel URL here_
+**Backend repo:** https://github.com/Sherzod-1998/vira
+
+![Home page](docs/screenshots/home.png)
+
+<details>
+<summary>More screenshots</summary>
+
+![Product listing](docs/screenshots/products.png)
+![Seller directory](docs/screenshots/sellers.png)
+![About page](docs/screenshots/about.png)
+
+</details>
+
+## Features
+
+- **Product marketplace** — browse, filter (type/material/location/price),
+  sort, and search jewelry listings; product detail pages with an image
+  gallery, reviews, and related items.
+- **Sellers** — public seller directory and profiles, follow/like, seller
+  stats, and a per-seller product catalog.
+- **Community** — a discussion board with categories, comments, and likes.
+- **Real-time** — a WebSocket-backed live chat and notification feed.
+- **Accounts** — email/phone signup and login, Google OAuth, buyer and
+  seller account types.
+- **Admin dashboard** — manage members, products, community posts, notices,
+  and support inquiries, gated by a server-side role check (Next.js
+  middleware verifying the caller's role against the backend, not a
+  client-decoded token).
+- **Internationalization** — English, Korean, and Russian, including
+  right-to-left-safe layout and locale-aware number/date formatting.
+
+## Tech stack
+
+- **Next.js 14** (Pages Router) + **TypeScript**
+- **Apollo Client** for GraphQL, with a WebSocket link for subscriptions/chat
+- **Material UI** for components, custom SCSS for page-specific styling
+- **next-i18next** for i18n (en / kr / ru)
+- **next/image** for optimized, responsive images throughout
+- **Playwright**-verified UI (see [Testing](#testing))
+
+## Architecture notes
+
+- Auth uses a JWT issued by the backend, cached in `localStorage` for the
+  client and mirrored into a cookie so Next.js **middleware** can verify a
+  caller's role server-side before rendering `/_admin/**` — the client-decoded
+  JWT is used for UI only and is never trusted for access control.
+- The WebSocket client authenticates with a post-connect `{event: 'auth'}`
+  message instead of a token in the connection URL, so the token never lands
+  in proxy or browser history logs.
+- Apollo's error link clears the local session on `UNAUTHENTICATED`/401
+  responses instead of leaving the app in a half-logged-in state.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+yarn install
+cp .env.example .env.local   # point at your local or deployed backend
+yarn dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment variables
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+| Variable | Description |
+|---|---|
+| `REACT_APP_API_URL` | Backend REST/health base URL |
+| `REACT_APP_API_GRAPHQL_URL` | Backend GraphQL endpoint |
+| `REACT_APP_API_WS` | Backend WebSocket URL (Apollo subscriptions) |
+| `NEXT_PUBLIC_CHAT_WS_URL` | Backend WebSocket URL (chat) |
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+The backend repo's README documents the matching server-side setup.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-Configure these Environment Variables in Vercel after the Render API is live:
-
-```text
-REACT_APP_API_URL=https://your-api.onrender.com
-REACT_APP_API_GRAPHQL_URL=https://your-api.onrender.com/graphql
-REACT_APP_API_WS=wss://your-api.onrender.com
-NEXT_PUBLIC_CHAT_WS_URL=wss://your-api.onrender.com
+```bash
+yarn lint        # ESLint
+npx tsc --noEmit # type-check
 ```
 
-Set the same values for Production and Preview if both environments should use
-the deployed API. Add the final Vercel domain to the backend's `CORS_ORIGINS`
-variable.
+_Automated UI tests are not yet part of this repo — see the backend for unit
+test coverage._
+
+## Deploying
+
+This app deploys cleanly to Vercel. After deploying the backend (see its
+README), set the four environment variables above to the deployed backend's
+URLs in your Vercel project, for both Production and Preview.
+
+## License
+
+MIT
