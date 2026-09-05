@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
 import { FollowInquiry } from '../../types/follow/follow.input';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Follower } from '../../types/follow/follow';
-import { REACT_APP_API_URL } from '../../config';
+import { getMemberImage, REACT_APP_API_URL } from '../../config';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { userVar } from '../../../apollo/store';
@@ -81,16 +81,19 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 						<Typography className="title-text">Details</Typography>
 						<Typography className="title-text">Subscription</Typography>
 					</Stack>
-					{memberFollowers?.length === 0 && (
+					{getMemberFollowersLoading ? (
+						<Stack className="mypage-list-state">
+							<CircularProgress size={28} />
+							<Typography>Loading followers...</Typography>
+						</Stack>
+					) : memberFollowers?.length === 0 ? (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
 							<p>No Followers yet!</p>
 						</div>
-					)}
-					{memberFollowers.map((follower: Follower) => {
-						const imagePath: string = follower?.followerData?.memberImage
-							? `${REACT_APP_API_URL}/${follower?.followerData?.memberImage}`
-							: '/img/profile/defaultUser.svg';
+					) : null}
+					{!getMemberFollowersLoading && memberFollowers.map((follower: Follower) => {
+						const imagePath: string = getMemberImage(follower?.followerData?.memberImage);
 						return (
 							<Stack className="follows-card-box" key={follower._id}>
 								<Stack className={'info'} onClick={() => redirectToMemberPageHandler(follower?.followerData?._id)}>

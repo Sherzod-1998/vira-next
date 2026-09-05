@@ -1,8 +1,9 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
+import type { GetStaticProps } from 'next';
+import Head from 'next/head';
+import { Box, Button, Menu, MenuItem, Pagination, Skeleton, Stack, Typography } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
-import ProductCard from '../../libs/components/product/ProductCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/product/Filter';
@@ -10,6 +11,7 @@ import { useRouter } from 'next/router';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Product } from '../../libs/types/product/product';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { useMutation, useQuery } from '@apollo/client';
@@ -19,15 +21,28 @@ import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import MainProductCard from '../../libs/components/homepage/MainProductCard';
 
-export const getStaticProps = async ({ locale }: any) => ({
+const DEFAULT_PRICE_START = 0;
+const DEFAULT_PRICE_END = 2000000;
+
+const formatFilterLabel = (value: string) =>
+	value
+		.toLowerCase()
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+
+const formatPrice = (value: number) => `$${value.toLocaleString()}`;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'product'])),
 	},
 });
 
 const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('product');
 
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
@@ -38,9 +53,9 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
-	const [filterSortName, setFilterSortName] = useState('New');
+	const [filterSortName, setFilterSortName] = useState<string>(t('list.sort.new'));
 
-	// 🔹 MOBILE FILTER DRAWER HOLATI
+	// Mobile filter drawer state
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	/** APOLLO REQUESTS **/
@@ -67,20 +82,144 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			const inputObj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(inputObj);
 			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+			setFilterSortName(getSortLabel(inputObj.sort, inputObj.direction));
 		}
 	}, [router.query.input]);
 
 	/** HANDLERS **/
-	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(
-			`/product?input=${JSON.stringify(searchFilter)}`,
-			`/product?input=${JSON.stringify(searchFilter)}`,
-			{
-				scroll: false,
+	const getSortLabel = (sort?: string, direction?: Direction) => {
+		if (sort === 'productPrice' && direction === Direction.ASC) return t('list.sort.lowestPrice');
+		if (sort === 'productPrice' && direction === Direction.DESC) return t('list.sort.highestPrice');
+		if (sort === 'productViews' && direction === Direction.DESC) return t('list.sort.mostPopular');
+		if (sort === 'productLikes' && direction === Direction.DESC) return t('list.sort.mostLiked');
+		return t('list.sort.new');
+	};
+
+	const pushSearchFilter = async (input: ProductsInquiry) => {
+		await router.push(`/product?input=${JSON.stringify(input)}`, `/product?input=${JSON.stringify(input)}`, {
+			scroll: false,
+		});
+		setSearchFilter(input);
+		setCurrentPage(input.page === undefined ? 1 : input.page);
+	};
+
+	const resetFilters = async () => {
+		await pushSearchFilter(initialInput);
+	};
+
+	const removeFilterValue = async (field: 'locationList' | 'typeList' | 'materialList', value: string) => {
+		const nextValues = ((searchFilter.search as any)?.[field] || []).filter((item: string) => item !== value);
+		const nextSearch = { ...searchFilter.search, [field]: nextValues };
+
+		if (nextValues.length === 0) delete (nextSearch as any)[field];
+
+		await pushSearchFilter({ ...searchFilter, page: 1, search: nextSearch });
+	};
+
+	const removeTextFilter = async () => {
+		const nextSearch = { ...searchFilter.search };
+		delete nextSearch.text;
+		await pushSearchFilter({ ...searchFilter, page: 1, search: nextSearch });
+	};
+
+	const resetPriceFilter = async () => {
+		await pushSearchFilter({
+			...searchFilter,
+			page: 1,
+			search: {
+				...searchFilter.search,
+				pricesRange: { start: DEFAULT_PRICE_START, end: DEFAULT_PRICE_END },
 			},
+		});
+	};
+
+	const activeFilterChips = [
+		...((searchFilter.search?.typeList || []).map((value: string) => ({
+			key: `type-${value}`,
+			label: t('list.chipType', { value: formatFilterLabel(value) }),
+			onRemove: () => removeFilterValue('typeList', value),
+		})) || []),
+		...((searchFilter.search?.materialList || []).map((value: string) => ({
+			key: `material-${value}`,
+			label: t('list.chipMaterial', { value: formatFilterLabel(value) }),
+			onRemove: () => removeFilterValue('materialList', value),
+		})) || []),
+		...((searchFilter.search?.locationList || []).map((value: string) => ({
+			key: `location-${value}`,
+			label: t('list.chipLocation', { value: formatFilterLabel(value) }),
+			onRemove: () => removeFilterValue('locationList', value),
+		})) || []),
+		...(searchFilter.search?.text
+			? [
+					{
+						key: 'text',
+						label: t('list.chipSearch', { value: searchFilter.search.text }),
+						onRemove: removeTextFilter,
+					},
+			  ]
+			: []),
+		...(searchFilter.search?.pricesRange &&
+		(searchFilter.search.pricesRange.start !== DEFAULT_PRICE_START ||
+			searchFilter.search.pricesRange.end !== DEFAULT_PRICE_END)
+			? [
+					{
+						key: 'price',
+						label: `${formatPrice(searchFilter.search.pricesRange.start)} - ${formatPrice(
+							searchFilter.search.pricesRange.end,
+						)}`,
+						onRemove: resetPriceFilter,
+					},
+			  ]
+			: []),
+	];
+
+	const renderActiveFilters = (mobile = false) =>
+		activeFilterChips.length > 0 && (
+			<Stack className={mobile ? 'm-active-filters' : 'active-filters'} direction="row">
+				{activeFilterChips.map((chip) => (
+					<button className="filter-chip" key={chip.key} type="button" onClick={chip.onRemove}>
+						<span>{chip.label}</span>
+						<b>✕</b>
+					</button>
+				))}
+				<button className="filter-chip clear-chip" type="button" onClick={resetFilters}>
+					{t('list.clearAll')}
+				</button>
+			</Stack>
 		);
-		setCurrentPage(value);
+
+	const renderSkeletonCards = (mobile = false) => (
+		<div className={mobile ? 'm-product-grid' : 'list-config'}>
+			{Array.from({ length: 9 }).map((_, index) => (
+				<Stack
+					className={`product-card product-card-skeleton ${mobile ? 'mobile' : ''}`}
+					key={`product-skeleton-${index}`}
+				>
+					<Skeleton variant="rectangular" className="skeleton-image" />
+					<Stack className="product-info">
+						<Skeleton variant="text" width="38%" height={22} />
+						<Skeleton variant="text" width="80%" height={28} />
+						<Skeleton variant="text" width="64%" height={24} />
+						<Skeleton variant="text" width="44%" height={28} />
+						<Skeleton variant="rounded" width="100%" height={44} />
+					</Stack>
+				</Stack>
+			))}
+		</div>
+	);
+
+	const renderEmptyState = (mobile = false) => (
+		<div className={mobile ? 'm-empty-state' : 'empty-state'}>
+			<Typography className="empty-title">{t('list.emptyTitle')}</Typography>
+			<Typography className="empty-subtitle">{t('list.emptySubtitle')}</Typography>
+			<Button className="empty-clear-btn" onClick={resetFilters}>
+				{t('list.clearFilters')}
+			</Button>
+		</div>
+	);
+
+	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
+		await pushSearchFilter({ ...searchFilter, page: value });
 	};
 
 	const onLike = async (id: string) => {
@@ -93,7 +232,6 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			await getProductsRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, onLike:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -109,7 +247,6 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			await getProductsRefetch({ input: initialInput });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -125,77 +262,97 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextInput = { ...searchFilter };
+
 		switch (e.currentTarget.id) {
 			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC });
-				setFilterSortName('New');
+				nextInput = { ...searchFilter, sort: 'createdAt', direction: Direction.DESC };
+				setFilterSortName(t('list.sort.new'));
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.ASC });
-				setFilterSortName('Lowest Price');
+				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.ASC };
+				setFilterSortName(t('list.sort.lowestPrice'));
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.DESC });
-				setFilterSortName('Highest Price');
+				nextInput = { ...searchFilter, sort: 'productPrice', direction: Direction.DESC };
+				setFilterSortName(t('list.sort.highestPrice'));
+				break;
+			case 'popular':
+				nextInput = { ...searchFilter, sort: 'productViews', direction: Direction.DESC };
+				setFilterSortName(t('list.sort.mostPopular'));
+				break;
+			case 'liked':
+				nextInput = { ...searchFilter, sort: 'productLikes', direction: Direction.DESC };
+				setFilterSortName(t('list.sort.mostLiked'));
+				break;
 		}
+		pushSearchFilter(nextInput).then();
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
 
-	/* 📱 MOBILE LAYOUT */
+	/* MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
-			<div id="product-list-page-mobile">
-				<div className="container">
+			<>
+				<Head>
+					<title>{t('list.seo.title')}</title>
+				</Head>
+				<div id="product-list-page-mobile">
+					<div className="container">
 					{/* TOP BAR: Title + Sort */}
 					<Stack className="m-top-bar" direction="row" alignItems="center" justifyContent="space-between">
-						<Typography className="m-title">Products</Typography>
+						<Typography className="m-title">{t('list.title')}</Typography>
 
 						<div className="m-sort">
-							<span className="m-sort-label">Sort by</span>
+							<span className="m-sort-label">{t('list.sortBy')}</span>
 							<Button
 								className="m-sort-button"
 								onClick={sortingClickHandler}
 								endIcon={<KeyboardArrowDownRoundedIcon />}
+								aria-label={t('list.sortBy') as string}
 							>
 								{filterSortName}
 							</Button>
 
 							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler}>
 								<MenuItem onClick={sortingHandler} id="new" disableRipple>
-									New
+									{t('list.sort.new')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="lowest" disableRipple>
-									Lowest Price
+									{t('list.sort.lowestPrice')}
 								</MenuItem>
 								<MenuItem onClick={sortingHandler} id="highest" disableRipple>
-									Highest Price
+									{t('list.sort.highestPrice')}
+								</MenuItem>
+								<MenuItem onClick={sortingHandler} id="popular" disableRipple>
+									{t('list.sort.mostPopular')}
+								</MenuItem>
+								<MenuItem onClick={sortingHandler} id="liked" disableRipple>
+									{t('list.sort.mostLiked')}
 								</MenuItem>
 							</Menu>
 						</div>
 					</Stack>
 
+					{renderActiveFilters(true)}
+
+					<Typography className="m-result-count">
+						{t('list.showingCount', { count: products?.length || 0, total: total || 0 })}
+					</Typography>
+
 					{/* FILTER BUTTON */}
 					<Stack className="m-filter-bar">
 						<Button className="m-filter-btn" onClick={() => setFilterOpen(true)}>
-							Filter
+							{t('list.filter')}
 						</Button>
 					</Stack>
 
 					{/* LIST / CONTENT */}
 					<Stack className="m-content" spacing={2}>
-						{getProductsLoading && (
-							<div className="m-loading">
-								<p>Loading products...</p>
-							</div>
-						)}
+						{getProductsLoading && renderSkeletonCards(true)}
 
-						{!getProductsLoading && products?.length === 0 && (
-							<div className="m-no-data">
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No products found!</p>
-							</div>
-						)}
+						{!getProductsLoading && products?.length === 0 && renderEmptyState(true)}
 
 						{!getProductsLoading && products?.length > 0 && (
 							<div className="m-product-grid">
@@ -217,9 +374,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								shape="circular"
 								color="secondary"
 							/>
-							<Typography className="m-total">
-								Total {total} product{total > 1 ? 's' : ''} available
-							</Typography>
+							<Typography className="m-total">{t('list.showingCount', { count: products.length, total })}</Typography>
 						</Stack>
 					)}
 
@@ -238,7 +393,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 						}}
 					>
 						<Stack spacing={2}>
-							{/* Asl Filter component - mobil uchun ham o‘sha */}
+							{/* The same filter component is used for mobile. */}
 							{/* @ts-ignore */}
 							<Filter
 								searchFilter={searchFilter}
@@ -252,23 +407,32 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								onClick={() => setFilterOpen(false)}
 								sx={{ background: '#000', color: '#fff', borderRadius: '12px' }}
 							>
-								Apply Filter
+								{t('list.applyFilter')}
 							</Button>
 						</Stack>
 					</Drawer>
 				</div>
 			</div>
+			</>
 		);
 	}
 
-	/* 💻 DESKTOP LAYOUT */
+	/* DESKTOP LAYOUT */
 	return (
-		<div id="product-list-page" style={{ position: 'relative' }}>
+		<>
+			<Head>
+				<title>{t('list.seo.title')}</title>
+			</Head>
+			<div id="product-list-page" style={{ position: 'relative' }}>
 			<div className="container">
 				<Box component={'div'} className={'right'}>
-					<span>Sort by</span>
+					<span>{t('list.sortBy')}</span>
 					<div>
-						<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
+						<Button
+							onClick={sortingClickHandler}
+							endIcon={<KeyboardArrowDownRoundedIcon />}
+							aria-label={t('list.sortBy') as string}
+						>
 							{filterSortName}
 						</Button>
 						<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
@@ -278,7 +442,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								New
+								{t('list.sort.new')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -286,7 +450,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Lowest Price
+								{t('list.sort.lowestPrice')}
 							</MenuItem>
 							<MenuItem
 								onClick={sortingHandler}
@@ -294,7 +458,23 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								disableRipple
 								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 							>
-								Highest Price
+								{t('list.sort.highestPrice')}
+							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'popular'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								{t('list.sort.mostPopular')}
+							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'liked'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								{t('list.sort.mostLiked')}
 							</MenuItem>
 						</Menu>
 					</div>
@@ -305,18 +485,21 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 						<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
 					</Stack>
 					<Stack className="main-config" mb={'76px'}>
-						<Stack className={'list-config'}>
-							{products?.length === 0 ? (
-								<div className={'no-data'}>
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No Products found!</p>
-								</div>
-							) : (
-								products.map((product: Product) => {
-									return <MainProductCard product={product} onLike={onLike} key={product?._id} />;
-								})
-							)}
+						<Stack className="result-toolbar">
+							<Typography className="result-count">
+								{t('list.showingCount', { count: products?.length || 0, total: total || 0 })}
+							</Typography>
+							{renderActiveFilters()}
 						</Stack>
+						{getProductsLoading && renderSkeletonCards()}
+						{!getProductsLoading && products?.length === 0 && renderEmptyState()}
+						{!getProductsLoading && products?.length > 0 && (
+							<Stack className={'list-config'}>
+								{products.map((product: Product) => {
+									return <MainProductCard product={product} onLike={onLike} key={product?._id} />;
+								})}
+							</Stack>
+						)}
 						<Stack className="pagination-config">
 							{products.length !== 0 && (
 								<Stack className="pagination-box">
@@ -342,9 +525,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 							{products.length !== 0 && (
 								<Stack className="total-result">
-									<Typography>
-										Total {total} product{total > 1 ? 's' : ''} available
-									</Typography>
+									<Typography>{t('list.showingCount', { count: products.length, total })}</Typography>
 								</Stack>
 							)}
 						</Stack>
@@ -352,6 +533,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 			</div>
 		</div>
+		</>
 	);
 };
 

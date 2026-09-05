@@ -1,0 +1,111 @@
+{
+  "subtitle": "다시 뵙게 되어 기쁩니다!",
+  "mobile": {
+    "myPage": "마이페이지"
+  },
+  "alerts": {
+    "subscribed": "구독되었습니다!",
+    "unsubscribed": "구독이 취소되었습니다!",
+    "success": "성공!"
+  },
+  "menu": {
+    "manageListings": "상품 관리",
+    "addProduct": "상품 등록",
+    "myProducts": "내 상품",
+    "myFavorites": "관심 목록",
+    "recentlyVisited": "최근 방문",
+    "myFollowers": "팔로워",
+    "myFollowings": "팔로잉",
+    "community": "커뮤니티",
+    "articles": "게시글",
+    "writeArticle": "글 작성",
+    "manageAccount": "계정 관리",
+    "myProfile": "내 프로필",
+    "logout": "로그아웃",
+    "logoutConfirm": "로그아웃 하시겠습니까?"
+  },
+  "articles": {
+    "title": "게시글",
+    "loading": "게시글을 불러오는 중...",
+    "empty": "게시글이 없습니다",
+    "emptyHint": "아직 작성한 게시글이 없습니다",
+    "totalCount": "총 {{count}}개의 게시글이 있습니다",
+    "likeSuccess": "성공"
+  },
+  "products": {
+    "title": "내 상품",
+    "onSale": "판매중",
+    "onSold": "판매완료",
+    "listingTitle": "상품명",
+    "datePublished": "등록일",
+    "status": "상태",
+    "view": "조회수",
+    "action": "관리",
+    "loading": "상품을 불러오는 중...",
+    "empty": "상품이 없습니다",
+    "emptyHint": "등록한 상품이 여기에 표시됩니다",
+    "totalCount": "상품 {{count}}개",
+    "sold": "판매완료",
+    "deleteConfirm": "이 상품을 삭제하시겠습니까?",
+    "statusConfirm": "{{status}} 상태로 변경하시겠습니까?"
+  },
+  "favorites": {
+    "title": "관심 목록",
+    "loading": "관심 상품을 불러오는 중...",
+    "empty": "관심 상품이 없습니다",
+    "emptyHint": "좋아요한 상품이 여기에 표시됩니다",
+    "totalCount": "관심 상품 {{count}}개"
+  },
+  "recentlyVisited": {
+    "title": "최근 방문",
+    "loading": "최근 방문 상품을 불러오는 중...",
+    "empty": "최근 방문한 상품이 없습니다",
+    "emptyHint": "조회한 상품이 여기에 표시됩니다",
+    "totalCount": "최근 방문 상품 {{count}}개"
+  },
+  "profile": {
+    "title": "내 프로필",
+    "photo": "사진",
+    "uploadImage": "프로필 사진 업로드",
+    "photoFormatHint": "사진은 JPG, JPEG 또는 PNG 형식이어야 합니다!",
+    "username": "닉네임",
+    "usernamePlaceholder": "닉네임을 입력하세요",
+    "phone": "전화번호",
+    "phonePlaceholder": "전화번호를 입력하세요",
+    "address": "주소",
+    "addressPlaceholder": "주소를 입력하세요",
+    "updateButton": "프로필 수정",
+    "updateSuccess": "정보가 성공적으로 수정되었습니다!"
+  },
+  "writeArticle": {
+    "title": "게시글 작성",
+    "subtitle": "자유롭게 아이디어를 작성해 주세요!"
+  },
+  "addProduct": {
+    "title": "새 상품 등록",
+    "titleLabel": "제목",
+    "titlePlaceholder": "제목",
+    "price": "가격",
+    "pricePlaceholder": "가격",
+    "selectType": "종류 선택",
+    "selectLocation": "지역 선택",
+    "addressLabel": "주소",
+    "addressPlaceholder": "주소",
+    "selectMaterial": "소재 선택",
+    "select": "선택",
+    "productDescriptionTitle": "상품 설명",
+    "descriptionLabel": "설명",
+    "uploadTitle": "상품 사진을 업로드하세요",
+    "dragDrop": "이미지를 드래그 앤 드롭하세요",
+    "formatHint": "사진은 JPEG 또는 PNG 형식이며 최소 2048x768 이어야 합니다",
+    "browseFiles": "파일 찾아보기",
+    "save": "저장",
+    "createSuccess": "상품이 성공적으로 등록되었습니다.",
+    "updateSuccess": "상품이 성공적으로 수정되었습니다.",
+    "maxImagesError": "이미지는 5개까지만 업로드할 수 있습니다!"
+  },
+  "productCard": {
+    "editAria": "상품 수정",
+    "deleteAria": "상품 삭제"
+  }
+}

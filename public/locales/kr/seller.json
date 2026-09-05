@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "판매자 | Vira",
+    "searchPlaceholder": "판매자 검색",
+    "sortBy": "정렬",
+    "sort": {
+      "recent": "최신순",
+      "oldest": "오래된순",
+      "likes": "좋아요순",
+      "views": "조회순"
+    },
+    "emptyTitle": "판매자를 찾을 수 없습니다",
+    "emptySubtitle": "다른 판매자 이름으로 검색하거나 초기화해 보세요.",
+    "reset": "초기화",
+    "totalAvailable": "총 {{count}}명의 판매자",
+    "totalAvailable_plural": "총 {{count}}명의 판매자"
+  },
+  "card": {
+    "verifiedSeller": "인증된 판매자",
+    "seller": "판매자",
+    "productsCount": "제품 {{count}}개",
+    "viewsAria": "조회수",
+    "followersAria": "팔로워",
+    "likeAria": "판매자 좋아요",
+    "unlikeAria": "판매자 좋아요 취소"
+  },
+  "detail": {
+    "verifiedSeller": "인증된 판매자",
+    "follow": "팔로우",
+    "following": "팔로잉",
+    "stats": {
+      "followers": "팔로워",
+      "following": "팔로잉",
+      "products": "제품",
+      "likes": "좋아요",
+      "memberSince": "가입일"
+    },
+    "productsMetaAndReviews": "제품 {{products}}개 · 리뷰 {{count}}개",
+    "productsMetaAndReviews_plural": "제품 {{products}}개 · 리뷰 {{count}}개",
+    "productsSection": "제품",
+    "noProductsFound": "제품을 찾을 수 없습니다!",
+    "totalProductsAvailable": "총 {{count}}개의 제품",
+    "totalProductsAvailable_plural": "총 {{count}}개의 제품",
+    "reviewsSection": "리뷰",
+    "reviewsSubtitle": "다시 만나서 반갑습니다",
+    "reviewsCount": "리뷰 {{count}}개",
+    "reviewsCount_plural": "리뷰 {{count}}개",
+    "leaveAReview": "리뷰 작성",
+    "review": "리뷰",
+    "writeReviewPlaceholder": "리뷰를 작성해 주세요...",
+    "submitReview": "리뷰 제출",
+    "pleaseLogInFirst": "먼저 로그인해 주세요",
+    "cannotReviewYourself": "본인에게는 리뷰를 작성할 수 없습니다",
+    "seo": {
+      "descriptionFallback": "Vira에서 이 판매자의 정교한 주얼리 컬렉션을 만나보세요."
+    }
+  }
+}

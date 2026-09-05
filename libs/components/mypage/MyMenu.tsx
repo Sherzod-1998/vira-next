@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { Stack, Typography, Box, List, ListItem } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Link from 'next/link';
@@ -7,12 +8,13 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import IconButton from '@mui/material/IconButton';
-import { REACT_APP_API_URL } from '../../config';
+import { getMemberImage } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../sweetAlert';
 
 const MyMenu = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('mypage');
 	const router = useRouter();
 	const pathname = router.query.category ?? 'myProfile';
 	const category: any = router.query?.category ?? 'myProfile';
@@ -21,9 +23,9 @@ const MyMenu = () => {
 	/** HANDLERS **/
 	const logoutHandler = async () => {
 		try {
-			if (await sweetConfirmAlert('Do you want to logout?')) logOut();
+			if (await sweetConfirmAlert(t('menu.logoutConfirm'))) logOut();
 		} catch (err: any) {
-			console.log('ERROR, logoutHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
 		}
 	};
 
@@ -35,7 +37,7 @@ const MyMenu = () => {
 				<Stack className={'profile'}>
 					<Box component={'div'} className={'profile-img'}>
 						<img
-							src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
+							src={getMemberImage(user?.memberImage)}
 							alt={'member-photo'}
 						/>
 					</Box>
@@ -57,7 +59,7 @@ const MyMenu = () => {
 				<Stack className={'sections'}>
 					<Stack className={'section'} style={{ height: user.memberType === 'SELLER' ? '228px' : '153px' }}>
 						<Typography className="title" variant={'h5'}>
-							MANAGE LISTINGS
+							{t('menu.manageListings')}
 						</Typography>
 						<List className={'sub-section'}>
 							{user.memberType === 'SELLER' && (
@@ -77,7 +79,7 @@ const MyMenu = () => {
 													<img className={'com-icon'} src={'/img/icons/newTab.svg'} alt={'com_icon'} />
 												)}
 												<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-													Add Product
+													{t('menu.addProduct')}
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '40px' }}>
 													<PortraitIcon style={{ color: 'red' }} />
@@ -100,7 +102,7 @@ const MyMenu = () => {
 													<img className={'com-icon'} src={'/img/icons/home.svg'} alt={'com-icon'} />
 												)}
 												<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-													My Products
+													{t('menu.myProducts')}
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '36px' }}>
 													<PortraitIcon style={{ color: 'red' }} />
@@ -126,7 +128,7 @@ const MyMenu = () => {
 										)}
 
 										<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-											My Favorites
+											{t('menu.myFavorites')}
 										</Typography>
 									</div>
 								</Link>
@@ -147,7 +149,7 @@ const MyMenu = () => {
 										)}
 
 										<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-											Recently Visited
+											{t('menu.recentlyVisited')}
 										</Typography>
 									</div>
 								</Link>
@@ -194,7 +196,7 @@ const MyMenu = () => {
 											</g>
 										</svg>
 										<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-											My Followers
+											{t('menu.myFollowers')}
 										</Typography>
 									</div>
 								</Link>
@@ -242,7 +244,7 @@ const MyMenu = () => {
 										</svg>
 
 										<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-											My Followings
+											{t('menu.myFollowings')}
 										</Typography>
 									</div>
 								</Link>
@@ -252,7 +254,7 @@ const MyMenu = () => {
 					<Stack className={'section'} sx={{ marginTop: '10px' }}>
 						<div>
 							<Typography className="title" variant={'h5'}>
-								Community
+								{t('menu.community')}
 							</Typography>
 							<List className={'sub-section'}>
 								<ListItem className={pathname === 'myArticles' ? 'focus' : ''}>
@@ -271,7 +273,7 @@ const MyMenu = () => {
 											)}
 
 											<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-												Articles
+												{t('menu.articles')}
 											</Typography>
 										</div>
 									</Link>
@@ -291,7 +293,7 @@ const MyMenu = () => {
 												<img className={'com-icon'} src={'/img/icons/newTab.svg'} alt={'com_icon'} />
 											)}
 											<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-												Write Article
+												{t('menu.writeArticle')}
 											</Typography>
 										</div>
 									</Link>
@@ -301,7 +303,7 @@ const MyMenu = () => {
 					</Stack>
 					<Stack className={'section'} sx={{ marginTop: '30px' }}>
 						<Typography className="title" variant={'h5'}>
-							MANAGE ACCOUNT
+							{t('menu.manageAccount')}
 						</Typography>
 						<List className={'sub-section'}>
 							<ListItem className={pathname === 'myProfile' ? 'focus' : ''}>
@@ -319,7 +321,7 @@ const MyMenu = () => {
 											<img className={'com-icon'} src={'/img/icons/user.svg'} alt={'com-icon'} />
 										)}
 										<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-											My Profile
+											{t('menu.myProfile')}
 										</Typography>
 									</div>
 								</Link>
@@ -328,7 +330,7 @@ const MyMenu = () => {
 								<div className={'flex-box'}>
 									<img className={'com-icon'} src={'/img/icons/logout.svg'} alt={'com-icon'} />
 									<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-										Logout
+										{t('menu.logout')}
 									</Typography>
 								</div>
 							</ListItem>

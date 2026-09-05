@@ -29,7 +29,7 @@ interface Notice {
 	noticeContent: string;
 	memberId: string;
 	createdAt: string;
-	memberNick?: string; // 🔹 qo'shildi
+	memberNick?: string; // Added for admin notice display.
 }
 
 interface NoticeListProps {

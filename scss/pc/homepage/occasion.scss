@@ -1,0 +1,136 @@
+.home-page {
+	.occasion-section {
+		width: 100%;
+		background-color: #faf9f6;
+		padding: 80px 0;
+
+		.occasion-inner {
+			max-width: 1280px;
+			margin: 0 auto;
+			padding: 0 40px;
+			box-sizing: border-box;
+		}
+
+		.occasion-header {
+			text-align: center;
+			margin-bottom: 48px;
+		}
+
+		.occasion-eyebrow {
+			font-family: 'Unbounded', sans-serif;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 0.18em;
+			color: #c9a84c;
+			text-transform: uppercase;
+			margin: 0 0 14px 0;
+		}
+
+		.occasion-title {
+			font-family: 'Unbounded', sans-serif;
+			font-size: 38px;
+			font-weight: 500;
+			color: #212121;
+			margin: 0;
+			line-height: 1.2;
+		}
+
+		.occasion-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 20px;
+		}
+
+		.occasion-card {
+			position: relative;
+			height: 340px;
+			border-radius: 18px;
+			background-size: cover;
+			background-position: center;
+			overflow: hidden;
+			cursor: pointer;
+			box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+			transition: box-shadow 0.35s ease, transform 0.35s ease;
+
+			// Inner image zoom on hover via background-size trick
+			&::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background-image: inherit;
+				background-size: cover;
+				background-position: center;
+				transition: transform 0.45s ease;
+				z-index: 0;
+			}
+
+			&:hover {
+				box-shadow: 0 10px 36px rgba(0, 0, 0, 0.28);
+
+				&::before {
+					transform: scale(1.06);
+				}
+			}
+
+			.overlay {
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.05));
+				z-index: 1;
+			}
+
+			&__label {
+				position: absolute;
+				bottom: 28px;
+				left: 24px;
+				z-index: 2;
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+			}
+
+			&__name {
+				font-family: 'Unbounded', sans-serif;
+				font-size: 22px;
+				font-weight: 500;
+				color: #ffffff;
+				line-height: 1.2;
+			}
+
+			&__cta {
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 600;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: #c9a84c;
+			}
+		}
+
+		@media (max-width: 1024px) {
+			.occasion-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (max-width: 560px) {
+			padding: 52px 0;
+
+			.occasion-inner {
+				padding: 0 20px;
+			}
+
+			.occasion-title {
+				font-size: 26px;
+			}
+
+			.occasion-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.occasion-card {
+				height: 240px;
+			}
+		}
+	}
+}

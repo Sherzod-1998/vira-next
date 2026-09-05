@@ -1,0 +1,33 @@
+// Additional footer styles for mobile — scoped under #mobile-wrap.
+// Do NOT import this file into main.scss; it is wired separately.
+
+#mobile-wrap {
+	// Trust badge row inside .m-bottom
+	.footer-trust {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 12px;
+		padding: 0 4px;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+			color: #c9a84c;
+		}
+
+		span {
+			color: rgba(255, 255, 255, 0.7);
+			font-family: Karla, sans-serif;
+			font-size: 11px;
+		}
+	}
+
+	// Ensure the mobile newsletter input stays clean inside its pill container
+	.m-input {
+		flex: 1;
+		background: transparent;
+	}
+}

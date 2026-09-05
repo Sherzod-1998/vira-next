@@ -5,6 +5,7 @@ import { Product } from '../../types/product/product';
 import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { ProductStatus } from '../../enums/product.enum';
 
 export interface MainProductCardProps {
 	product: Product;
@@ -32,6 +33,7 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 	const imageUrl = data?.productImages?.[0]
 		? `${REACT_APP_API_URL}/${data.productImages[0]}`
 		: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=800&q=80';
+	const isSold = data?.productStatus === ProductStatus.SOLD;
 
 	const onLikeClick = async (e?: React.SyntheticEvent) => {
 		e?.stopPropagation();
@@ -54,9 +56,10 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 			onClick={() => pushDetailHandler(data._id)}
 			sx={{ position: 'relative' }}
 		>
-			{/* Rasm */}
+			{/* Image */}
 			<Box className="product-image" sx={{ backgroundImage: `url('${imageUrl}')` }}>
 				<Box className="product-label">{data.productMaterial}</Box>
+				{isSold && <Box className="sold-badge">SOLD</Box>}
 			</Box>
 
 			{/* Info */}
@@ -68,16 +71,16 @@ const MainProductCard: React.FC<MainProductCardProps> = ({ product, onLike }) =>
 				<Typography className="product-category">{data.productType}</Typography>
 				<Typography className="product-name">{data.productTitle}</Typography>
 
-				{/* rating bloki */}
+				{/* Rating */}
 				<Stack className="rating" direction="row" alignItems="center" spacing={1}>
 					<Stack className="stars" direction="row" spacing={0.5}>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
-						<span className="star">★</span>
+						{[1, 2, 3, 4, 5].map((n) => (
+							<span key={n} className={`star${Math.round(data.productRank ?? 0) >= n ? '' : ' star--empty'}`}>
+								★
+							</span>
+						))}
 					</Stack>
-					<Typography className="review-count">{data.productViews ?? 0} reviews</Typography>
+					<Typography className="review-count">{data.productViews ?? 0} views</Typography>
 				</Stack>
 
 				{/* Price row */}

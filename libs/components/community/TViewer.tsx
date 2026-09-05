@@ -22,27 +22,6 @@ const TViewer = (props: any) => {
 					<Viewer
 						initialValue={props.markdown}
 						customHTMLRenderer={{
-							htmlBlock: {
-								iframe(node: any) {
-									return [
-										{
-											type: 'openTag',
-											tagName: 'iframe',
-											outerNewLine: true,
-											attributes: node.attrs,
-										},
-										{ type: 'html', content: node.childrenHTML ?? '' },
-										{ type: 'closeTag', tagName: 'iframe', outerNewLine: true },
-									];
-								},
-								div(node: any) {
-									return [
-										{ type: 'openTag', tagName: 'div', outerNewLine: true, attributes: node.attrs },
-										{ type: 'html', content: node.childrenHTML ?? '' },
-										{ type: 'closeTag', tagName: 'div', outerNewLine: true },
-									];
-								},
-							},
 							htmlInline: {
 								big(node: any, { entering }: any) {
 									return entering

@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "Продавцы | Vira",
+    "searchPlaceholder": "Поиск продавца",
+    "sortBy": "Сортировать",
+    "sort": {
+      "recent": "Недавние",
+      "oldest": "Старые",
+      "likes": "Лайки",
+      "views": "Просмотры"
+    },
+    "emptyTitle": "Продавцы не найдены",
+    "emptySubtitle": "Попробуйте другое имя продавца или сбросьте поиск.",
+    "reset": "Сбросить",
+    "totalAvailable": "Всего доступен {{count}} продавец",
+    "totalAvailable_plural": "Всего доступно {{count}} продавцов"
+  },
+  "card": {
+    "verifiedSeller": "Проверенный продавец",
+    "seller": "продавец",
+    "productsCount": "{{count}} товаров",
+    "viewsAria": "Просмотры",
+    "followersAria": "Подписчики",
+    "likeAria": "Лайкнуть продавца",
+    "unlikeAria": "Убрать лайк продавца"
+  },
+  "detail": {
+    "verifiedSeller": "Проверенный продавец",
+    "follow": "Подписаться",
+    "following": "Вы подписаны",
+    "stats": {
+      "followers": "Подписчики",
+      "following": "Подписки",
+      "products": "Товары",
+      "likes": "Лайки",
+      "memberSince": "На платформе с"
+    },
+    "productsMetaAndReviews": "{{products}} товаров · {{count}} отзыв",
+    "productsMetaAndReviews_plural": "{{products}} товаров · {{count}} отзывов",
+    "productsSection": "Товары",
+    "noProductsFound": "Товары не найдены!",
+    "totalProductsAvailable": "Всего доступен {{count}} товар",
+    "totalProductsAvailable_plural": "Всего доступно {{count}} товаров",
+    "reviewsSection": "Отзывы",
+    "reviewsSubtitle": "Мы рады видеть вас снова",
+    "reviewsCount": "{{count}} отзыв",
+    "reviewsCount_plural": "{{count}} отзывов",
+    "leaveAReview": "Оставить отзыв",
+    "review": "Отзыв",
+    "writeReviewPlaceholder": "Напишите ваш отзыв...",
+    "submitReview": "Отправить отзыв",
+    "pleaseLogInFirst": "Пожалуйста, сначала войдите в систему",
+    "cannotReviewYourself": "Нельзя оставить отзыв самому себе",
+    "seo": {
+      "descriptionFallback": "Откройте для себя изысканную коллекцию украшений этого продавца на Vira."
+    }
+  }
+}

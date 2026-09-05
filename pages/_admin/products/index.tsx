@@ -134,13 +134,12 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 				setProductsInquiry({ ...productsInquiry });
 			}
 		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
+			sweetErrorHandling(err).then();
 		}
 	};
 
 	const updateProductHandler = async (updateData: ProductUpdate) => {
 		try {
-			console.log('+updateData: ', updateData);
 			await updateProductByAdmin({
 				variables: {
 					input: updateData,

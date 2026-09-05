@@ -19,6 +19,8 @@
       gap: 6px;
 
       .m-avatar {
+        position: relative;
+        overflow: hidden;
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -48,9 +50,27 @@
         gap: 2px;
 
         strong {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 5px;
           font-size: 15px;
           font-weight: 600;
           color: #181a20;
+        }
+
+        .m-verified-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          color: #a98a34;
+          font-size: 10px;
+          font-weight: 700;
+
+          svg {
+            width: 13px;
+            height: 13px;
+          }
         }
 
         .m-role {
@@ -178,9 +198,20 @@
             flex-direction: column;
             gap: 12px;
             min-height: 200px;
+
+            .seller-card-skeleton {
+                pointer-events: none;
+
+                .m-skeleton-avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                }
+            }
         }
 
-        .m-no-data {
+        .m-no-data,
+        .m-empty-state {
             width: 100%;
             padding: 40px 0;
             display: flex;
@@ -200,7 +231,43 @@
             }
         }
 
-        /* 🔹 Pagination */
+        .m-empty-state {
+            min-height: 260px;
+            padding: 34px 18px;
+            border: 1px solid rgba(201, 168, 76, 0.28);
+            border-radius: 16px;
+            background: #faf9f6;
+
+            .empty-title {
+                color: #212121;
+                font-family: Unbounded, system-ui, sans-serif;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .empty-subtitle {
+                max-width: 280px;
+                color: #777;
+                font-size: 13px;
+                line-height: 1.45;
+            }
+
+            .empty-reset-btn {
+                margin-top: 6px;
+                padding: 9px 20px;
+                border-radius: 999px;
+                background: #c9a84c;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 700;
+
+                &:hover {
+                    background: #a98a34;
+                }
+            }
+        }
+
+        /* Pagination */
         .m-pagination {
             width: 100%;
             align-items: center;

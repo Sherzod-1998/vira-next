@@ -1,0 +1,70 @@
+{
+  "list": {
+    "metaTitle": "Community | Vira",
+    "metaDescription": "Join the Vira Community to share your thoughts, recommendations, news and humor with fellow jewelry lovers.",
+    "pageTitle": "Vira Community",
+    "heroSubtitle": "Share your thoughts, recommendations, news and humor with the Vira family.",
+    "tabsMobile": {
+      "free": "Free",
+      "recommend": "Recommend",
+      "news": "News",
+      "humor": "Humor"
+    },
+    "tabsDesktop": {
+      "free": "Free Board",
+      "recommend": "Recommendation",
+      "news": "News",
+      "humor": "Humor"
+    },
+    "board": "BOARD",
+    "boardSubtitle": "Express your opinions freely here without content restrictions",
+    "write": "Write",
+    "searchPlaceholder": "Search articles",
+    "clearSearch": "Clear search",
+    "sortBy": "Sort by",
+    "sort": {
+      "newest": "Newest",
+      "liked": "Most Liked",
+      "viewed": "Most Viewed",
+      "commented": "Most Commented"
+    },
+    "emptyTitle": "No Article found!",
+    "emptySubtitle": "Try another category or search phrase.",
+    "totalResult_one": "Total {{count}} article available",
+    "totalResult_other": "Total {{count}} articles available"
+  },
+  "card": {
+    "viewsAria": "Views",
+    "likeAria": "Like this article",
+    "authorAria": "Go to author's page"
+  },
+  "detail": {
+    "boardArticleTitle": "Community Board Article",
+    "board": "BOARD",
+    "boardSubtitle": "Express your opinions freely here without content restrictions",
+    "write": "Write",
+    "commentsTitle": "Comments ({{count}})",
+    "leaveComment": "Leave a comment",
+    "comment": "Comment",
+    "updateComment": "Update comment",
+    "cancel": "Cancel",
+    "update": "Update",
+    "likeCount_one": "{{count}} Like",
+    "likeCount_other": "{{count}} Likes",
+    "comments": "Comments",
+    "deleteCommentAria": "Delete comment",
+    "editCommentAria": "Edit comment",
+    "likeArticleAria": "Like this article",
+    "viewsAria": "Views"
+  },
+  "editor": {
+    "category": "Category",
+    "title": "Title",
+    "typeTitle": "Type Title",
+    "register": "Register",
+    "free": "Free",
+    "humor": "Humor",
+    "news": "News",
+    "recommend": "Recommendation"
+  }
+}

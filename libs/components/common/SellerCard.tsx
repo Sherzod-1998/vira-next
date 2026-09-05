@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography, IconButton } from '@mui/material';
 import Link from 'next/link';
-import { REACT_APP_API_URL } from '../../config';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { getMemberImage } from '../../config';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { sweetMixinErrorAlert } from '../../sweetAlert';
 
 interface SellerCardProps {
   seller: any;
@@ -17,18 +22,19 @@ interface SellerCardProps {
 const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) => {
   const device = useDeviceDetect();
   const user = useReactiveVar(userVar);
+  const { t } = useTranslation('seller');
 
-  const imagePath: string = seller?.memberImage
-    ? `${REACT_APP_API_URL}/${seller?.memberImage}`
-    : '/img/profile/defaultUser.svg';
+  const imagePath: string = getMemberImage(seller?.memberImage);
+  const sellerName: string = seller?.memberFullName ?? seller?.memberNick ?? t('card.seller');
 
   const getLikedFromServer = (s: any) =>
     !!(s?.meLiked && s.meLiked[0]?.myFavorite);
 
   const [isLiked, setIsLiked] = useState<boolean>(getLikedFromServer(seller));
   const [likeCount, setLikeCount] = useState<number>(seller?.memberLikes || 0);
+  const isVerified = (seller?.memberRank || 0) > 0;
 
-  // 🔄 props o‘zgarsa – local state sync
+  // Keep local like state synced when seller props change.
   useEffect(() => {
     setIsLiked(getLikedFromServer(seller));
     setLikeCount(seller?.memberLikes || 0);
@@ -36,7 +42,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
 
   const handleLikeClick = async () => {
     if (!user?._id) {
-      alert('Avval tizimga kiring.');
+      sweetMixinErrorAlert(t('detail.pleaseLogInFirst')).then();
       return;
     }
 
@@ -55,7 +61,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
     }
   };
 
-  /* 🔹 MOBILE CARD */
+  /* MOBILE CARD */
   if (device === 'mobile') {
     return (
       <Stack className="m-seller-card">
@@ -66,17 +72,11 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
           }}
         >
           <Box className="m-left">
-            <div
-              className="m-avatar"
-              style={{
-                backgroundImage: `url(${imagePath})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-              }}
-            />
+            <div className="m-avatar">
+              <Image src={imagePath} alt={sellerName} fill style={{ objectFit: 'cover' }} />
+            </div>
             <span className="m-badge">
-              {seller?.memberProducts} products
+              {t('card.productsCount', { count: seller?.memberProducts ?? 0 })}
             </span>
           </Box>
         </Link>
@@ -89,9 +89,17 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
                 query: { sellerId: seller?._id },
               }}
             >
-              <strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+              <strong>
+                {sellerName}
+                {isVerified && (
+                  <span className="m-verified-badge">
+                    <VerifiedOutlinedIcon />
+                    {t('card.verifiedSeller')}
+                  </span>
+                )}
+              </strong>
             </Link>
-            <span className="m-role">seller</span>
+            <span className="m-role">{t('card.seller')}</span>
           </div>
 
           <div className="m-meta">
@@ -99,11 +107,16 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
               <RemoveRedEyeIcon className="m-icon" />
               <span>{seller?.memberViews}</span>
             </div>
+            <div className="m-meta-item">
+              <PeopleAltOutlinedIcon className="m-icon" />
+              <span>{seller?.memberFollowers ?? 0}</span>
+            </div>
 
             <button
               type="button"
               className="m-like-btn"
               onClick={handleLikeClick}
+              aria-label={isLiked ? t('card.unlikeAria') : t('card.likeAria')}
             >
               {isLiked ? (
                 <FavoriteIcon className="m-like-icon active" />
@@ -118,7 +131,7 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
     );
   }
 
-  /* 🔹 DESKTOP CARD */
+  /* DESKTOP CARD */
   return (
     <Stack className="seller-general-card">
       <Link
@@ -126,18 +139,11 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
           pathname: '/seller/detail',
           query: { sellerId: seller?._id },
         }}
+        style={{ position: 'relative', display: 'block' }}
       >
-        <Box
-          component="div"
-          className="seller-img"
-          style={{
-            backgroundImage: `url(${imagePath})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
-          <div>{seller?.memberProducts} products</div>
+        <Box component="div" className="seller-img">
+          <Image src={imagePath} alt={sellerName} fill style={{ objectFit: 'cover' }} />
+          <div>{t('card.productsCount', { count: seller?.memberProducts ?? 0 })}</div>
         </Box>
       </Link>
 
@@ -149,13 +155,19 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
               query: { sellerId: seller?._id },
             }}
           >
-            <strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+            <strong>{sellerName}</strong>
           </Link>
-          <span>seller</span>
+          {isVerified && (
+            <span className="verified-badge">
+              <VerifiedOutlinedIcon />
+              {t('card.verifiedSeller')}
+            </span>
+          )}
+          <span>{t('card.seller')}</span>
         </Box>
 
         <Box component="div" className="buttons">
-          <IconButton>
+          <IconButton aria-label={t('card.viewsAria')}>
             <RemoveRedEyeIcon />
           </IconButton>
 
@@ -163,7 +175,15 @@ const SellerCard: React.FC<SellerCardProps> = ({ seller, likeMemberHandler }) =>
             {seller?.memberViews}
           </Typography>
 
-          <IconButton onClick={handleLikeClick}>
+          <IconButton aria-label={t('card.followersAria')}>
+            <PeopleAltOutlinedIcon />
+          </IconButton>
+
+          <Typography className="view-cnt">
+            {seller?.memberFollowers ?? 0}
+          </Typography>
+
+          <IconButton onClick={handleLikeClick} aria-label={isLiked ? t('card.unlikeAria') : t('card.likeAria')}>
             {isLiked ? (
               <FavoriteIcon style={{ color: 'rgba(146, 106, 84, 1)' }} />
             ) : (

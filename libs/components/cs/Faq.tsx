@@ -4,6 +4,7 @@ import { AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
@@ -34,11 +35,14 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const Faq = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('cs');
 	const [category, setCategory] = useState<string>('product');
 	const [expanded, setExpanded] = useState<string | false>('panel1');
+	const [searchText, setSearchText] = useState<string>('');
 
 	const changeCategoryHandler = (category: string) => {
 		setCategory(category);
+		setExpanded(false);
 	};
 
 	const handleChange = (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
@@ -411,58 +415,89 @@ const Faq = () => {
 			},
 		],
 	};
+	const visibleItems = (data[category] || []).filter((item) => {
+		const query = searchText.trim().toLowerCase();
+		if (!query) return true;
+		return `${item.subject} ${item.content}`.toLowerCase().includes(query);
+	});
 
-	// 🔹 MOBILE LAYOUT
+	const renderSearch = (mobile = false) => (
+		<Box className={mobile ? 'm-faq-search' : 'faq-search'} component="div">
+			<input
+				type="text"
+				aria-label={t('faq.searchLabel')}
+				placeholder={t('faq.searchPlaceholder')}
+				value={searchText}
+				onChange={(e) => setSearchText(e.target.value)}
+			/>
+			{searchText && (
+				<button type="button" onClick={() => setSearchText('')} aria-label={t('faq.clearSearch')}>
+					✕
+				</button>
+			)}
+		</Box>
+	);
+
+	const renderNoResults = (mobile = false) => (
+		<Stack className={mobile ? 'm-faq-no-results' : 'faq-no-results'}>
+			<Typography>{t('faq.noResults.title')}</Typography>
+			<span>{t('faq.noResults.subtitle')}</span>
+		</Stack>
+	);
+
+	// MOBILE LAYOUT
 	if (device === 'mobile') {
 		return (
 			<Stack className="m-faq-content">
+				{renderSearch(true)}
 				<Box className="m-categories" component="div">
 					<div
 						className={category === 'product' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('product')}
 					>
-						Product
+						{t('faq.categories.product')}
 					</div>
 					<div
 						className={category === 'payment' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('payment')}
 					>
-						Payment
+						{t('faq.categories.payment')}
 					</div>
 					<div
 						className={category === 'buyers' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('buyers')}
 					>
-						For Buyers
+						{t('faq.categories.buyers')}
 					</div>
 					<div
 						className={category === 'sellers' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('sellers')}
 					>
-						For Sellers
+						{t('faq.categories.sellers')}
 					</div>
 					<div
 						className={category === 'membership' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('membership')}
 					>
-						Membership
+						{t('faq.categories.membership')}
 					</div>
 					<div
 						className={category === 'community' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('community')}
 					>
-						Community
+						{t('faq.categories.community')}
 					</div>
 					<div
 						className={category === 'other' ? 'active' : ''}
 						onClick={() => changeCategoryHandler('other')}
 					>
-						Other
+						{t('faq.categories.other')}
 					</div>
 				</Box>
 				<Box className="m-wrap" component="div">
-					{data[category] &&
-						data[category].map((ele) => (
+					{visibleItems.length === 0 && renderNoResults(true)}
+					{visibleItems.length > 0 &&
+						visibleItems.map((ele) => (
 							<Accordion
 								expanded={expanded === ele.id}
 								onChange={handleChange(ele.id)}
@@ -472,6 +507,7 @@ const Faq = () => {
 									id="panel1d-header"
 									className="m-question"
 									aria-controls="panel1d-content"
+									aria-label={expanded === ele.id ? t('faq.collapseAnswer') : t('faq.expandAnswer')}
 								>
 									<Typography className="badge" variant="h4">
 										Q
@@ -493,62 +529,69 @@ const Faq = () => {
 		);
 	}
 
-	// 🔹 PC LAYOUT
+	// PC LAYOUT
 	return (
 		<Stack className={'faq-content'}>
+			{renderSearch()}
 			<Box className={'categories'} component={'div'}>
 				<div
 					className={category === 'product' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('product')}
 				>
-					Product
+					{t('faq.categories.product')}
 				</div>
 				<div
 					className={category === 'payment' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('payment')}
 				>
-					Payment
+					{t('faq.categories.payment')}
 				</div>
 				<div
 					className={category === 'buyers' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('buyers')}
 				>
-					For Buyers
+					{t('faq.categories.buyers')}
 				</div>
 				<div
 					className={category === 'sellers' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('sellers')}
 				>
-					For Sellers
+					{t('faq.categories.sellers')}
 				</div>
 				<div
 					className={category === 'membership' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('membership')}
 				>
-					Membership
+					{t('faq.categories.membership')}
 				</div>
 				<div
 					className={category === 'community' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('community')}
 				>
-					Community
+					{t('faq.categories.community')}
 				</div>
 				<div
 					className={category === 'other' ? 'active' : ''}
 					onClick={() => changeCategoryHandler('other')}
 				>
-					Other
+					{t('faq.categories.other')}
 				</div>
 			</Box>
 			<Box className={'wrap'} component={'div'}>
-				{data[category] &&
-					data[category].map((ele) => (
+				{visibleItems.length === 0 && renderNoResults()}
+				{visibleItems.length > 0 &&
+					visibleItems.map((ele) => (
 						<Accordion
 							expanded={expanded === ele.id}
 							onChange={handleChange(ele.id)}
 							key={ele.id}
 						>
-							<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+							<AccordionSummary
+								id="panel1d-header"
+								className="question"
+								aria-controls="panel1d-content"
+								aria-label={expanded === ele.id ? t('faq.collapseAnswer') : t('faq.expandAnswer')}
+							>
 								<Typography className="badge" variant={'h4'}>
 									Q
 								</Typography>

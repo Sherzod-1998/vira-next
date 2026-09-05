@@ -8,7 +8,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useGoogleLogin } from '@react-oauth/google';
+import { googleLogin } from '../../libs/auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -19,6 +22,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 const Join: NextPage = () => {
 	const router = useRouter();
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
 	const [loginView, setLoginView] = useState<boolean>(true);
@@ -54,6 +58,18 @@ const Join: NextPage = () => {
 		}
 	}, [input, router]);
 
+	const handleGoogleLogin = useGoogleLogin({
+		onSuccess: async (tokenResponse) => {
+			try {
+				await googleLogin(tokenResponse.access_token);
+				router.push(`${router.query.referrer ?? '/'}`);
+			} catch (err: any) {
+				sweetMixinErrorAlert(err.message);
+			}
+		},
+		onError: () => sweetMixinErrorAlert('Google login failed'),
+	});
+
 	if (device === 'mobile') {
 		return (
 			<Stack className="join-page-mo">
@@ -61,35 +77,35 @@ const Join: NextPage = () => {
 					<Box className="hero-block" />
 
 					<Box className="info">
-						<span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
-						<p>{loginView ? 'Login to continue' : 'Start your free trial'}</p>
+						<span>{loginView ? t('join.login') : t('join.mobileTitleSignup')}</span>
+						<p>{loginView ? t('join.mobileSubtitleLogin') : t('join.mobileSubtitleSignup')}</p>
 					</Box>
 
-					<Box className="social-btn google">
+					<Box className="social-btn google" onClick={() => handleGoogleLogin()} style={{ cursor: 'pointer' }}>
 						<div className="icon">
 							<GoogleIcon />
 						</div>
-						<span>Login With Google</span>
+						<span>{t('join.loginWithGoogle')}</span>
 					</Box>
 
 					<Box className="divider-or">
-						<span>Or</span>
+						<span>{t('join.or')}</span>
 					</Box>
 
 					<Box className="input-wrap">
 						<div className="input-box">
-							<span>Email / Nickname</span>
+							<span>{t('join.emailNickname')}</span>
 							<input onChange={(e) => handleInput('nick', e.target.value)} />
 						</div>
 
 						<div className="input-box">
-							<span>Password</span>
+							<span>{t('join.password')}</span>
 							<input type="password" onChange={(e) => handleInput('password', e.target.value)} />
 						</div>
 
 						{!loginView && (
 							<div className="input-box">
-								<span>Phone</span>
+								<span>{t('join.phone')}</span>
 								<input onChange={(e) => handleInput('phone', e.target.value)} />
 							</div>
 						)}
@@ -98,7 +114,7 @@ const Join: NextPage = () => {
 					<Box className="register">
 						{!loginView && (
 							<div className="type-option">
-								<span className="text">Register as:</span>
+								<span className="text">{t('join.registerAs')}</span>
 								<div>
 									<FormControlLabel
 										control={
@@ -109,7 +125,7 @@ const Join: NextPage = () => {
 												onChange={checkUserTypeHandler}
 											/>
 										}
-										label="User"
+										label={t('join.user')}
 									/>
 
 									<FormControlLabel
@@ -121,7 +137,7 @@ const Join: NextPage = () => {
 												onChange={checkUserTypeHandler}
 											/>
 										}
-										label="Seller"
+										label={t('join.seller')}
 									/>
 								</div>
 							</div>
@@ -134,7 +150,7 @@ const Join: NextPage = () => {
 								disabled={!input.nick || !input.password}
 								onClick={doLogin}
 							>
-								LOGIN
+								{t('join.login')}
 							</Button>
 						) : (
 							<Button
@@ -143,32 +159,32 @@ const Join: NextPage = () => {
 								disabled={!input.nick || !input.password || !input.phone}
 								onClick={doSignUp}
 							>
-								SIGNUP
+								{t('join.signupButton')}
 							</Button>
 						)}
 					</Box>
 
 					<Box className="divider-or second">
-						<span>Or</span>
+						<span>{t('join.or')}</span>
 					</Box>
 
 					<Box className="social-btn facebook">
 						<div className="icon">
 							<FacebookIcon />
 						</div>
-						<span>Login With Facebook</span>
+						<span>{t('join.loginWithFacebook')}</span>
 					</Box>
 
 					<Box className="ask-info">
 						{loginView ? (
 							<p>
-								Don’t Have An Account?
-								<b onClick={() => viewChangeHandler(false)}> Create Account</b>
+								{t('join.noAccountMobile')}
+								<b onClick={() => viewChangeHandler(false)}> {t('join.createAccountMobile')}</b>
 							</p>
 						) : (
 							<p>
-								Already have account?
-								<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
+								{t('join.haveAccountMobile')}
+								<b onClick={() => viewChangeHandler(true)}> {t('join.login')}</b>
 							</p>
 						)}
 					</Box>
@@ -179,42 +195,68 @@ const Join: NextPage = () => {
 
 	return (
 		<Stack className="join-page">
-			<Stack className="container">
-				<Stack className="main">
-					<Stack className="left">
-						<Box className="hero-block" />
+			<Stack className="main">
+				{/* LEFT — luxury visual panel */}
+				<Stack className="visual">
+					<Box className="overlay" />
+					<Box className="brand">
+						<h1 className="logo">VIRA</h1>
+						<span className="tagline">{t('join.tagline')}</span>
+					</Box>
+					<Box className="quote">
+						<p>“{t('join.quote')}”</p>
+					</Box>
+				</Stack>
 
-						<Box className="info">
-							<span>{loginView ? 'LOGIN' : 'CREATE YOUR ACCOUNT'}</span>
-							<p>{loginView ? 'Login with your account to continue.' : "LET'S GET STARTED"}</p>
+				{/* RIGHT — form panel */}
+				<Stack className="form-side">
+					<Box className="form-inner">
+						<Box className="heading">
+							<span className="title">{loginView ? t('join.welcomeBack') : t('join.createYourAccount')}</span>
+							<p className="subtitle">
+								{loginView ? t('join.signInSubtitle') : t('join.joinSubtitle')}
+							</p>
 						</Box>
 
-						<Box className="social-btn google">
+						<Box className="social-btn google" onClick={() => handleGoogleLogin()}>
 							<div className="icon">
 								<GoogleIcon />
 							</div>
-							<span>Login With Google</span>
+							<span>{t('join.continueWithGoogle')}</span>
 						</Box>
 
 						<Box className="divider-or">
-							<span>Or</span>
+							<span>{t('join.orLower')}</span>
 						</Box>
 
 						<Box className="input-wrap">
 							<div className="input-box">
-								<span>Email / Nickname</span>
-								<input onChange={(e) => handleInput('nick', e.target.value)} />
+								<span>{t('join.emailNickname')}</span>
+								<input
+									placeholder={t('join.nicknamePlaceholder')}
+									value={input.nick}
+									onChange={(e) => handleInput('nick', e.target.value)}
+								/>
 							</div>
 
 							<div className="input-box">
-								<span>Password</span>
-								<input type="password" onChange={(e) => handleInput('password', e.target.value)} />
+								<span>{t('join.password')}</span>
+								<input
+									type="password"
+									placeholder={t('join.passwordPlaceholder')}
+									value={input.password}
+									onChange={(e) => handleInput('password', e.target.value)}
+								/>
 							</div>
 
 							{!loginView && (
 								<div className="input-box">
-									<span>Phone</span>
-									<input onChange={(e) => handleInput('phone', e.target.value)} />
+									<span>{t('join.phone')}</span>
+									<input
+										placeholder={t('join.phonePlaceholder')}
+										value={input.phone}
+										onChange={(e) => handleInput('phone', e.target.value)}
+									/>
 								</div>
 							)}
 						</Box>
@@ -222,7 +264,7 @@ const Join: NextPage = () => {
 						<Box className="register">
 							{!loginView && (
 								<div className="type-option">
-									<span className="text">Register as:</span>
+									<span className="text">{t('join.registerAs')}</span>
 									<div>
 										<FormControlLabel
 											control={
@@ -233,7 +275,7 @@ const Join: NextPage = () => {
 													onChange={checkUserTypeHandler}
 												/>
 											}
-											label="User"
+											label={t('join.user')}
 										/>
 										<FormControlLabel
 											control={
@@ -244,7 +286,7 @@ const Join: NextPage = () => {
 													onChange={checkUserTypeHandler}
 												/>
 											}
-											label="Seller"
+											label={t('join.seller')}
 										/>
 									</div>
 								</div>
@@ -253,26 +295,27 @@ const Join: NextPage = () => {
 							<Button
 								variant="contained"
 								className="primary-btn"
-								disabled={!input.nick || !input.password}
+								disabled={loginView ? !input.nick || !input.password : !input.nick || !input.password || !input.phone}
 								onClick={loginView ? doLogin : doSignUp}
 							>
-								{loginView ? 'LOGIN' : 'SIGNUP'}
+								{loginView ? t('join.signIn') : t('join.signUp')}
 							</Button>
 						</Box>
+
 						<Box className="ask-info">
 							{loginView ? (
 								<p>
-									Don&apos;t Have An Account?
-									<b onClick={() => viewChangeHandler(false)}> Create Account</b>
+									{t('join.noAccount')}
+									<b onClick={() => viewChangeHandler(false)}> {t('join.createAccount')}</b>
 								</p>
 							) : (
 								<p>
-									Already have account?
-									<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
+									{t('join.haveAccount')}
+									<b onClick={() => viewChangeHandler(true)}> {t('join.signInLink')}</b>
 								</p>
 							)}
 						</Box>
-					</Stack>
+					</Box>
 				</Stack>
 			</Stack>
 		</Stack>

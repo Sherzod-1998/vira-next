@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "Sellers | Vira",
+    "searchPlaceholder": "Search for a seller",
+    "sortBy": "Sort by",
+    "sort": {
+      "recent": "Recent",
+      "oldest": "Oldest",
+      "likes": "Likes",
+      "views": "Views"
+    },
+    "emptyTitle": "No sellers found",
+    "emptySubtitle": "Try a different seller name or reset the search.",
+    "reset": "Reset",
+    "totalAvailable": "Total {{count}} seller available",
+    "totalAvailable_plural": "Total {{count}} sellers available"
+  },
+  "card": {
+    "verifiedSeller": "Verified Seller",
+    "seller": "seller",
+    "productsCount": "{{count}} products",
+    "viewsAria": "Views",
+    "followersAria": "Followers",
+    "likeAria": "Like seller",
+    "unlikeAria": "Unlike seller"
+  },
+  "detail": {
+    "verifiedSeller": "Verified Seller",
+    "follow": "Follow",
+    "following": "Following",
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "products": "Products",
+      "likes": "Likes",
+      "memberSince": "Member since"
+    },
+    "productsMetaAndReviews": "{{products}} products · {{count}} review",
+    "productsMetaAndReviews_plural": "{{products}} products · {{count}} reviews",
+    "productsSection": "Products",
+    "noProductsFound": "No products found!",
+    "totalProductsAvailable": "Total {{count}} product available",
+    "totalProductsAvailable_plural": "Total {{count}} products available",
+    "reviewsSection": "Reviews",
+    "reviewsSubtitle": "We are glad to see you again",
+    "reviewsCount": "{{count}} review",
+    "reviewsCount_plural": "{{count}} reviews",
+    "leaveAReview": "Leave A Review",
+    "review": "Review",
+    "writeReviewPlaceholder": "Write your review...",
+    "submitReview": "Submit Review",
+    "pleaseLogInFirst": "Please log in first",
+    "cannotReviewYourself": "Cannot write a review for yourself",
+    "seo": {
+      "descriptionFallback": "Discover this seller's exquisite jewelry collection on Vira."
+    }
+  }
+}

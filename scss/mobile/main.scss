@@ -1,4 +1,5 @@
 @import '/scss/variables.scss';
+@import '../mobile/footer-extra.scss';
 @import '../mobile/product.scss';
 @import '../mobile/product-detail.scss';
 @import '../mobile/seller.scss';
@@ -7,6 +8,7 @@
 @import '../mobile/community-detail.scss';
 @import '../mobile/cs.scss';
 @import '../mobile/join.scss';
+@import '../mobile/about.scss';
 
 #mobile-wrap {
   .navbar {

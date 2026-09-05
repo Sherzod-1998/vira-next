@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -59,12 +60,11 @@ const HeaderContent = () => {
 							left: -28, // moved further to the left
 						}}
 					>
-						<img
+						<Image
 							src="/img/banner/circle.jpg"
 							alt="Header Banner"
+							fill
 							style={{
-								width: '100%',
-								height: '100%',
 								borderRadius: '50%',
 								objectFit: 'cover',
 							}}
@@ -80,7 +80,7 @@ const HeaderContent = () => {
 					</h1>
 				</Stack>
 				<Stack className="buttons" direction="row" spacing={2}>
-					<button className="more-detail" onClick={() => (window.location.href = '/about-us')}>
+					<button className="more-detail" onClick={() => (window.location.href = '/about')}>
 						{t('MORE DETAILS')}
 					</button>
 					<button className="shop_now" onClick={() => (window.location.href = '/product')}>
@@ -140,12 +140,11 @@ const HeaderContent = () => {
 							left: -28, // moved further to the left
 						}}
 					>
-						<img
+						<Image
 							src="/img/banner/circle.jpg"
 							alt="Header Banner"
+							fill
 							style={{
-								width: '100%',
-								height: '100%',
 								borderRadius: '50%',
 								objectFit: 'cover',
 							}}
@@ -161,7 +160,7 @@ const HeaderContent = () => {
 					</h1>
 				</Stack>
 				<Stack className="buttons" direction="row" spacing={2}>
-					<button className="more-detail" onClick={() => (window.location.href = '/about-us')}>
+					<button className="more-detail" onClick={() => (window.location.href = '/about')}>
 						{t('MORE DETAILS')}
 					</button>
 					<button className="shop_now" onClick={() => (window.location.href = '/product')}>

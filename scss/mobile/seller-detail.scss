@@ -26,10 +26,12 @@
       box-shadow: 0 1px 4px rgba(24, 26, 32, 0.06);
 
       .m-avatar {
+        position: relative;
+        overflow: hidden;
         width: 68px;
         height: 68px;
         border-radius: 50%;
-        object-fit: cover;
+        cursor: pointer;
       }
 
       .m-info {
@@ -38,11 +40,38 @@
         flex-direction: column;
         gap: 4px;
 
+        .m-name-row {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+        }
+
         strong {
           font-family: $font;
           font-size: 18px;
           font-weight: 600;
           color: #181a20;
+        }
+
+        .m-verified-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          background: #f4f1ec;
+          color: #a98a34;
+          font-size: 10px;
+          font-weight: 700;
+          line-height: 1;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
         }
 
         .m-phone {
@@ -53,6 +82,59 @@
         .m-meta {
           font-size: 12px;
           color: #888;
+        }
+
+        .m-seller-stats {
+          margin-top: 8px;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+
+          .m-stat-item {
+            padding: 8px 10px;
+            border: 1px solid rgba(201, 168, 76, 0.28);
+            border-radius: 10px;
+            background: #faf9f6;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+
+            b {
+              color: #212121;
+              font-size: 14px;
+              font-weight: 700;
+              line-height: 1;
+            }
+
+            small {
+              color: #777;
+              font-size: 10px;
+              font-weight: 600;
+              line-height: 1.2;
+            }
+          }
+        }
+
+        .m-follow-btn {
+          margin-top: 8px;
+          align-self: flex-start;
+          min-width: 118px;
+          height: 38px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #c9a84c 0%, #a98a34 100%);
+          color: #fff;
+          font-size: 13px;
+          font-weight: 700;
+
+          &:hover {
+            background: linear-gradient(135deg, #d7b85e 0%, #a98a34 100%);
+          }
+
+          &.is-following {
+            background: #fff;
+            color: #a98a34;
+            border: 1px solid #c9a84c;
+          }
         }
       }
     }

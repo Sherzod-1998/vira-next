@@ -1,0 +1,74 @@
+{
+  "list": {
+    "metaTitle": "Сообщество | Vira",
+    "metaDescription": "Присоединяйтесь к сообществу Vira, чтобы делиться мыслями, рекомендациями, новостями и юмором с другими любителями украшений.",
+    "pageTitle": "Сообщество Vira",
+    "heroSubtitle": "Делитесь мыслями, рекомендациями, новостями и юмором с семьёй Vira.",
+    "tabsMobile": {
+      "free": "Свободное",
+      "recommend": "Рекомендации",
+      "news": "Новости",
+      "humor": "Юмор"
+    },
+    "tabsDesktop": {
+      "free": "Свободный форум",
+      "recommend": "Рекомендации",
+      "news": "Новости",
+      "humor": "Юмор"
+    },
+    "board": "ФОРУМ",
+    "boardSubtitle": "Свободно выражайте своё мнение без ограничений по содержанию",
+    "write": "Написать",
+    "searchPlaceholder": "Поиск статей",
+    "clearSearch": "Очистить поиск",
+    "sortBy": "Сортировать по",
+    "sort": {
+      "newest": "Новые",
+      "liked": "По лайкам",
+      "viewed": "По просмотрам",
+      "commented": "По комментариям"
+    },
+    "emptyTitle": "Статьи не найдены!",
+    "emptySubtitle": "Попробуйте другую категорию или поисковый запрос.",
+    "totalResult_one": "Всего {{count}} статья",
+    "totalResult_few": "Всего {{count}} статьи",
+    "totalResult_many": "Всего {{count}} статей",
+    "totalResult_other": "Всего {{count}} статьи"
+  },
+  "card": {
+    "viewsAria": "Просмотры",
+    "likeAria": "Оценить статью",
+    "authorAria": "Перейти на страницу автора"
+  },
+  "detail": {
+    "boardArticleTitle": "Статья форума сообщества",
+    "board": "ФОРУМ",
+    "boardSubtitle": "Свободно выражайте своё мнение без ограничений по содержанию",
+    "write": "Написать",
+    "commentsTitle": "Комментарии ({{count}})",
+    "leaveComment": "Оставить комментарий",
+    "comment": "Комментировать",
+    "updateComment": "Редактировать комментарий",
+    "cancel": "Отмена",
+    "update": "Обновить",
+    "likeCount_one": "{{count}} лайк",
+    "likeCount_few": "{{count}} лайка",
+    "likeCount_many": "{{count}} лайков",
+    "likeCount_other": "{{count}} лайка",
+    "comments": "Комментарии",
+    "deleteCommentAria": "Удалить комментарий",
+    "editCommentAria": "Редактировать комментарий",
+    "likeArticleAria": "Оценить статью",
+    "viewsAria": "Просмотры"
+  },
+  "editor": {
+    "category": "Категория",
+    "title": "Заголовок",
+    "typeTitle": "Введите заголовок",
+    "register": "Опубликовать",
+    "free": "Свободное",
+    "humor": "Юмор",
+    "news": "Новости",
+    "recommend": "Рекомендации"
+  }
+}

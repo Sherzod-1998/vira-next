@@ -28,10 +28,11 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useReactiveVar, useQuery, useMutation, gql } from '@apollo/client';
 import { socketVar, unreadNotificationCountVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
-import { REACT_APP_API_URL } from '../config';
+import { getMemberImage } from '../config';
 import {
 	GET_MY_NOTIFICATIONS,
 	GET_MY_UNREAD_NOTIFICATIONS_COUNT,
@@ -299,12 +300,7 @@ const Top: React.FC = () => {
 							{user?._id ? (
 								<>
 									<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
-										<img
-											src={
-												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.png'
-											}
-											alt=""
-										/>
+										<Image src={getMemberImage(user?.memberImage)} alt="User profile" width={34} height={34} />
 									</div>
 									<Menu
 										id="basic-menu"
@@ -446,21 +442,21 @@ const Top: React.FC = () => {
 									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
 								>
 									<Box className={'flag'}>
-										<img src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} />
+										<Image src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} width={22} height={16} />
 									</Box>
 								</Button>
 
 								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
 									<MenuItem disableRipple onClick={langChoice} id="en">
-										<img className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} />
+										<Image className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} width={22} height={16} />
 										{t('English')}
 									</MenuItem>
 									<MenuItem disableRipple onClick={langChoice} id="kr">
-										<img className="img-flag" src={'/img/flag/langkr.png'} alt={'koreanFlag'} />
+										<Image className="img-flag" src={'/img/flag/langkr.png'} alt={'koreanFlag'} width={22} height={16} />
 										{t('Korean')}
 									</MenuItem>
 									<MenuItem disableRipple onClick={langChoice} id="ru">
-										<img className="img-flag" src={'/img/flag/langru.png'} alt={'russiaFlag'} />
+										<Image className="img-flag" src={'/img/flag/langru.png'} alt={'russiaFlag'} width={22} height={16} />
 										{t('Russian')}
 									</MenuItem>
 								</StyledMenu>
@@ -514,12 +510,7 @@ const Top: React.FC = () => {
 						{user?._id ? (
 							<>
 								<div className={'login-user'} onClick={(e) => setLogoutAnchor(e.currentTarget)}>
-									<img
-										src={
-											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.png'
-										}
-										alt=""
-									/>
+									<Image src={getMemberImage(user?.memberImage)} alt="User profile" width={42} height={42} />
 								</div>
 								<Menu
 									id="basic-menu"
@@ -657,21 +648,21 @@ const Top: React.FC = () => {
 								endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
 							>
 								<Box className={'flag'}>
-									<img src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} />
+									<Image src={`/img/flag/lang${lang || 'en'}.png`} alt={'language-flag'} width={24} height={17} />
 								</Box>
 							</Button>
 
 							<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
 								<MenuItem disableRipple onClick={langChoice} id="en">
-									<img className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} />
+									<Image className="img-flag" src={'/img/flag/langen.png'} alt={'usaFlag'} width={24} height={17} />
 									{t('English')}
 								</MenuItem>
 								<MenuItem disableRipple onClick={langChoice} id="kr">
-									<img className="img-flag" src={'/img/flag/langkr.png'} alt={'koreanFlag'} />
+									<Image className="img-flag" src={'/img/flag/langkr.png'} alt={'koreanFlag'} width={24} height={17} />
 									{t('Korean')}
 								</MenuItem>
 								<MenuItem disableRipple onClick={langChoice} id="ru">
-									<img className="img-flag" src={'/img/flag/langru.png'} alt={'russiaFlag'} />
+									<Image className="img-flag" src={'/img/flag/langru.png'} alt={'russiaFlag'} width={24} height={17} />
 									{t('Russian')}
 								</MenuItem>
 							</StyledMenu>

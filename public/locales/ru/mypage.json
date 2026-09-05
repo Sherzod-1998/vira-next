@@ -1,0 +1,111 @@
+{
+  "subtitle": "Мы рады снова видеть вас!",
+  "mobile": {
+    "myPage": "ЛИЧНЫЙ КАБИНЕТ"
+  },
+  "alerts": {
+    "subscribed": "Вы подписались!",
+    "unsubscribed": "Вы отписались!",
+    "success": "Успешно!"
+  },
+  "menu": {
+    "manageListings": "УПРАВЛЕНИЕ ТОВАРАМИ",
+    "addProduct": "Добавить товар",
+    "myProducts": "Мои товары",
+    "myFavorites": "Избранное",
+    "recentlyVisited": "Недавно просмотренные",
+    "myFollowers": "Мои подписчики",
+    "myFollowings": "Мои подписки",
+    "community": "Сообщество",
+    "articles": "Статьи",
+    "writeArticle": "Написать статью",
+    "manageAccount": "УПРАВЛЕНИЕ АККАУНТОМ",
+    "myProfile": "Мой профиль",
+    "logout": "Выйти",
+    "logoutConfirm": "Вы хотите выйти?"
+  },
+  "articles": {
+    "title": "Статья",
+    "loading": "Загрузка статей...",
+    "empty": "Статьи не найдены",
+    "emptyHint": "Вы еще не написали ни одной статьи",
+    "totalCount": "Всего доступно статей: {{count}}",
+    "likeSuccess": "Успешно"
+  },
+  "products": {
+    "title": "Мои товары",
+    "onSale": "В продаже",
+    "onSold": "Продано",
+    "listingTitle": "Название товара",
+    "datePublished": "Дата публикации",
+    "status": "Статус",
+    "view": "Просмотры",
+    "action": "Действие",
+    "loading": "Загрузка товаров...",
+    "empty": "Товары не найдены",
+    "emptyHint": "Ваши товары появятся здесь",
+    "totalCount": "Доступно товаров: {{count}}",
+    "sold": "Продано",
+    "deleteConfirm": "Вы уверены, что хотите удалить этот товар?",
+    "statusConfirm": "Вы уверены, что хотите изменить статус на {{status}}?"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "loading": "Загрузка избранного...",
+    "empty": "Избранные товары не найдены",
+    "emptyHint": "Понравившиеся товары появятся здесь",
+    "totalCount": "Всего избранных товаров: {{count}}{{suffix}}"
+  },
+  "recentlyVisited": {
+    "title": "Недавно просмотренные",
+    "loading": "Загрузка недавно просмотренных товаров...",
+    "empty": "Недавно просмотренные товары не найдены",
+    "emptyHint": "Просмотренные товары появятся здесь",
+    "totalCount": "Всего недавно просмотренных товаров: {{count}}{{suffix}}"
+  },
+  "profile": {
+    "title": "Мой профиль",
+    "photo": "Фото",
+    "uploadImage": "Загрузить фото профиля",
+    "photoFormatHint": "Фото должно быть в формате JPG, JPEG или PNG!",
+    "username": "Имя пользователя",
+    "usernamePlaceholder": "Ваше имя пользователя",
+    "phone": "Телефон",
+    "phonePlaceholder": "Ваш телефон",
+    "address": "Адрес",
+    "addressPlaceholder": "Ваш адрес",
+    "updateButton": "Обновить профиль",
+    "updateSuccess": "Информация успешно обновлена!"
+  },
+  "writeArticle": {
+    "title": "Написать статью",
+    "subtitle": "Не стесняйтесь делиться своими идеями!"
+  },
+  "addProduct": {
+    "title": "Добавить новый товар",
+    "titleLabel": "Название",
+    "titlePlaceholder": "Название",
+    "price": "Цена",
+    "pricePlaceholder": "Цена",
+    "selectType": "Выберите тип",
+    "selectLocation": "Выберите локацию",
+    "addressLabel": "Адрес",
+    "addressPlaceholder": "Адрес",
+    "selectMaterial": "Выберите материал",
+    "select": "Выбрать",
+    "productDescriptionTitle": "Описание товара",
+    "descriptionLabel": "Описание",
+    "uploadTitle": "Загрузите фото вашего товара",
+    "dragDrop": "Перетащите изображения сюда",
+    "formatHint": "Фото должны быть в формате JPEG или PNG, минимум 2048x768",
+    "browseFiles": "Выбрать файлы",
+    "save": "Сохранить",
+    "createSuccess": "Товар успешно создан.",
+    "updateSuccess": "Товар успешно обновлен.",
+    "maxImagesError": "Нельзя загрузить более 5 изображений!"
+  },
+  "productCard": {
+    "editAria": "Редактировать товар",
+    "deleteAria": "Удалить товар"
+  }
+}

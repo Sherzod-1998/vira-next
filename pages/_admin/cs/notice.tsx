@@ -10,7 +10,7 @@ const AdminNoticePage: NextPage = () => {
 	const [statusTab, setStatusTab] = useState<NoticeStatusTab>('ALL');
 
 	const statusValue =
-		statusTab === 'ALL' ? undefined : statusTab; // NoticeList'ga prop sifatida beramiz
+		statusTab === 'ALL' ? undefined : statusTab; // Pass the selected status to NoticeList.
 
 	return (
 		<Box component="div" className="content">

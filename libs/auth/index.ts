@@ -1,9 +1,10 @@
 import decodeJWT from 'jwt-decode';
+import Cookies from 'js-cookie';
 import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
-import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { LOGIN, SIGN_UP, GOOGLE_LOGIN } from '../../apollo/user/mutation';
 
 const isTokenExpired = (token: string): boolean => {
 	try {
@@ -29,6 +30,12 @@ export function getJwtToken(): any {
 
 export function setJwtToken(token: string) {
 	localStorage.setItem('accessToken', token);
+	// Also mirrored into a cookie (not httpOnly, same trust level as localStorage)
+	// solely so Next.js middleware can read it server-side and ask the backend
+	// to verify the caller's real role before rendering the admin UI — the
+	// cookie value is never trusted directly, only used as the bearer token for
+	// that server-side verification call.
+	Cookies.set('accessToken', token, { sameSite: 'lax', expires: 30 });
 }
 
 export const logIn = async (nick: string, password: string): Promise<void> => {
@@ -62,12 +69,10 @@ const requestJwtToken = async ({
 			fetchPolicy: 'network-only',
 		});
 
-		console.log('---------- login ----------');
 		const { accessToken } = result?.data?.login;
 
 		return { jwtToken: accessToken };
 	} catch (err: any) {
-		console.log('request token err', err.graphQLErrors);
 		switch (err.graphQLErrors[0].message) {
 			case 'Definer: login and password do not match':
 				await sweetMixinErrorAlert('Please check your password again');
@@ -117,12 +122,10 @@ const requestSignUpJwtToken = async ({
 			fetchPolicy: 'network-only',
 		});
 
-		console.log('---------- login ----------');
 		const { accessToken } = result?.data?.signup;
 
 		return { jwtToken: accessToken };
 	} catch (err: any) {
-		console.log('request token err', err.graphQLErrors);
 		switch (err.graphQLErrors[0].message) {
 			case 'Definer: login and password do not match':
 				await sweetMixinErrorAlert('Please check your password again');
@@ -132,6 +135,25 @@ const requestSignUpJwtToken = async ({
 				break;
 		}
 		throw new Error('token error');
+	}
+};
+
+export const googleLogin = async (googleAccessToken: string): Promise<void> => {
+	const apolloClient = await initializeApollo();
+	try {
+		const result = await apolloClient.mutate({
+			mutation: GOOGLE_LOGIN,
+			variables: { accessToken: googleAccessToken },
+			fetchPolicy: 'network-only',
+		});
+		const { accessToken: jwtToken } = result?.data?.googleLogin;
+		if (jwtToken) {
+			updateStorage({ jwtToken });
+			updateUserInfo(jwtToken);
+		}
+	} catch (err: any) {
+		await sweetMixinErrorAlert('Google login failed. Please try again.');
+		throw new Error('Google login failed');
 	}
 };
 
@@ -177,6 +199,7 @@ export const logOut = () => {
 
 const deleteStorage = () => {
 	localStorage.removeItem('accessToken');
+	Cookies.remove('accessToken');
 	window.localStorage.setItem('logout', Date.now().toString());
 };
 

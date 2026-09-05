@@ -2,8 +2,8 @@ import React from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography } from '@mui/material';
 import { Comment } from '../../types/comment/comment';
-import Moment from 'react-moment';
-import { REACT_APP_API_URL } from '../../config';
+import dayjs from 'dayjs';
+import { getMemberImage, REACT_APP_API_URL } from '../../config';
 
 interface ReviewCardProps {
 	fromMyPage?: string;
@@ -13,11 +13,9 @@ interface ReviewCardProps {
 const ReviewCard = (props: ReviewCardProps) => {
 	const { fromMyPage, comment } = props;
 	const device = useDeviceDetect();
-	const imagePath: string = comment?.memberData?.memberImage
-		? `${REACT_APP_API_URL}/${comment?.memberData?.memberImage}`
-		: '/img/profile/defaultUser.svg';
+	const imagePath: string = getMemberImage(comment?.memberData?.memberImage);
 
-	/** 🔹 MOBILE LAYOUT */
+	/** MOBILE LAYOUT */
 	if (device === 'mobile') {
 		return (
 			<Box component="div" className="m-review-card">
@@ -26,9 +24,7 @@ const ReviewCard = (props: ReviewCardProps) => {
 						<img src={imagePath} alt="" />
 						<div>
 							<strong>{comment.memberData?.memberNick}</strong>
-							<span>
-								<Moment format={'DD MMMM'}>{comment.createdAt}</Moment>
-							</span>
+							<span>{dayjs(comment.createdAt).format('DD MMMM')}</span>
 						</div>
 					</div>
 				</div>
@@ -63,9 +59,7 @@ const ReviewCard = (props: ReviewCardProps) => {
 					<img src={imagePath} alt="" />
 					<div>
 						<strong>{comment.memberData?.memberNick}</strong>
-						<span>
-							<Moment format={'DD MMMM'}>{comment.createdAt}</Moment>
-						</span>
+						<span>{dayjs(comment.createdAt).format('DD MMMM')}</span>
 					</div>
 				</div>
 			</div>

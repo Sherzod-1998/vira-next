@@ -1,8 +1,13 @@
 /** IMPORTS **/
 @import '/scss/variables.scss';
 @import '/scss/pc/general.scss';
+@import '/scss/pc/footer-extra.scss';
 
 @import '/scss/pc/homepage/homepage';
+@import '/scss/pc/homepage/occasion';
+@import '/scss/pc/homepage/newArrivals';
+@import '/scss/pc/homepage/material';
+@import '/scss/pc/homepage/trust';
 
 @import '/scss/pc/product/product';
 @import '/scss/pc/product/detail.scss';
@@ -13,7 +18,6 @@
 @import '/scss/pc/mypage/addNewProduct.scss';
 @import '/scss/pc/mypage/myProducts.scss';
 @import '/scss/pc/mypage/myFavorites.scss';
-@import '/scss/pc/mypage/mySaved.scss';
 @import '/scss/pc/mypage/myProfile.scss';
 @import '/scss/pc/mypage/myArticles.scss';
 @import '/scss/pc/mypage/writeArticle.scss';

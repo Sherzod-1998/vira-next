@@ -8,6 +8,47 @@
     padding: 0 16px;
   }
 
+  .m-active-filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 6px 11px;
+      border: 1px solid rgba(201, 168, 76, 0.45);
+      border-radius: 999px;
+      background: #f4f1ec;
+      color: #212121;
+      font-size: 11px;
+      font-weight: 600;
+
+      b {
+        color: #a98a34;
+        font-size: 12px;
+        line-height: 1;
+      }
+
+      &.clear-chip {
+        background: #212121;
+        border-color: #212121;
+        color: #fff;
+      }
+    }
+  }
+
+  .m-result-count {
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
   /* TOP BAR */
   .m-top-bar {
     margin-bottom: 12px;
@@ -65,7 +106,8 @@
   .m-content {
 
     .m-loading,
-    .m-no-data {
+    .m-no-data,
+    .m-empty-state {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -84,10 +126,81 @@
       }
     }
 
+    .m-empty-state {
+      min-height: 260px;
+      gap: 8px;
+      border: 1px solid rgba(201, 168, 76, 0.28);
+      border-radius: 12px;
+      background: #faf9f6;
+      text-align: center;
+
+      .empty-title {
+        color: #212121;
+        font-family: Unbounded, system-ui, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .empty-subtitle {
+        color: #777;
+        font-size: 13px;
+      }
+
+      .empty-clear-btn {
+        margin-top: 6px;
+        padding: 9px 18px;
+        border-radius: 999px;
+        background: #c9a84c;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+
+        &:hover {
+          background: #a98a34;
+        }
+      }
+    }
+
     .m-product-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
+
+      .product-card.mobile {
+        max-width: none;
+        height: 100%;
+
+        .product-image {
+          overflow: hidden;
+        }
+
+        .sold-badge {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          z-index: 3;
+          width: 140%;
+          padding: 8px 0;
+          background: rgba(33, 33, 33, 0.72);
+          color: #fff;
+          font-family: Unbounded, system-ui, sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          text-align: center;
+          letter-spacing: 0;
+          transform: translate(-50%, -50%) rotate(-14deg);
+        }
+
+        &.product-card-skeleton {
+          pointer-events: none;
+
+          .skeleton-image {
+            width: 100%;
+            height: 150px;
+            transform: none;
+          }
+        }
+      }
 
       @media (max-width: 380px) {
         grid-template-columns: 1fr;
@@ -125,7 +238,7 @@
 }
 
 /* ===========================
-   📱 MOBILE FILTER (DRAWER)
+   MOBILE FILTER (DRAWER)
    =========================== */
 
 .m-filter-main {
@@ -179,7 +292,50 @@
   }
 }
 
-/* Drawer paper (ixtiyoriy, chiroy uchun) */
+/* Drawer paper polish */
 .MuiDrawer-paper {
   box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.price-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 6px 4px 2px;
+
+  .price-slider-values {
+    p {
+      color: #212121;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  }
+
+  .noUi-target {
+    height: 6px;
+    border: none;
+    border-radius: 999px;
+    background: #efe8dc;
+    box-shadow: none;
+
+    .noUi-connect {
+      background: #c9a84c;
+    }
+
+    .noUi-handle {
+      top: -8px;
+      right: -10px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #a98a34;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(33, 33, 33, 0.18);
+
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
 }

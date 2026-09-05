@@ -18,9 +18,9 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import OpenInBrowserRoundedIcon from '@mui/icons-material/OpenInBrowserRounded';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { BoardArticle } from '../../../types/board-article/board-article';
-import { REACT_APP_API_URL } from '../../../config';
+import { getMemberImage, REACT_APP_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import { BoardArticleStatus } from '../../../enums/board-article.enum';
@@ -173,11 +173,7 @@ const CommunityArticleList = (props: CommunityArticleListProps) => {
 										<Link href={`/member?memberId=${article?.memberData?._id}`}>
 											<Avatar
 												alt="Remy Sharp"
-												src={
-													article?.memberData?.memberImage
-														? `${REACT_APP_API_URL}/${article?.memberData?.memberImage}`
-														: `/img/profile/defaultUser.svg`
-												}
+												src={getMemberImage(article?.memberData?.memberImage)}
 												sx={{ ml: '2px', mr: '10px' }}
 											/>
 											{article?.memberData?.memberNick}
@@ -186,7 +182,7 @@ const CommunityArticleList = (props: CommunityArticleListProps) => {
 									<TableCell align="center">{article?.articleViews}</TableCell>
 									<TableCell align="center">{article?.articleLikes}</TableCell>
 									<TableCell align="left">
-										<Moment format={'DD.MM.YY HH:mm'}>{article?.createdAt}</Moment>
+										{dayjs(article?.createdAt).format('DD.MM.YY HH:mm')}
 									</TableCell>
 									<TableCell align="center">
 										{article.articleStatus === BoardArticleStatus.DELETE ? (

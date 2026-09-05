@@ -1,8 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import Image from 'next/image';
+import Head from 'next/head';
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import { NextPage } from 'next';
+import type { GetStaticProps } from 'next';
 import Review from '../../libs/components/product/Review';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
@@ -13,9 +16,8 @@ import EastIcon from '@mui/icons-material/East';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Product } from '../../libs/types/product/product';
-import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
-import { REACT_APP_API_URL } from '../../libs/config';
+import { getMemberImage, REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
@@ -28,6 +30,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from '@mui/icons-material/Close';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { GET_COMMENTS, GET_PRODUCT, GET_PRODUCTS } from '../../apollo/user/query';
@@ -39,15 +42,16 @@ import MainProductCard from '../../libs/components/homepage/MainProductCard';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale as string, ['common', 'product'])),
 	},
 });
 
 const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('product');
 	const user = useReactiveVar(userVar);
 	const [productId, setProductId] = useState<string | null>(null);
 	const [product, setProduct] = useState<Product | null>(null);
@@ -62,10 +66,6 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 		commentRefId: '',
 	});
 	const [quantity, setQuantity] = useState(2);
-
-	const handleAddToCart = () => {
-		alert('Mahsulot savatga qo‘shildi!');
-	};
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -166,9 +166,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 		try {
 			await likeTargetProduct({ variables: { input: id } });
 			await getProductRefetch({ productId });
-		} catch (e) {
-			console.log('like error:', (e as any)?.message);
-		}
+		} catch (e) {}
 	};
 
 	const commentPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
@@ -188,7 +186,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 		}
 	};
 
-	if (getProductLoading) {
+	if (getProductLoading || !product) {
 		return (
 			<Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '1080px' }}>
 				<CircularProgress size={'4rem'} />
@@ -198,14 +196,21 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 	if (device === 'mobile') {
 		return (
-			<div id="m-product-detail-page">
+			<>
+				<Head>
+					<title>{product?.productTitle ? `${product.productTitle} | Vira` : t('detail.seo.titleFallback')}</title>
+					<meta name="description" content={product?.productDesc ?? (t('detail.seo.descriptionFallback') as string)} />
+				</Head>
+				<div id="m-product-detail-page">
 				<div className="m-container">
 					{/* GALLERY */}
 					<Stack className="m-gallery">
-						<div className="m-main-img">
-							<img
+						<div className="m-main-img" style={{ position: 'relative', width: '100%', height: 320 }}>
+							<Image
 								src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
-								alt="product-main"
+								alt={t('detail.productMainImageAlt') as string}
+								fill
+								style={{ objectFit: 'cover' }}
 							/>
 						</div>
 
@@ -221,7 +226,13 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 											className={`m-thumb ${active ? 'is-active' : ''}`}
 											onClick={() => changeImageHandler(subImg)}
 										>
-											<img src={imagePath} alt="thumb" />
+											<Image
+												src={imagePath}
+												alt={t('detail.thumbnailAlt') as string}
+												width={72}
+												height={72}
+												style={{ objectFit: 'cover' }}
+											/>
 										</button>
 									);
 								})}
@@ -245,7 +256,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							<Stack direction="row" alignItems="center" spacing={0.5} className="m-rating">
 								<span className="m-stars">★★★★★</span>
 								<Typography className="m-rating-text">
-									{commentTotal || 0} reviews
+									{t('detail.reviewsCount', { count: commentTotal || 0 })}
 								</Typography>
 							</Stack>
 						</Stack>
@@ -257,24 +268,24 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						<Stack className="m-meta">
 							{product?.productMaterial && (
 								<p>
-									<span className="label">Material:</span> {product.productMaterial}
+									<span className="label">{t('detail.material')}:</span> {product.productMaterial}
 								</p>
 							)}
 							{product?.productLocation && (
 								<p>
-									<span className="label">Location:</span> {product.productLocation}
+									<span className="label">{t('detail.location')}:</span> {product.productLocation}
 								</p>
 							)}
 							{product?.productAddress && (
 								<p>
-									<span className="label">Address:</span> {product.productAddress}
+									<span className="label">{t('detail.address')}:</span> {product.productAddress}
 								</p>
 							)}
 						</Stack>
 
 						{/* QUANTITY */}
 						<Stack className="m-qty" spacing={1}>
-							<span className="m-qty-label">Quantity</span>
+							<span className="m-qty-label">{t('detail.quantity')}</span>
 							<div className="m-qty-control">
 								<button
 									type="button"
@@ -295,26 +306,24 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						{/* ACTION BUTTONS */}
 						<Stack className="m-actions" spacing={1}>
 							<button type="button" className="m-btn-outline">
-								Add to cart
+								{t('detail.addToCart')}
 							</button>
 							<button type="button" className="m-btn-primary">
-								Buy it now
+								{t('detail.buyItNow')}
 							</button>
 						</Stack>
 
 						{/* SELLER INFO */}
 						{product?.memberData && (
 							<Stack className="m-seller" spacing={1.5}>
-								<span className="m-seller-label">Seller</span>
+								<span className="m-seller-label">{t('detail.seller')}</span>
 								<Stack direction="row" spacing={1.5} alignItems="center">
-									<img
+									<Image
 										className="m-seller-img"
-										src={
-											product.memberData.memberImage
-												? `${REACT_APP_API_URL}/${product.memberData.memberImage}`
-												: '/img/profile/defaultUser.svg'
-										}
-										alt="seller"
+										src={getMemberImage(product.memberData.memberImage)}
+										alt={t('detail.sellerImageAlt') as string}
+										width={48}
+										height={48}
 									/>
 									<Stack spacing={0.3}>
 											<Link href={`/member?memberId=${product.memberData._id}`} passHref>
@@ -342,21 +351,21 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						{/* SHORT REVIEWS LIST */}
 						<Stack className="m-reviews" spacing={1.5}>
 							<Typography className="m-reviews-title">
-								Reviews ({commentTotal})
+								{t('detail.reviewsWithCount', { count: commentTotal })}
 							</Typography>
 
 							{productComments.slice(0, 2).map((comment: Comment) => (
 								<Review comment={comment} key={comment?._id} />
 							))}
 
-							
+
 						</Stack>
 
 						{/* LEAVE REVIEW */}
 						<Stack className="m-leave-review" spacing={1.2}>
-							<Typography className="m-leave-title">Leave a review</Typography>
+							<Typography className="m-leave-title">{t('detail.leaveReview')}</Typography>
 							<textarea
-								placeholder="Write your review..."
+								placeholder={t('detail.writeReviewPlaceholder') as string}
 								value={insertCommentData.commentContent}
 								onChange={({ target: { value } }) =>
 									setInsertCommentData({ ...insertCommentData, commentContent: value })
@@ -368,14 +377,14 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								disabled={insertCommentData.commentContent === '' || !user?._id}
 								onClick={createCommentHandler}
 							>
-								Submit review
+								{t('detail.submitReview')}
 							</button>
 						</Stack>
 
 						{/* RELATED PRODUCTS (horizontal scroll) */}
 						{destinationProducts.length !== 0 && (
 							<Stack className="m-related" spacing={1.5}>
-								<Typography className="m-related-title">Related products</Typography>
+								<Typography className="m-related-title">{t('detail.relatedProducts')}</Typography>
 								<div className="m-related-scroll">
 									{destinationProducts.map((p: Product) => (
 										<div className="m-related-card" key={p._id}>
@@ -387,11 +396,17 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						)}
 					</Stack>
 				</div>
-			</div>
+				</div>
+			</>
 		);
 	} else {
 		return (
-			<div id={'product-detail-page'}>
+			<>
+				<Head>
+					<title>{product?.productTitle ? `${product.productTitle} | Vira` : t('detail.seo.titleFallback')}</title>
+					<meta name="description" content={product?.productDesc ?? (t('detail.seo.descriptionFallback') as string)} />
+				</Head>
+				<div id={'product-detail-page'}>
 				<div className={'container'}>
 					<Stack className={'product-detail-config'}>
 						<Stack className={'product-info-config'}>
@@ -399,9 +414,11 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								{/* LEFT: GALLERY */}
 								<Stack className="pd-left">
 									<div className="pd-main">
-										<img
+										<Image
 											src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
-											alt="product-main"
+											alt={t('detail.productMainImageAlt') as string}
+											width={467}
+											height={640}
 										/>
 									</div>
 
@@ -417,7 +434,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 														className={`pd-thumb ${active ? 'is-active' : ''}`}
 														onClick={() => changeImageHandler(subImg)}
 													>
-														<img src={imagePath} alt="thumb" />
+														<Image src={imagePath} alt={t('detail.thumbnailAlt') as string} width={151} height={195} />
 													</button>
 												);
 											})}
@@ -432,26 +449,30 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 									</Typography>
 
 									<Stack direction="row" spacing={2} alignItems="center" mt={1}>
-										<Typography sx={{ color: '#b77b54', fontWeight: 600 }}>Price ${product?.productPrice}</Typography>
+										<Typography sx={{ color: '#b77b54', fontWeight: 600 }}>
+											{t('detail.price')} ${product?.productPrice}
+										</Typography>
 									</Stack>
 
 									<Typography sx={{ mt: 1, color: '#f7b500' }}>
-										★★★★★ ({product?.productViews} Customer Review)
+										{t('detail.customerReview', { count: product?.productViews })}
 									</Typography>
 
-									<Typography sx={{ mt: 2, color: '#555' }}>
-										SKU: MTUO-258-KJ-256-658 | Available In Stock (15 Items)
-									</Typography>
+									<Typography sx={{ mt: 2, color: '#555' }}>{t('detail.skuStock')}</Typography>
 
 									<Typography sx={{ mt: 2 }}>{product?.productDesc}</Typography>
 
 									<Typography sx={{ mt: 2, fontWeight: 600 }}>
-										Type: {product?.productType},{product?.productMaterial}
+										{t('detail.type')}: {product?.productType},{product?.productMaterial}
 									</Typography>
-									<p>Location: {product?.productLocation}</p>
-									<p>Address: {product?.productAddress}</p>
+									<p>
+										{t('detail.location')}: {product?.productLocation}
+									</p>
+									<p>
+										{t('detail.address')}: {product?.productAddress}
+									</p>
 
-									<Typography sx={{ mt: 3, fontWeight: 600 }}>Quantity:</Typography>
+									<Typography sx={{ mt: 3, fontWeight: 600 }}>{t('detail.quantity')}:</Typography>
 									<Stack direction="row" alignItems="center" spacing={2} mt={1}>
 										<Button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</Button>
 										<Typography>{quantity}</Typography>
@@ -467,7 +488,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 												},
 											}}
 										>
-											ADD TO CART
+											{t('detail.addToCartUpper')}
 										</Button>
 									</Stack>
 
@@ -481,11 +502,11 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 											'&:hover': { backgroundColor: '#5e3724' },
 										}}
 									>
-										BUY IT NOW
+										{t('detail.buyItNowUpper')}
 									</Button>
 
 									<Stack direction="row" spacing={2} mt={4}>
-										<h1>Social Media</h1>
+										<h1>{t('detail.socialMedia')}</h1>
 										<InstagramIcon sx={{ cursor: 'pointer', '&:hover': { color: '#E4405F' } }} />
 										<FacebookIcon sx={{ cursor: 'pointer', '&:hover': { color: '#1877F2' } }} />
 										<YouTubeIcon sx={{ cursor: 'pointer', '&:hover': { color: '#FF0000' } }} />
@@ -543,8 +564,8 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 									</Stack>
 								)}
 								<Stack className={'leave-review-config'}>
-									<Typography className={'main-title'}>Leave A Review</Typography>
-									<Typography className={'review-title'}>Review</Typography>
+									<Typography className={'main-title'}>{t('detail.leaveAReview')}</Typography>
+									<Typography className={'review-title'}>{t('detail.review')}</Typography>
 									<textarea
 										onChange={({ target: { value } }: any) => {
 											setInsertCommentData({ ...insertCommentData, commentContent: value });
@@ -557,7 +578,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 											disabled={insertCommentData.commentContent === '' || user?._id === ''}
 											onClick={createCommentHandler}
 										>
-											<Typography className={'title'}>Submit Review</Typography>
+											<Typography className={'title'}>{t('detail.submitReviewUpper')}</Typography>
 											<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 												<g clipPath="url(#clip0_6975_3642)">
 													<path
@@ -581,16 +602,14 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							</Stack>
 							<Stack className={'right-config'}>
 								<Stack className={'info-box'}>
-									<Typography className={'main-title'}>Get More Information</Typography>
+									<Typography className={'main-title'}>{t('detail.getMoreInformation')}</Typography>
 									<Stack className={'image-info'}>
-											<img
+											<Image
 												className={'member-image'}
-												src={
-													product?.memberData?.memberImage
-														? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
-														: '/img/profile/defaultUser.svg'
-												}
-												alt="member profile"
+												src={getMemberImage(product?.memberData?.memberImage)}
+												alt={t('detail.memberImageAlt') as string}
+												width={95}
+												height={95}
 											/>
 											<Stack className={'name-phone-listings'}>
 												<Link href={`/member?memberId=${product?.memberData?._id}`} passHref>
@@ -631,29 +650,29 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 												</svg>
 												<Typography className={'number'}>{product?.memberData?.memberPhone}</Typography>
 											</Stack>
-											<Typography className={'listings'}>View Listings</Typography>
+											<Typography className={'listings'}>{t('detail.viewListings')}</Typography>
 										</Stack>
 									</Stack>
 								</Stack>
 								<Stack className={'info-box'}>
-									<Typography className={'sub-title'}>Name</Typography>
-									<input type={'text'} placeholder={'Enter your name'} />
+									<Typography className={'sub-title'}>{t('detail.name')}</Typography>
+									<input type={'text'} placeholder={t('detail.namePlaceholder') as string} />
 								</Stack>
 								<Stack className={'info-box'}>
-									<Typography className={'sub-title'}>Phone</Typography>
-									<input type={'text'} placeholder={'Enter your phone'} />≠
+									<Typography className={'sub-title'}>{t('detail.phone')}</Typography>
+									<input type={'text'} placeholder={t('detail.phonePlaceholder') as string} />
 								</Stack>
 								<Stack className={'info-box'}>
-									<Typography className={'sub-title'}>Email</Typography>
-									<input type={'text'} placeholder={'creativelayers088'} />
+									<Typography className={'sub-title'}>{t('detail.email')}</Typography>
+									<input type={'text'} placeholder={t('detail.emailPlaceholder') as string} />
 								</Stack>
 								<Stack className={'info-box'}>
-									<Typography className={'sub-title'}>Message</Typography>
-									<textarea placeholder={'Hello, I am interested in...'}></textarea>
+									<Typography className={'sub-title'}>{t('detail.message')}</Typography>
+									<textarea placeholder={t('detail.messagePlaceholder') as string}></textarea>
 								</Stack>
 								<Stack className={'info-box'}>
 									<Button className={'send-message'}>
-										<Typography className={'title'}>Send Message</Typography>
+										<Typography className={'title'}>{t('detail.sendMessage')}</Typography>
 										<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 											<g clipPath="url(#clip0_6975_593)">
 												<path
@@ -679,7 +698,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							<Stack className={'similar-products-config'}>
 								<Stack className={'title-pagination-box'}>
 									<Stack className={'title-box'}>
-										<Typography className={'main-title'}>Related Products</Typography>
+										<Typography className={'main-title'}>{t('detail.relatedProductsTitle')}</Typography>
 									</Stack>
 									<Stack className={'pagination-box'}>
 										<WestIcon className={'swiper-similar-prev'} />
@@ -714,7 +733,8 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						)}
 					</Stack>
 				</div>
-			</div>
+				</div>
+			</>
 		);
 	}
 };

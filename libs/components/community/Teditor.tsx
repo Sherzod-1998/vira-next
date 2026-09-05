@@ -11,9 +11,11 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { useMutation } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { Message } from '../../enums/common.enum';
-import { sweetErrorHandling, sweetTopSuccessAlert } from '../../sweetAlert';
+import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const TuiEditor = () => {
+	const { t } = useTranslation('community');
 	const editorRef = useRef<Editor>(null),
 		token = getJwtToken(),
 		router = useRouter();
@@ -38,7 +40,7 @@ const TuiEditor = () => {
 				'operations',
 				JSON.stringify({
 					query: `mutation ImageUploader($file: Upload!, $target: String!) {
-						imageUploader(file: $file, target: $target) 
+						imageUploader(file: $file, target: $target)
 				  }`,
 					variables: {
 						file: null,
@@ -63,12 +65,11 @@ const TuiEditor = () => {
 			});
 
 			const responseImage = response.data.data.imageUploader;
-			console.log('=responseImage: ', responseImage);
 			memoizedValues.articleImage = responseImage;
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
-		} catch (err) {
-			console.log('Error, uploadImage:', err);
+		} catch (err: any) {
+			await sweetMixinErrorAlert(err.message);
 		}
 	};
 
@@ -77,7 +78,6 @@ const TuiEditor = () => {
 	};
 
 	const articleTitleHandler = (e: T) => {
-		console.log(e.target.value);
 		memoizedValues.articleTitle = e.target.value;
 	};
 
@@ -105,8 +105,7 @@ const TuiEditor = () => {
 				},
 			});
 		} catch (err: any) {
-			console.log(err);
-			sweetErrorHandling(new Error(Message.INSERT_ALL_INPUTS)).then();
+			sweetErrorHandling(err).then();
 		}
 	};
 
@@ -121,32 +120,32 @@ const TuiEditor = () => {
 			<Stack direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
 				<Box component={'div'} className={'form_row'} style={{ width: '300px' }}>
 					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Category
+						{t('editor.category')}
 					</Typography>
 					<FormControl sx={{ width: '100%', background: 'white' }}>
 						<Select
 							value={articleCategory}
 							onChange={changeCategoryHandler}
 							displayEmpty
-							inputProps={{ 'aria-label': 'Without label' }}
+							inputProps={{ 'aria-label': t('editor.category') as string }}
 						>
 							<MenuItem value={BoardArticleCategory.FREE}>
-								<span>Free</span>
+								<span>{t('editor.free')}</span>
 							</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
-							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
-							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
+							<MenuItem value={BoardArticleCategory.HUMOR}>{t('editor.humor')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.NEWS}>{t('editor.news')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.RECOMMEND}>{t('editor.recommend')}</MenuItem>
 						</Select>
 					</FormControl>
 				</Box>
 				<Box component={'div'} style={{ width: '300px', flexDirection: 'column' }}>
 					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Title
+						{t('editor.title')}
 					</Typography>
 					<TextField
 						onChange={articleTitleHandler}
 						id="filled-basic"
-						label="Type Title"
+						label={t('editor.typeTitle') as string}
 						style={{ width: '300px', background: 'white' }}
 					/>
 				</Box>
@@ -184,7 +183,7 @@ const TuiEditor = () => {
 					style={{ margin: '30px', width: '250px', height: '45px' }}
 					onClick={handleRegisterButton}
 				>
-					Register
+					{t('editor.register')}
 				</Button>
 			</Stack>
 		</Stack>

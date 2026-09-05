@@ -62,6 +62,77 @@
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
+
+				.seller-general-card {
+					.seller-card-skeleton {
+						pointer-events: none;
+					}
+				}
+
+				.verified-badge {
+					margin-top: 5px;
+					display: inline-flex;
+					align-items: center;
+					gap: 4px;
+					color: #a98a34;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 700;
+					line-height: 1;
+
+					svg {
+						width: 14px;
+						height: 14px;
+					}
+				}
+
+				.buttons {
+					gap: 2px;
+				}
+			}
+			.seller-card-skeleton {
+				pointer-events: none;
+			}
+			.seller-empty-state {
+				margin-top: 35px;
+				width: 100%;
+				min-height: 360px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				border: 1px solid rgba(201, 168, 76, 0.28);
+				border-radius: 16px;
+				background: #faf9f6;
+				text-align: center;
+
+				.empty-title {
+					color: #212121;
+					font-family: Unbounded, $font;
+					font-size: 24px;
+					font-weight: 600;
+				}
+
+				.empty-subtitle {
+					color: #777;
+					font-family: $font;
+					font-size: 14px;
+				}
+
+				.empty-reset-btn {
+					margin-top: 8px;
+					padding: 10px 24px;
+					border-radius: 999px;
+					background: #c9a84c;
+					color: #fff;
+					font-family: $font;
+					font-weight: 700;
+
+					&:hover {
+						background: #a98a34;
+					}
+				}
 			}
 			.pagination {
 				display: flex;
