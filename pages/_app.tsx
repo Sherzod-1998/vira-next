@@ -18,6 +18,10 @@ const App = ({ Component, pageProps }: AppProps) => {
 	const client = useApollo(pageProps.initialApolloState);
 
 	return (
+		// NEXT_PUBLIC_GOOGLE_CLIENT_ID must be set in every deploy target (including
+		// Vercel env vars, not just .env.local) — with an empty clientId, Google's
+		// own SDK throws inside useGoogleLogin's mount-time initTokenClient() call
+		// on /account/join, crashing the whole page for every visitor.
 		<GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
 			<ApolloProvider client={client}>
 				<ThemeProvider theme={theme}>
